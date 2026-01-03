@@ -1,0 +1,277 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>BUILDSTATE - Login</title>
+    <meta content="" name="description" />
+    <meta content="" name="author" />
+    <meta
+      content="width=device-width, initial-scale=1, maximum-scale=1"
+      name="viewport"
+    />
+    <!-- favicon -->
+    <link
+      href="{% static 'img/favicon.png' %}"
+      rel="icon"
+      sizes="32x32"
+      type="image/png"
+    />
+    <!-- Bootstrap CSS -->
+    <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet" />
+    <!-- font awesome CSS -->
+    <link href="{% static 'font-awesome/css/font-awesome.css' %}" rel="stylesheet" />
+    <!-- on3step CSS -->
+    <link href="{% static 'css/on3step-style.css' %}" rel="stylesheet" />
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        background: #f5f5f5;
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Arial', sans-serif;
+        padding: 20px;
+      }
+
+      .login-container {
+        background: white;
+        border-radius: 8px;
+        box-shadow: 0 2px 8px rgba(255, 102, 0, 0.08);
+        overflow: hidden;
+        width: 100%;
+        max-width: 420px;
+      }
+
+      .login-header {
+        background: #ff6600;
+        color: white;
+        padding: 40px 30px;
+        text-align: center;
+      }
+
+      .login-header h1 {
+        margin: 0;
+        font-size: 32px;
+        font-weight: 700;
+        margin-bottom: 8px;
+        letter-spacing: -0.5px;
+      }
+
+      .login-header p {
+        margin: 0;
+        font-size: 14px;
+        opacity: 0.95;
+        font-weight: 500;
+      }
+
+      .login-body {
+        padding: 35px 30px;
+      }
+
+      .form-group {
+        margin-bottom: 22px;
+        position: relative;
+      }
+
+      .form-group label {
+        display: block;
+        margin-bottom: 10px;
+        color: #333;
+        font-weight: 700;
+        font-size: 12px;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+      }
+
+      .form-group input {
+        width: 100%;
+        padding: 12px 14px;
+        border: 1px solid #e0e0e0;
+        border-radius: 4px;
+        font-size: 14px;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        background: #fafafa;
+      }
+
+      .form-group input:focus {
+        outline: none;
+        border-color: #ff6600;
+        background: white;
+        box-shadow: 0 0 0 3px rgba(255, 102, 0, 0.1);
+      }
+
+      .btn-login {
+        width: 100%;
+        padding: 13px;
+        background: #ff6600;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        font-size: 14px;
+        font-weight: 700;
+        cursor: pointer;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        letter-spacing: 0.3px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+      }
+
+      .btn-login:hover {
+        background: #e55a00;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(255, 102, 0, 0.2);
+      }
+
+      .btn-login:active {
+        transform: translateY(0);
+      }
+
+      .btn-login:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+        transform: none;
+      }
+
+      .alert {
+        padding: 14px;
+        margin-bottom: 22px;
+        border-radius: 4px;
+        font-size: 13px;
+        display: none;
+        border-left: 4px solid transparent;
+      }
+
+      .alert-success {
+        background: #d4edda;
+        color: #155724;
+        border-left-color: #28a745;
+      }
+
+      .alert-danger {
+        background: #f8d7da;
+        color: #721c24;
+        border-left-color: #dc3545;
+      }
+
+      .login-footer {
+        padding: 25px 30px;
+        background: #fafafa;
+        text-align: center;
+        color: #666;
+        font-size: 13px;
+        border-top: 1px solid #e8e8e8;
+      }
+
+      .login-footer a {
+        color: #ff6600;
+        text-decoration: none;
+        font-weight: 700;
+        transition: color 0.3s ease;
+      }
+
+      .login-footer a:hover {
+        color: #e55a00;
+      }
+
+      .spinner {
+        display: none;
+        width: 14px;
+        height: 14px;
+      }
+
+      .spinner.show {
+        display: inline-block;
+        border: 2px solid rgba(255, 255, 255, 0.3);
+        border-top-color: white;
+        border-radius: 50%;
+        animation: spin 0.6s linear infinite;
+      }
+
+      @keyframes spin {
+        to {
+          transform: rotate(360deg);
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="login-container">
+      <div class="login-header">
+        <h1>BUILDSTATE</h1>
+        <p>Login to Your Account</p>
+      </div>
+
+      <div class="login-body">
+        <div id="alert" class="alert"></div>
+
+        <form method="post" id="loginForm" action="{% url 'login' %}">
+          {% csrf_token %}
+          <div class="form-group">
+            <label for="id_username">Username</label>
+            <input
+              type="text"
+              id="id_username"
+              name="username"
+              placeholder="Enter your username"
+              required
+              autocomplete="username"
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="id_password">Password</label>
+            <input
+              type="password"
+              id="id_password"
+              name="password"
+              placeholder="Enter your password"
+              required
+              autocomplete="current-password"
+            />
+          </div>
+
+          <button type="submit" class="btn-login" id="submitBtn" title="Submit login form">
+            <span class="spinner" id="spinner"></span>
+            <span id="btnText">Login</span>
+          </button>
+        </form>
+        
+        {% if form.non_field_errors %}
+          <div class="alert alert-danger" style="display: block; margin-top: 20px;">
+            {% for error in form.non_field_errors %}
+              <p>{{ error }}</p>
+            {% endfor %}
+          </div>
+        {% endif %}
+      </div>
+
+      <div class="login-footer">
+        Need access? Contact an administrator
+      </div>
+    </div>
+
+    <script>
+      const form = document.getElementById('loginForm');
+      const submitBtn = document.getElementById('submitBtn');
+      const spinner = document.getElementById('spinner');
+      const btnText = document.getElementById('btnText');
+
+      // Handle form submission - show loading state
+      form.addEventListener('submit', function() {
+        submitBtn.disabled = true;
+        spinner.classList.add('show');
+        btnText.textContent = 'Logging in...';
+        // Form will naturally submit and Django will handle the redirect
+      });
+    </script>
+  </body>
+</html>

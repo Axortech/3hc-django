@@ -1,0 +1,521 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="zxx">
+  <head>
+    <meta charset="utf-8">
+    <title>BUILDSTATE - Construction</title>
+    <meta content="" name="description">
+    <meta content="" name="author">
+    <meta content="" name="keywords">
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1" name="viewport">
+    <!-- favicon -->
+    <link href="{% static 'img/favicon.png' %}" rel="icon" sizes="32x32" type="image/png">
+    <!-- Bootstrap CSS -->
+    <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet">
+    <!-- font themify CSS -->
+    <link rel="stylesheet" href="{% static 'css/themify-icons.css' %}">
+    <!-- font awesome CSS -->
+    <link href="{% static 'font-awesome/css/font-awesome.css' %}" rel="stylesheet">
+    <!-- revolution slider css -->
+    <link rel="stylesheet" type="text/css" href="{% static 'css/fullscreen.css' %}" media="screen" />
+	<link rel="stylesheet" type="text/css" href="{% static 'rs-plugin/css/settings.css' %}" media="screen" />
+    <link rel="stylesheet" href="{% static 'css/rev-settings.css' %}" type="text/css">
+    <!-- on3step CSS -->
+    <link href="{% static 'css/animated-on3step.css' %}" rel="stylesheet">
+    <link href="{% static 'css/owl.carousel.css' %}" rel="stylesheet">
+    <link href="{% static 'css/owl.theme.css' %}" rel="stylesheet">
+    <link href="{% static 'css/owl.transitions.css' %}" rel="stylesheet">
+    <link href="{% static 'css/on3step-style.css' %}" rel="stylesheet">
+    <link href="{% static 'css/queries-on3step.css' %}" media="all" rel="stylesheet" type="text/css">
+  </head>
+  <body>
+  
+    <!-- preloader -->
+    <div class="bg-preloader"></div>
+    <div class="preloader">
+      <div class="mainpreloader">
+      <span></span>
+      </div>
+    </div>
+    <!-- preloader end -->
+    
+    <!-- content wraper -->
+    <div class="content-wrapper">
+    
+    <!-- subnav -->
+    <div class="subnav">
+    <div class="container">
+        <div class="row">
+
+         <div class="col-md-8">
+          <div class="social-icons-subnav">
+                                <a href="#"><span class="ti-location-pin"></span>Chyasa Dekwo Marg, Lalitpur</a>
+                                <a href="#"><span class="ti-mobile"></span>+977-9876543211</a>
+                                <a href="#"><span class="ti-time"></span>Monday - Friday 08:00am ~ 05:00pm</a>
+          </div>
+         </div>
+        
+         <div class="col-md-4">
+                        <div class="right">
+                            <div class="social-icons-subnav">
+                                <a href="#"><span class="ti-facebook"></span></a>
+                                <a href="#"><span class="ti-dribbble"></span></a>
+                                <a href="#"><span class="ti-twitter"></span></a>
+                                <a href="#"><span class="ti-linkedin"></span></a>
+                            </div>
+                        </div>
+         </div>
+        
+        </div>
+    </div>
+    </div>
+    <!-- subnav end -->
+    
+      <!-- nav -->
+      <div class="navbar navbar-default navbar-fixed-top">
+        <div class="container">
+        <div class="row">
+        
+           <!-- menu mobile display -->
+           <button type="button" class="navbar-toggle" data-target=".navbar-collapse" data-toggle="collapse" title="Toggle Navigation Menu">
+           <span class="icon icon-bar"></span> 
+           <span class="icon icon-bar"></span> 
+           <span class="icon icon-bar"></span></button> 
+          
+          <!-- logo --> 
+          <a class="navbar-brand" href="index.html"><img alt="logo" src="{% static 'img/logo.png' %}"></a> 
+          
+          <!-- mainmenu start -->
+          <div class="menu-init" id="main-menu">
+            <nav id="menu-center">
+              <ul>
+                <li>
+                 <a href="#">Home</a>
+                 <ul>
+                    <li><a href="index-rev-slider.html">Index Rev Slider</a></li>
+                    <li><a href="index-slider.html">Index Slider</a></li>
+                    <li><a href="index.html">Slider Text</a></li>
+                    <li><a href="index-white.html">Index White</a></li>
+                    <li><a href="{% static 'intro/index.html' %}">INTRO</a></li>
+                  </ul>
+                </li>
+                <li><a href="#">About</a>
+                <ul>
+                    <li><a href="about.html">About Us - 1</a></li>
+                    <li><a href="about-2.html">About Us - 2</a></li>
+                    <li><a href="about-3.html">Our History</a></li>
+                  </ul>
+                </li>
+                <li><a href="#">Services</a>
+                 <ul>
+                    <li><a href="service.html">CONSULTING BUILDING</a></li>
+                    <li><a href="service-1.html">ARCHITECTURE BUILDING</a></li>
+                    <li><a href="service-2.html">DESIGN & BUILD</a></li>
+                    <li><a href="service-3.html">RENOVATION BUILDING</a></li>
+                    <li><a href="service-4.html">CONSTRUCTION BUILDING</a></li>
+                  </ul>
+                </li>
+                <li><a class="actived" href="#">Projects</a> <ul>
+                    <li><a href="result.html">PROJECTS FLUID</a></li>
+                    <li><a href="#">PROJECTS GRID</a> <ul>
+                    <li><a href="projects-grid-2.html">PROJECTS 2 COL</a></li>
+                    <li><a href="projects-grid-3.html">PROJECTS 3 COL</a></li>
+                    <li><a href="projects-grid-4.html">PROJECTS 4 COL</a></li>
+                    </ul>
+                    </li>
+                    <li><a href="#">PROJECT DETAILS</a><ul>
+                    <li><a href="project-detail.html">PROJECT DETAILS 1</a></li>
+                    <li><a href="project-detail-2.html">PROJECT DETAILS 2</a></li>
+                    </ul>
+                    </li>
+                  </ul>
+                </li>
+                <li><a  href="#">Blog</a>
+                <ul>
+                    <li><a href="blog.html">Blog Single</a></li>
+                    <li><a href="blog-post.html">Blog Post</a></li>
+                  </ul>
+                </li>
+                <li><a href="#">Contact</a>
+                 <ul>
+                    <li><a href="contact.html">Contact</a></li>
+                    <li><a href="contact-1.html">Contact - 1</a></li>
+                  </ul>
+                </li>
+              </ul>
+            </nav>
+          </div>
+          <!-- mainmenu end -->
+          
+        </div>
+        </div>
+        <!-- container -->
+      </div>
+      <!-- nav end -->
+      
+      <!-- subheader -->
+      <section id="subheader">
+        <div class="container">
+          <div class="row">
+            <div class="col-md-12">
+              <h1>
+                PROJECTS DETAIL 2
+              </h1>
+            </div>
+            
+            <!-- devider -->
+            <div class="col-md-12">
+              <div class="devider-page">
+                <div class="devider-img-right">
+                </div>
+              </div>
+            </div>
+
+            <div class="col-md-12">
+              <ul class="subdetail">
+                <li>
+                  <a href="index.html">Home</a>
+                </li>
+
+                <li class="sep">/
+                </li>
+
+                <li>Overview
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </section>
+      <!-- subheader end -->
+      
+      <!-- services -->
+      <section class="projects-detail whitepage">
+      <div class="onStep" data-animation="fadeInUp" data-time="300">
+        <div class="container">
+          <div class="row">
+          
+       
+
+        <!-- detail img -->
+        <div class="col-md-8">
+        
+         <div id="projectsBig" class="owl-carousel">
+          <div class="item"><img src="{% static 'img/projects/projects-detail/fullimage1.jpg' %}"></div>
+          <div class="item"><img src="{% static 'img/projects/projects-detail/fullimage2.jpg' %}"></div>
+          <div class="item"><img src="{% static 'img/projects/projects-detail/fullimage3.jpg' %}"></div>
+          <div class="item"><img src="{% static 'img/projects/projects-detail/fullimage1.jpg' %}"></div>
+          <div class="item"><img src="{% static 'img/projects/projects-detail/fullimage2.jpg' %}"></div>
+         </div>
+         
+         <div id="projectsSmall" class="owl-carousel">
+          <div class="item"><img src="{% static 'img/projects/projects-detail/fullimage1.jpg' %}"></div>
+          <div class="item"><img src="{% static 'img/projects/projects-detail/fullimage2.jpg' %}"></div>
+          <div class="item"><img src="{% static 'img/projects/projects-detail/fullimage3.jpg' %}"></div>
+          <div class="item"><img src="{% static 'img/projects/projects-detail/fullimage1.jpg' %}"></div>
+          <div class="item"><img src="{% static 'img/projects/projects-detail/fullimage2.jpg' %}"></div>
+         </div>
+         
+       </div>
+       <!-- detail img end -->
+          
+          <!-- text detail -->
+          <div class="col-md-4">
+           <h2>Constructions Overview</h2>
+           <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magnaaliqua. Ut enim ad minim veniam, quis nstrud exercitation ullamco laboris nisi ut aliquip ex ea commodoconsequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nullapariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa.Lorem ipsum dolor sit amet, consecteturadipiscing elit,
+<br><br>
+cupidatat non proident, sunt in culpa cupidatat non proident, sunt in culpa.Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore.
+            </p>
+          <div class="space-half"></div>
+          <div class="detaillist">
+          <h2>Projects Detail</h2>
+          <span><strong>Categories:</strong> Architec, Renovation, Tilling</span>
+          <span><strong>Client:</strong> Johny Dono</span>
+          <span><strong>Date:</strong> Apr 05, 2017</span>
+          <span><strong>Budget:</strong> $ 8,00,000</span>
+          <span><strong>Duration:</strong> 6 Months</span>
+          <span><strong>Tags:</strong> Commercial</span>
+          </div>
+          </div>
+          <!-- text detail end -->
+          
+        <div class="space-single"></div>  
+        <!-- button projects -->  
+        <div class="col-md-6">
+        <div class="pro-btn">
+        <a href="#">
+        PREV PROJECTS
+        </a>
+        </div>
+        </div>  
+        <div class="col-md-6">
+        <div class="pro-btn">
+        <a href="#">
+        NEXT PROJECTS
+        </a>
+        </div>
+        </div>   
+        <!-- button projects end -->  
+          
+          </div>
+        </div>
+        </div>
+      </section>
+      <!-- services end -->
+      
+      <!-- Related projects -->
+      <div class="container">
+      <div class="row">
+            
+            <div id="owl-project" class="owl-carousel">
+            
+             <div class="item">
+              <div class="gal-home">
+                  <a href="project-detail.html">
+                <div class="hovereffect">
+                  <img alt="imageportofolio" class="img-responsive" src="{% static 'img/gallery-home/img1.jpg' %}">
+                  <div class="overlay">
+                  <h3>FONDATION BUILDING
+                  <span class="devider"></span>
+                  </h3>
+                  <p>MORE DETAIL</p>
+                  </div>
+                </div>
+                </a>
+              </div>
+              </div>
+              
+              <div class="item">
+              <div class="gal-home">
+                  <a href="project-detail.html">
+                <div class="hovereffect">
+                  <img alt="imageportofolio" class="img-responsive" src="{% static 'img/gallery-home/img2.jpg' %}">
+                  <div class="overlay">
+                  <h3>POLISHING BUILDING
+                  <span class="devider"></span>
+                  </h3>
+                  <p>MORE DETAIL</p>
+                  </div>
+                </div>
+                </a>
+              </div>
+              </div>
+              
+              <div class="item">
+              <div class="gal-home">
+                  <a href="project-detail.html">
+                <div class="hovereffect">
+                  <img alt="imageportofolio" class="img-responsive" src="{% static 'img/gallery-home/img3.jpg' %}">
+                  <div class="overlay">
+                  <h3>RESTORATION BUILDING
+                  <span class="devider"></span>
+                  </h3>
+                   <p>MORE DETAIL</p>
+                  </div>
+                </div>
+                </a>
+              </div>
+              </div>
+              
+              <div class="item">
+              <div class="gal-home">
+                  <a href="project-detail.html">
+                <div class="hovereffect">
+                  <img alt="imageportofolio" class="img-responsive" src="{% static 'img/gallery-home/img4.jpg' %}">
+                  <div class="overlay">
+                  <h3>CONCREATE BUILDING
+                  <span class="devider"></span>
+                  </h3>
+                  <p>MORE DETAIL</p>
+                  </div>
+                </div>
+                </a>
+              </div>
+              </div>
+              
+              <div class="item">
+              <div class="gal-home">
+                  <a href="project-detail.html">
+                <div class="hovereffect">
+                  <img alt="imageportofolio" class="img-responsive" src="{% static 'img/gallery-home/img1.jpg' %}">
+                  <div class="overlay">
+                  <h3>FONDATION BUILDING
+                  <span class="devider"></span>
+                  </h3>
+                  <p>MORE DETAIL</p>
+                  </div>
+                </div>
+                </a>
+              </div>
+              </div>
+              
+              <div class="item">
+              <div class="gal-home">
+                  <a href="project-detail.html">
+                <div class="hovereffect">
+                  <img alt="imageportofolio" class="img-responsive" src="{% static 'img/gallery-home/img2.jpg' %}">
+                  <div class="overlay">
+                  <h3>POLISHING BUILDING
+                  <span class="devider"></span>
+                  </h3>
+                  <p>MORE DETAIL</p>
+                  </div>
+                </div>
+                </a>
+              </div>
+              </div>
+              
+              <div class="item">
+              <div class="gal-home">
+                  <a href="project-detail.html">
+                <div class="hovereffect">
+                  <img alt="imageportofolio" class="img-responsive" src="{% static 'img/gallery-home/img3.jpg' %}">
+                  <div class="overlay">
+                  <h3>RESTORATION BUILDING
+                  <span class="devider"></span>
+                  </h3>
+                   <p>MORE DETAIL</p>
+                  </div>
+                </div>
+                </a>
+              </div>
+              </div>
+              
+              <div class="item">
+              <div class="gal-home">
+                  <a href="project-detail.html">
+                <div class="hovereffect">
+                  <img alt="imageportofolio" class="img-responsive" src="{% static 'img/gallery-home/img4.jpg' %}">
+                  <div class="overlay">
+                  <h3>CONCREATE BUILDING
+                  <span class="devider"></span>
+                  </h3>
+                  <p>MORE DETAIL</p>
+                  </div>
+                </div>
+                </a>
+              </div>
+              </div>
+              
+            </div>  
+        
+        </div>    
+        </div>
+        <!-- Related projects end -->
+        
+        <!-- spacer -->
+        <div class="space-double"></div>
+
+     <!-- subfooter -->
+      <section aria-label="footer" class="subfooter">
+        <div class="container">
+          <div class="row">
+            <div class="col-md-3 col-xs-12">
+                <div class="logo">
+                  <img alt="logo" src="{% static 'img/logo.png' %}">
+                </div>
+
+                <p>
+                  Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Donec mollis. Quisque convallis libero in sapien pharetra tincidunt. Aliquam elit ante, malesuada id, tempor eu, gravida
+                  id, odio. Maecenas suscipit, risus et eleifend imperdiet, nisi orci ullamcorper massa adipiscing.
+                </p>
+            </div>
+
+            <div class="col-md-3 col-xs-12">
+
+                <h3>LINKS</h3>
+                <ul style="list-style: none; padding: 0; line-height: 2;">
+                <li><a href="notices.html" style="color: #666; text-decoration: none;">Notices</a></li>
+                <li><a href="careers.html" style="color: #666; text-decoration: none;">Careers</a></li>
+                <li><a href="blog.html" style="color: #666; text-decoration: none;">Blog</a></li>
+                <li><a href="contact.html" style="color: #666; text-decoration: none;">Contact</a></li>
+                </ul>
+
+            </div>
+
+            <div class="col-md-3 col-xs-12">
+                <h3>
+                  CONTACT INFO
+                </h3>
+
+                <address>
+                  <span>Chyasa Dekwo Marg, Lalitpur</span> <span><strong>PHONE:</strong> +977-9876543211</span> <span><strong>EMAIL:</strong> <a href=
+                  "mailto:companyname@gmail.com">companyname@gmail.com</a></span> <span><strong>SITE:</strong> <a href="#">www.companyname.com</a></span>
+                </address>
+            </div>
+
+            <div class="col-md-3 col-xs-12">
+                <h3>
+                  PHOTO STREAM
+                </h3>
+
+                <div id="flickr-photo-stream">
+                  <script src="http://www.flickr.com/badge_code_v2.gne?count=8&amp;display=random&amp;size=s&amp;layout=x&amp;source=user&amp;user=52617155@N08" type="text/javascript">
+                  </script>
+                  <div class="clearfix">
+                  </div>
+                </div>
+              </div>
+            </div>
+        </div>
+      </section>
+      <!-- subfooter end -->
+      
+      <!-- footer -->
+      <footer>
+        <div class="container">
+          <div class="row">
+            <div class="col-md-6">
+              Buildstate &copy; Copyright 2025 by reflex
+            </div>
+
+            <div class="col-md-6">
+              <div class="right">
+                <div class="social-icons">
+                  <a href="#"><span class="ti-facebook"></span></a> <a href="#"><span class="ti-dribbble"></span></a> <a href="#"><span class="ti-twitter"></span></a> <a href="#"><span class=
+                  "ti-linkedin"></span></a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </footer>
+      <!-- footer end -->
+      
+      <!-- ScrolltoTop -->
+      <div id="totop">
+        <span class="ti-angle-up"></span>
+      </div>
+      
+    </div>
+    <!-- content wraper end -->
+    
+    <!-- Subscribe start -->
+    <div class="white-popup-block mfp-hide animbounceInDown" data-time="0" id="subwrap">
+      <h5>
+        PLEASE FILL YOUR EMAIL BELOW
+      </h5>
+
+      <div class="space-half">
+      </div>
+
+      <form action="subscribe.php" id="subscribe" method="post" name="subscribe">
+        <label for="subscribeemail" style="display: none;">Email Address</label>
+        <input class="subscribfield subscribeemail" id="subscribeemail" name="subscribeemail" type="text" placeholder="your email" title="Enter your email to subscribe"> <button class="btn-form" id="submit-2" type="submit">Subscribe</button>
+      </form>
+
+      <div class="subscribesuccess">
+        Thank you for fill your email
+      </div>
+    </div>
+    <!-- Subscribe end -->
+    
+    <!-- plugin JS -->
+    <script src="{% static 'plugin/pluginson3step.js' %}" type="text/javascript"></script> 
+    <!-- slider revolution  -->
+    <script type="text/javascript" src="{% static 'rs-plugin/js/jquery.themepunch.revolution.min.js' %}"></script>
+    <!-- on3step JS -->
+    <script src="{% static 'js/on3step.js' %}" type="text/javascript"></script>
+    <script src="{% static 'js/plugin-set.js' %}" type="text/javascript"></script>
+  </body>
+</html>

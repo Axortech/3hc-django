@@ -1,0 +1,108 @@
+{% load static %}
+<!-- Header Component - Reusable Navigation -->
+<div class="subnav">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-8">
+        <div class="social-icons-subnav">
+          <a href="#" id="header-location"><span class="ti-location-pin"></span>Chyasa Dekwo Marg, Lalitpur</a>
+          <a href="#" id="header-phone"><span class="ti-mobile"></span>+977-9876543211</a>
+          <a href="#" id="header-hours"><span class="ti-time"></span>Monday - Friday 08:00am ~ 05:00pm</a>
+        </div>
+      </div>
+
+      <div class="col-md-4">
+        <div class="right">
+          <div class="social-icons-subnav">
+            <a href="#"><span class="ti-facebook"></span></a>
+            <a href="#"><span class="ti-dribbble"></span></a>
+            <a href="#"><span class="ti-twitter"></span></a>
+            <a href="#"><span class="ti-linkedin"></span></a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Navbar -->
+<div class="navbar navbar-default navbar-fixed-top">
+  <div class="container">
+    <div class="row">
+      <!-- menu mobile display -->
+      <button type="button" class="navbar-toggle" data-target=".navbar-collapse" data-toggle="collapse" title="Toggle Navigation Menu">
+        <span class="icon icon-bar"></span>
+        <span class="icon icon-bar"></span>
+        <span class="icon icon-bar"></span>
+      </button>
+
+      <!-- logo -->
+      <a class="navbar-brand" href="index.html"><img id="site-logo" alt="logo" src="{% static 'img/logo.png' %}" style="width: 100%; height: auto; max-width: 200px; object-fit: contain;" /></a>
+
+      <!-- mainmenu start -->
+      <div class="menu-init" id="main-menu">
+        <nav id="menu-center">
+          <ul>
+            <li>
+              <a href="index.html">Home</a>
+             </li>
+            <li>
+              <a href="about.html">About</a>
+            </li>
+            <li>
+              <a href="service-landing.html">Services</a>
+              <ul>
+                <li><a href="service.html">CONSULTING BUILDING</a></li>
+                <li><a href="service-1.html">ARCHITECTURE BUILDING</a></li>
+                <li><a href="service-2.html">DESIGN & BUILD</a></li>
+                <li><a href="service-3.html">RENOVATION BUILDING</a></li>
+                <li><a href="service-4.html">CONSTRUCTION BUILDING</a></li>
+              </ul>
+            </li>
+            <li>
+              <a href="#">Projects</a>
+              <ul>
+                <li><a href="result.html">PROJECTS FLUID</a></li>
+                <li>
+                  <a href="#">PROJECTS GRID</a>
+                  <ul>
+                    <li><a href="projects-grid-2.html">PROJECTS 2 COL</a></li>
+                    <li><a href="projects-grid-3.html">PROJECTS 3 COL</a></li>
+                    <li><a href="projects-grid-4.html">PROJECTS 4 COL</a></li>
+                  </ul>
+                </li>
+                <li>
+                  <a href="#">PROJECT DETAILS</a>
+                  <ul>
+                    <li><a href="project-detail.html">PROJECT DETAILS 1</a></li>
+                    <li><a href="project-detail-2.html">PROJECT DETAILS 2</a></li>
+                  </ul>
+                </li>
+              </ul>
+            </li>
+            <li>
+              <a href="#">Blog</a>
+              <ul>
+                <li><a href="blog.html">Blog Single</a></li>
+                <li><a href="blog-post.html">Blog Post</a></li>
+              </ul>
+            </li>
+            <li>
+              <a href="#">Contact</a>
+              <ul>
+                <li><a href="contact.html">Contact</a></li>
+                <li><a href="contact-1.html">Contact - 1</a></li>
+              </ul>
+            </li>
+          </ul>
+        </nav>
+      </div>
+      <!-- mainmenu end -->
+    </div>
+  </div>
+</div>
+
+<!-- Site Configuration Loader Script -->
+{% if not request.resolver_match.url_name == 'dashboard' %}
+<script src="{% static 'js/site-config.js' %}" type="text/javascript" defer></script>
+{% endif %}

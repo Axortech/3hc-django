@@ -1,0 +1,5637 @@
+openapi: 3.0.3
+info:
+  title: Website Backend API
+  version: 1.0.0
+  description: APIs for Banner, About, Project and Leads (Contact) with admin CRUD.
+paths:
+  /api/about/:
+    get:
+      operationId: about_list
+      description: Multiple 'about' entries supported, but you can use one.
+      summary: Get about page contents
+      parameters:
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      tags:
+      - about
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedAboutList'
+              examples:
+                AboutExample:
+                  value:
+                    count: 123
+                    next: http://api.example.org/accounts/?page=4
+                    previous: http://api.example.org/accounts/?page=2
+                    results:
+                    - title: About 3HC Construction
+                      content: Founded in 2000, we are a leading construction company...
+                      image: /media/about/images/company-photo.jpg
+                      mission_title: Our Mission
+                      mission_content: To deliver exceptional construction solutions...
+                      vision_title: Our Vision
+                      vision_content: To be the most trusted construction partner...
+                      goals_title: Our Goals
+                      goals_content: |-
+                        1. Deliver quality projects
+                        2. Maintain safety standards
+                        3. Innovate continuously
+                      achievements_title: Our Achievements
+                      achievements_content: |-
+                        • 500+ completed projects
+                        • ISO 9001 certified
+                        • Award-winning designs
+                      is_published: true
+                  summary: Example about page with Mission, Vision, Goals, Achievements
+          description: ''
+    post:
+      operationId: about_create
+      tags:
+      - about
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/About'
+            examples:
+              AboutExample:
+                value:
+                  title: About 3HC Construction
+                  content: Founded in 2000, we are a leading construction company...
+                  image: /media/about/images/company-photo.jpg
+                  mission_title: Our Mission
+                  mission_content: To deliver exceptional construction solutions...
+                  vision_title: Our Vision
+                  vision_content: To be the most trusted construction partner...
+                  goals_title: Our Goals
+                  goals_content: |-
+                    1. Deliver quality projects
+                    2. Maintain safety standards
+                    3. Innovate continuously
+                  achievements_title: Our Achievements
+                  achievements_content: |-
+                    • 500+ completed projects
+                    • ISO 9001 certified
+                    • Award-winning designs
+                  is_published: true
+                summary: Example about page with Mission, Vision, Goals, Achievements
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/About'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/About'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/About'
+              examples:
+                AboutExample:
+                  value:
+                    title: About 3HC Construction
+                    content: Founded in 2000, we are a leading construction company...
+                    image: /media/about/images/company-photo.jpg
+                    mission_title: Our Mission
+                    mission_content: To deliver exceptional construction solutions...
+                    vision_title: Our Vision
+                    vision_content: To be the most trusted construction partner...
+                    goals_title: Our Goals
+                    goals_content: |-
+                      1. Deliver quality projects
+                      2. Maintain safety standards
+                      3. Innovate continuously
+                    achievements_title: Our Achievements
+                    achievements_content: |-
+                      • 500+ completed projects
+                      • ISO 9001 certified
+                      • Award-winning designs
+                    is_published: true
+                  summary: Example about page with Mission, Vision, Goals, Achievements
+          description: ''
+  /api/about/{id}/:
+    get:
+      operationId: about_retrieve
+      summary: Get a single about entry
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this About Page Content.
+        required: true
+      tags:
+      - about
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/About'
+              examples:
+                AboutExample:
+                  value:
+                    title: About 3HC Construction
+                    content: Founded in 2000, we are a leading construction company...
+                    image: /media/about/images/company-photo.jpg
+                    mission_title: Our Mission
+                    mission_content: To deliver exceptional construction solutions...
+                    vision_title: Our Vision
+                    vision_content: To be the most trusted construction partner...
+                    goals_title: Our Goals
+                    goals_content: |-
+                      1. Deliver quality projects
+                      2. Maintain safety standards
+                      3. Innovate continuously
+                    achievements_title: Our Achievements
+                    achievements_content: |-
+                      • 500+ completed projects
+                      • ISO 9001 certified
+                      • Award-winning designs
+                    is_published: true
+                  summary: Example about page with Mission, Vision, Goals, Achievements
+          description: ''
+    put:
+      operationId: about_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this About Page Content.
+        required: true
+      tags:
+      - about
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/About'
+            examples:
+              AboutExample:
+                value:
+                  title: About 3HC Construction
+                  content: Founded in 2000, we are a leading construction company...
+                  image: /media/about/images/company-photo.jpg
+                  mission_title: Our Mission
+                  mission_content: To deliver exceptional construction solutions...
+                  vision_title: Our Vision
+                  vision_content: To be the most trusted construction partner...
+                  goals_title: Our Goals
+                  goals_content: |-
+                    1. Deliver quality projects
+                    2. Maintain safety standards
+                    3. Innovate continuously
+                  achievements_title: Our Achievements
+                  achievements_content: |-
+                    • 500+ completed projects
+                    • ISO 9001 certified
+                    • Award-winning designs
+                  is_published: true
+                summary: Example about page with Mission, Vision, Goals, Achievements
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/About'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/About'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/About'
+              examples:
+                AboutExample:
+                  value:
+                    title: About 3HC Construction
+                    content: Founded in 2000, we are a leading construction company...
+                    image: /media/about/images/company-photo.jpg
+                    mission_title: Our Mission
+                    mission_content: To deliver exceptional construction solutions...
+                    vision_title: Our Vision
+                    vision_content: To be the most trusted construction partner...
+                    goals_title: Our Goals
+                    goals_content: |-
+                      1. Deliver quality projects
+                      2. Maintain safety standards
+                      3. Innovate continuously
+                    achievements_title: Our Achievements
+                    achievements_content: |-
+                      • 500+ completed projects
+                      • ISO 9001 certified
+                      • Award-winning designs
+                    is_published: true
+                  summary: Example about page with Mission, Vision, Goals, Achievements
+          description: ''
+    patch:
+      operationId: about_partial_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this About Page Content.
+        required: true
+      tags:
+      - about
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedAbout'
+            examples:
+              AboutExample:
+                value:
+                  title: About 3HC Construction
+                  content: Founded in 2000, we are a leading construction company...
+                  image: /media/about/images/company-photo.jpg
+                  mission_title: Our Mission
+                  mission_content: To deliver exceptional construction solutions...
+                  vision_title: Our Vision
+                  vision_content: To be the most trusted construction partner...
+                  goals_title: Our Goals
+                  goals_content: |-
+                    1. Deliver quality projects
+                    2. Maintain safety standards
+                    3. Innovate continuously
+                  achievements_title: Our Achievements
+                  achievements_content: |-
+                    • 500+ completed projects
+                    • ISO 9001 certified
+                    • Award-winning designs
+                  is_published: true
+                summary: Example about page with Mission, Vision, Goals, Achievements
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedAbout'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedAbout'
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/About'
+              examples:
+                AboutExample:
+                  value:
+                    title: About 3HC Construction
+                    content: Founded in 2000, we are a leading construction company...
+                    image: /media/about/images/company-photo.jpg
+                    mission_title: Our Mission
+                    mission_content: To deliver exceptional construction solutions...
+                    vision_title: Our Vision
+                    vision_content: To be the most trusted construction partner...
+                    goals_title: Our Goals
+                    goals_content: |-
+                      1. Deliver quality projects
+                      2. Maintain safety standards
+                      3. Innovate continuously
+                    achievements_title: Our Achievements
+                    achievements_content: |-
+                      • 500+ completed projects
+                      • ISO 9001 certified
+                      • Award-winning designs
+                    is_published: true
+                  summary: Example about page with Mission, Vision, Goals, Achievements
+          description: ''
+    delete:
+      operationId: about_destroy
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this About Page Content.
+        required: true
+      tags:
+      - about
+      security:
+      - jwtAuth: []
+      responses:
+        '204':
+          description: No response body
+  /api/banners/:
+    get:
+      operationId: banners_list
+      description: Returns list of banners. Supports ordering by 'order' and 'updated_at'.
+      summary: List banners
+      parameters:
+      - name: ordering
+        required: false
+        in: query
+        description: Which field to use when ordering the results.
+        schema:
+          type: string
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      tags:
+      - banners
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedBannerList'
+              examples:
+                BannerExample:
+                  value:
+                    count: 123
+                    next: http://api.example.org/accounts/?page=4
+                    previous: http://api.example.org/accounts/?page=2
+                    results:
+                    - title: Welcome
+                      subtitle: We build stuff
+                      video_poster: /media/banners/posters/poster.jpg
+                      video_autoplay: true
+                      video_muted: true
+                      video_loop: true
+                      is_active: true
+                      order: 0
+                  summary: Example banner entry
+          description: ''
+    post:
+      operationId: banners_create
+      summary: Create a banner
+      tags:
+      - banners
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Banner'
+            examples:
+              BannerExample:
+                value:
+                  title: Welcome
+                  subtitle: We build stuff
+                  video_poster: /media/banners/posters/poster.jpg
+                  video_autoplay: true
+                  video_muted: true
+                  video_loop: true
+                  is_active: true
+                  order: 0
+                summary: Example banner entry
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Banner'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Banner'
+      security:
+      - jwtAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Banner'
+              examples:
+                BannerExample:
+                  value:
+                    title: Welcome
+                    subtitle: We build stuff
+                    video_poster: /media/banners/posters/poster.jpg
+                    video_autoplay: true
+                    video_muted: true
+                    video_loop: true
+                    is_active: true
+                    order: 0
+                  summary: Example banner entry
+          description: ''
+  /api/banners/{id}/:
+    get:
+      operationId: banners_retrieve
+      summary: Retrieve single banner
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this Banner.
+        required: true
+      tags:
+      - banners
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Banner'
+              examples:
+                BannerExample:
+                  value:
+                    title: Welcome
+                    subtitle: We build stuff
+                    video_poster: /media/banners/posters/poster.jpg
+                    video_autoplay: true
+                    video_muted: true
+                    video_loop: true
+                    is_active: true
+                    order: 0
+                  summary: Example banner entry
+          description: ''
+    put:
+      operationId: banners_update
+      summary: Update banner
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this Banner.
+        required: true
+      tags:
+      - banners
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Banner'
+            examples:
+              BannerExample:
+                value:
+                  title: Welcome
+                  subtitle: We build stuff
+                  video_poster: /media/banners/posters/poster.jpg
+                  video_autoplay: true
+                  video_muted: true
+                  video_loop: true
+                  is_active: true
+                  order: 0
+                summary: Example banner entry
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Banner'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Banner'
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Banner'
+              examples:
+                BannerExample:
+                  value:
+                    title: Welcome
+                    subtitle: We build stuff
+                    video_poster: /media/banners/posters/poster.jpg
+                    video_autoplay: true
+                    video_muted: true
+                    video_loop: true
+                    is_active: true
+                    order: 0
+                  summary: Example banner entry
+          description: ''
+    patch:
+      operationId: banners_partial_update
+      summary: Partially update banner
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this Banner.
+        required: true
+      tags:
+      - banners
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedBanner'
+            examples:
+              BannerExample:
+                value:
+                  title: Welcome
+                  subtitle: We build stuff
+                  video_poster: /media/banners/posters/poster.jpg
+                  video_autoplay: true
+                  video_muted: true
+                  video_loop: true
+                  is_active: true
+                  order: 0
+                summary: Example banner entry
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedBanner'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedBanner'
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Banner'
+              examples:
+                BannerExample:
+                  value:
+                    title: Welcome
+                    subtitle: We build stuff
+                    video_poster: /media/banners/posters/poster.jpg
+                    video_autoplay: true
+                    video_muted: true
+                    video_loop: true
+                    is_active: true
+                    order: 0
+                  summary: Example banner entry
+          description: ''
+    delete:
+      operationId: banners_destroy
+      summary: Delete banner
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this Banner.
+        required: true
+      tags:
+      - banners
+      security:
+      - jwtAuth: []
+      responses:
+        '204':
+          description: No response body
+  /api/blog-categories/:
+    get:
+      operationId: blog_categories_list
+      description: Get all blog categories
+      summary: List Blog Categories
+      parameters:
+      - name: ordering
+        required: false
+        in: query
+        description: Which field to use when ordering the results.
+        schema:
+          type: string
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      - name: search
+        required: false
+        in: query
+        description: A search term.
+        schema:
+          type: string
+      tags:
+      - blog-categories
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedBlogCategoryList'
+              examples:
+                BlogCategoryExample:
+                  value:
+                    count: 123
+                    next: http://api.example.org/accounts/?page=4
+                    previous: http://api.example.org/accounts/?page=2
+                    results:
+                    - name: Technology
+                      slug: technology
+                      description: Articles about technology and innovation
+                      is_active: true
+                  summary: Blog Category Example
+          description: ''
+    post:
+      operationId: blog_categories_create
+      summary: Create Blog Category (admin only)
+      tags:
+      - blog-categories
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BlogCategory'
+            examples:
+              BlogCategoryExample:
+                value:
+                  name: Technology
+                  slug: technology
+                  description: Articles about technology and innovation
+                  is_active: true
+                summary: Blog Category Example
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/BlogCategory'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/BlogCategory'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BlogCategory'
+              examples:
+                BlogCategoryExample:
+                  value:
+                    name: Technology
+                    slug: technology
+                    description: Articles about technology and innovation
+                    is_active: true
+                  summary: Blog Category Example
+          description: ''
+  /api/blog-categories/{id}/:
+    get:
+      operationId: blog_categories_retrieve
+      summary: Get Blog Category Details
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this Blog Category.
+        required: true
+      tags:
+      - blog-categories
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BlogCategory'
+              examples:
+                BlogCategoryExample:
+                  value:
+                    name: Technology
+                    slug: technology
+                    description: Articles about technology and innovation
+                    is_active: true
+                  summary: Blog Category Example
+          description: ''
+    put:
+      operationId: blog_categories_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this Blog Category.
+        required: true
+      tags:
+      - blog-categories
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BlogCategory'
+            examples:
+              BlogCategoryExample:
+                value:
+                  name: Technology
+                  slug: technology
+                  description: Articles about technology and innovation
+                  is_active: true
+                summary: Blog Category Example
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/BlogCategory'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/BlogCategory'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BlogCategory'
+              examples:
+                BlogCategoryExample:
+                  value:
+                    name: Technology
+                    slug: technology
+                    description: Articles about technology and innovation
+                    is_active: true
+                  summary: Blog Category Example
+          description: ''
+    patch:
+      operationId: blog_categories_partial_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this Blog Category.
+        required: true
+      tags:
+      - blog-categories
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedBlogCategory'
+            examples:
+              BlogCategoryExample:
+                value:
+                  name: Technology
+                  slug: technology
+                  description: Articles about technology and innovation
+                  is_active: true
+                summary: Blog Category Example
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedBlogCategory'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedBlogCategory'
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BlogCategory'
+              examples:
+                BlogCategoryExample:
+                  value:
+                    name: Technology
+                    slug: technology
+                    description: Articles about technology and innovation
+                    is_active: true
+                  summary: Blog Category Example
+          description: ''
+    delete:
+      operationId: blog_categories_destroy
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this Blog Category.
+        required: true
+      tags:
+      - blog-categories
+      security:
+      - jwtAuth: []
+      responses:
+        '204':
+          description: No response body
+  /api/blog-posts/:
+    get:
+      operationId: blog_posts_list
+      description: Returns a list of blog posts. Supports filtering by status, category,
+        and tags.
+      summary: List blog posts
+      parameters:
+      - in: query
+        name: category
+        schema:
+          type: string
+        description: Filter by category
+      - in: query
+        name: created_date
+        schema:
+          type: string
+          format: date
+        description: Filter by created date (YYYY-MM-DD)
+      - in: query
+        name: last_edited_date
+        schema:
+          type: string
+          format: date
+        description: Filter by last edited date (YYYY-MM-DD)
+      - name: ordering
+        required: false
+        in: query
+        description: Which field to use when ordering the results.
+        schema:
+          type: string
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      - name: search
+        required: false
+        in: query
+        description: A search term.
+        schema:
+          type: string
+      - in: query
+        name: status
+        schema:
+          type: string
+        description: Filter by status (draft, published, archived)
+      - in: query
+        name: tags
+        schema:
+          type: string
+        description: Filter by tags (comma-separated)
+      tags:
+      - blog-posts
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedBlogPostList'
+              examples:
+                BlogPostExample:
+                  value:
+                    count: 123
+                    next: http://api.example.org/accounts/?page=4
+                    previous: http://api.example.org/accounts/?page=2
+                    results:
+                    - title: Getting Started with Django
+                      slug: getting-started-with-django
+                      author: John Doe
+                      excerpt: Learn the basics of Django framework
+                      content: |-
+                        # Django Basics
+
+                        Django is a powerful web framework...
+                      featured_image: /media/blog/featured/django-guide.jpg
+                      featured_image_alt: Django logo and code snippet
+                      thumbnail: /media/blog/thumbnails/django-guide-thumb.jpg
+                      reading_time_minutes: 5
+                      status: published
+                      category: Web Development
+                      tags: django,python,web
+                      is_featured: true
+                      is_deleted: false
+                      meta_description: Complete guide to getting started with Django
+                        framework for Python developers
+                      meta_keywords: django,python,web development,framework
+                      focus_keyword: django tutorial
+                      og_title: Getting Started with Django - Complete Guide
+                      og_description: Learn Django fundamentals with this step-by-step
+                        tutorial
+                      robots_meta: index, follow
+                      view_count: 150
+                  summary: Example blog post with markdown content and robust SEO
+          description: ''
+    post:
+      operationId: blog_posts_create
+      summary: Create a blog post
+      tags:
+      - blog-posts
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BlogPost'
+            examples:
+              BlogPostExample:
+                value:
+                  title: Getting Started with Django
+                  slug: getting-started-with-django
+                  author: John Doe
+                  excerpt: Learn the basics of Django framework
+                  content: |-
+                    # Django Basics
+
+                    Django is a powerful web framework...
+                  featured_image: /media/blog/featured/django-guide.jpg
+                  featured_image_alt: Django logo and code snippet
+                  thumbnail: /media/blog/thumbnails/django-guide-thumb.jpg
+                  reading_time_minutes: 5
+                  status: published
+                  category: Web Development
+                  tags: django,python,web
+                  is_featured: true
+                  is_deleted: false
+                  meta_description: Complete guide to getting started with Django
+                    framework for Python developers
+                  meta_keywords: django,python,web development,framework
+                  focus_keyword: django tutorial
+                  og_title: Getting Started with Django - Complete Guide
+                  og_description: Learn Django fundamentals with this step-by-step
+                    tutorial
+                  robots_meta: index, follow
+                  view_count: 150
+                summary: Example blog post with markdown content and robust SEO
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/BlogPost'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/BlogPost'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BlogPost'
+              examples:
+                BlogPostExample:
+                  value:
+                    title: Getting Started with Django
+                    slug: getting-started-with-django
+                    author: John Doe
+                    excerpt: Learn the basics of Django framework
+                    content: |-
+                      # Django Basics
+
+                      Django is a powerful web framework...
+                    featured_image: /media/blog/featured/django-guide.jpg
+                    featured_image_alt: Django logo and code snippet
+                    thumbnail: /media/blog/thumbnails/django-guide-thumb.jpg
+                    reading_time_minutes: 5
+                    status: published
+                    category: Web Development
+                    tags: django,python,web
+                    is_featured: true
+                    is_deleted: false
+                    meta_description: Complete guide to getting started with Django
+                      framework for Python developers
+                    meta_keywords: django,python,web development,framework
+                    focus_keyword: django tutorial
+                    og_title: Getting Started with Django - Complete Guide
+                    og_description: Learn Django fundamentals with this step-by-step
+                      tutorial
+                    robots_meta: index, follow
+                    view_count: 150
+                  summary: Example blog post with markdown content and robust SEO
+          description: ''
+  /api/blog-posts/{id}/:
+    get:
+      operationId: blog_posts_retrieve
+      summary: Retrieve a blog post
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this blog post.
+        required: true
+      tags:
+      - blog-posts
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BlogPost'
+              examples:
+                BlogPostExample:
+                  value:
+                    title: Getting Started with Django
+                    slug: getting-started-with-django
+                    author: John Doe
+                    excerpt: Learn the basics of Django framework
+                    content: |-
+                      # Django Basics
+
+                      Django is a powerful web framework...
+                    featured_image: /media/blog/featured/django-guide.jpg
+                    featured_image_alt: Django logo and code snippet
+                    thumbnail: /media/blog/thumbnails/django-guide-thumb.jpg
+                    reading_time_minutes: 5
+                    status: published
+                    category: Web Development
+                    tags: django,python,web
+                    is_featured: true
+                    is_deleted: false
+                    meta_description: Complete guide to getting started with Django
+                      framework for Python developers
+                    meta_keywords: django,python,web development,framework
+                    focus_keyword: django tutorial
+                    og_title: Getting Started with Django - Complete Guide
+                    og_description: Learn Django fundamentals with this step-by-step
+                      tutorial
+                    robots_meta: index, follow
+                    view_count: 150
+                  summary: Example blog post with markdown content and robust SEO
+          description: ''
+    put:
+      operationId: blog_posts_update
+      summary: Update a blog post
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this blog post.
+        required: true
+      tags:
+      - blog-posts
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BlogPost'
+            examples:
+              BlogPostExample:
+                value:
+                  title: Getting Started with Django
+                  slug: getting-started-with-django
+                  author: John Doe
+                  excerpt: Learn the basics of Django framework
+                  content: |-
+                    # Django Basics
+
+                    Django is a powerful web framework...
+                  featured_image: /media/blog/featured/django-guide.jpg
+                  featured_image_alt: Django logo and code snippet
+                  thumbnail: /media/blog/thumbnails/django-guide-thumb.jpg
+                  reading_time_minutes: 5
+                  status: published
+                  category: Web Development
+                  tags: django,python,web
+                  is_featured: true
+                  is_deleted: false
+                  meta_description: Complete guide to getting started with Django
+                    framework for Python developers
+                  meta_keywords: django,python,web development,framework
+                  focus_keyword: django tutorial
+                  og_title: Getting Started with Django - Complete Guide
+                  og_description: Learn Django fundamentals with this step-by-step
+                    tutorial
+                  robots_meta: index, follow
+                  view_count: 150
+                summary: Example blog post with markdown content and robust SEO
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/BlogPost'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/BlogPost'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BlogPost'
+              examples:
+                BlogPostExample:
+                  value:
+                    title: Getting Started with Django
+                    slug: getting-started-with-django
+                    author: John Doe
+                    excerpt: Learn the basics of Django framework
+                    content: |-
+                      # Django Basics
+
+                      Django is a powerful web framework...
+                    featured_image: /media/blog/featured/django-guide.jpg
+                    featured_image_alt: Django logo and code snippet
+                    thumbnail: /media/blog/thumbnails/django-guide-thumb.jpg
+                    reading_time_minutes: 5
+                    status: published
+                    category: Web Development
+                    tags: django,python,web
+                    is_featured: true
+                    is_deleted: false
+                    meta_description: Complete guide to getting started with Django
+                      framework for Python developers
+                    meta_keywords: django,python,web development,framework
+                    focus_keyword: django tutorial
+                    og_title: Getting Started with Django - Complete Guide
+                    og_description: Learn Django fundamentals with this step-by-step
+                      tutorial
+                    robots_meta: index, follow
+                    view_count: 150
+                  summary: Example blog post with markdown content and robust SEO
+          description: ''
+    patch:
+      operationId: blog_posts_partial_update
+      summary: Partially update a blog post
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this blog post.
+        required: true
+      tags:
+      - blog-posts
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedBlogPost'
+            examples:
+              BlogPostExample:
+                value:
+                  title: Getting Started with Django
+                  slug: getting-started-with-django
+                  author: John Doe
+                  excerpt: Learn the basics of Django framework
+                  content: |-
+                    # Django Basics
+
+                    Django is a powerful web framework...
+                  featured_image: /media/blog/featured/django-guide.jpg
+                  featured_image_alt: Django logo and code snippet
+                  thumbnail: /media/blog/thumbnails/django-guide-thumb.jpg
+                  reading_time_minutes: 5
+                  status: published
+                  category: Web Development
+                  tags: django,python,web
+                  is_featured: true
+                  is_deleted: false
+                  meta_description: Complete guide to getting started with Django
+                    framework for Python developers
+                  meta_keywords: django,python,web development,framework
+                  focus_keyword: django tutorial
+                  og_title: Getting Started with Django - Complete Guide
+                  og_description: Learn Django fundamentals with this step-by-step
+                    tutorial
+                  robots_meta: index, follow
+                  view_count: 150
+                summary: Example blog post with markdown content and robust SEO
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedBlogPost'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedBlogPost'
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BlogPost'
+              examples:
+                BlogPostExample:
+                  value:
+                    title: Getting Started with Django
+                    slug: getting-started-with-django
+                    author: John Doe
+                    excerpt: Learn the basics of Django framework
+                    content: |-
+                      # Django Basics
+
+                      Django is a powerful web framework...
+                    featured_image: /media/blog/featured/django-guide.jpg
+                    featured_image_alt: Django logo and code snippet
+                    thumbnail: /media/blog/thumbnails/django-guide-thumb.jpg
+                    reading_time_minutes: 5
+                    status: published
+                    category: Web Development
+                    tags: django,python,web
+                    is_featured: true
+                    is_deleted: false
+                    meta_description: Complete guide to getting started with Django
+                      framework for Python developers
+                    meta_keywords: django,python,web development,framework
+                    focus_keyword: django tutorial
+                    og_title: Getting Started with Django - Complete Guide
+                    og_description: Learn Django fundamentals with this step-by-step
+                      tutorial
+                    robots_meta: index, follow
+                    view_count: 150
+                  summary: Example blog post with markdown content and robust SEO
+          description: ''
+    delete:
+      operationId: blog_posts_destroy
+      summary: Delete a blog post
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this blog post.
+        required: true
+      tags:
+      - blog-posts
+      security:
+      - jwtAuth: []
+      responses:
+        '204':
+          description: No response body
+  /api/clients/:
+    get:
+      operationId: clients_list
+      description: Public endpoint for clients/companies.
+      summary: List clients
+      parameters:
+      - name: ordering
+        required: false
+        in: query
+        description: Which field to use when ordering the results.
+        schema:
+          type: string
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      - name: search
+        required: false
+        in: query
+        description: A search term.
+        schema:
+          type: string
+      tags:
+      - clients
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedClientList'
+              examples:
+                ClientExample:
+                  value:
+                    count: 123
+                    next: http://api.example.org/accounts/?page=4
+                    previous: http://api.example.org/accounts/?page=2
+                    results:
+                    - id: 1
+                      name: ABC Construction Ltd.
+                      address: 123 Business Plaza, City, State 12345
+                      phone: +1 (555) 123-4567
+                      about: Leading construction company with 20+ years of experience
+                      website: https://www.abcconstruction.com
+                      logo: /media/clients/logos/abc-logo.png
+                      is_active: true
+                      order: 1
+                  summary: Client Example
+          description: ''
+    post:
+      operationId: clients_create
+      tags:
+      - clients
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Client'
+            examples:
+              ClientExample:
+                value:
+                  id: 1
+                  name: ABC Construction Ltd.
+                  address: 123 Business Plaza, City, State 12345
+                  phone: +1 (555) 123-4567
+                  about: Leading construction company with 20+ years of experience
+                  website: https://www.abcconstruction.com
+                  logo: /media/clients/logos/abc-logo.png
+                  is_active: true
+                  order: 1
+                summary: Client Example
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Client'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Client'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Client'
+              examples:
+                ClientExample:
+                  value:
+                    id: 1
+                    name: ABC Construction Ltd.
+                    address: 123 Business Plaza, City, State 12345
+                    phone: +1 (555) 123-4567
+                    about: Leading construction company with 20+ years of experience
+                    website: https://www.abcconstruction.com
+                    logo: /media/clients/logos/abc-logo.png
+                    is_active: true
+                    order: 1
+                  summary: Client Example
+          description: ''
+  /api/clients/{id}/:
+    get:
+      operationId: clients_retrieve
+      summary: Get client details
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this client.
+        required: true
+      tags:
+      - clients
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Client'
+              examples:
+                ClientExample:
+                  value:
+                    id: 1
+                    name: ABC Construction Ltd.
+                    address: 123 Business Plaza, City, State 12345
+                    phone: +1 (555) 123-4567
+                    about: Leading construction company with 20+ years of experience
+                    website: https://www.abcconstruction.com
+                    logo: /media/clients/logos/abc-logo.png
+                    is_active: true
+                    order: 1
+                  summary: Client Example
+          description: ''
+    put:
+      operationId: clients_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this client.
+        required: true
+      tags:
+      - clients
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Client'
+            examples:
+              ClientExample:
+                value:
+                  id: 1
+                  name: ABC Construction Ltd.
+                  address: 123 Business Plaza, City, State 12345
+                  phone: +1 (555) 123-4567
+                  about: Leading construction company with 20+ years of experience
+                  website: https://www.abcconstruction.com
+                  logo: /media/clients/logos/abc-logo.png
+                  is_active: true
+                  order: 1
+                summary: Client Example
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Client'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Client'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Client'
+              examples:
+                ClientExample:
+                  value:
+                    id: 1
+                    name: ABC Construction Ltd.
+                    address: 123 Business Plaza, City, State 12345
+                    phone: +1 (555) 123-4567
+                    about: Leading construction company with 20+ years of experience
+                    website: https://www.abcconstruction.com
+                    logo: /media/clients/logos/abc-logo.png
+                    is_active: true
+                    order: 1
+                  summary: Client Example
+          description: ''
+    patch:
+      operationId: clients_partial_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this client.
+        required: true
+      tags:
+      - clients
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedClient'
+            examples:
+              ClientExample:
+                value:
+                  id: 1
+                  name: ABC Construction Ltd.
+                  address: 123 Business Plaza, City, State 12345
+                  phone: +1 (555) 123-4567
+                  about: Leading construction company with 20+ years of experience
+                  website: https://www.abcconstruction.com
+                  logo: /media/clients/logos/abc-logo.png
+                  is_active: true
+                  order: 1
+                summary: Client Example
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedClient'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedClient'
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Client'
+              examples:
+                ClientExample:
+                  value:
+                    id: 1
+                    name: ABC Construction Ltd.
+                    address: 123 Business Plaza, City, State 12345
+                    phone: +1 (555) 123-4567
+                    about: Leading construction company with 20+ years of experience
+                    website: https://www.abcconstruction.com
+                    logo: /media/clients/logos/abc-logo.png
+                    is_active: true
+                    order: 1
+                  summary: Client Example
+          description: ''
+    delete:
+      operationId: clients_destroy
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this client.
+        required: true
+      tags:
+      - clients
+      security:
+      - jwtAuth: []
+      responses:
+        '204':
+          description: No response body
+  /api/csrf/:
+    get:
+      operationId: csrf_retrieve
+      description: Returns/sets a CSRF token cookie for use by clients
+      summary: Get CSRF token
+      tags:
+      - csrf
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '200':
+          description: Returns csrf token
+  /api/leads/:
+    get:
+      operationId: leads_list
+      summary: List leads (contact form submissions)
+      parameters:
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      tags:
+      - leads
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedLeadList'
+              examples:
+                LeadExample:
+                  value:
+                    count: 123
+                    next: http://api.example.org/accounts/?page=4
+                    previous: http://api.example.org/accounts/?page=2
+                    results:
+                    - name: Jane Smith
+                      email: jane@example.com
+                      phone: +1 (555) 987-6543
+                      message: Interested in your services
+                      source: website
+                      status: new
+                      is_read: false
+                  summary: Lead Example
+          description: ''
+    post:
+      operationId: leads_create
+      description: Public endpoint for contact form submissions. No authentication
+        required.
+      summary: Create a lead
+      tags:
+      - leads
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Lead'
+            examples:
+              CreateLeadExample:
+                value:
+                  name: Jane
+                  email: jane@example.com
+                  message: Hi!
+                summary: Create lead example
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Lead'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Lead'
+        required: true
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Lead'
+              examples:
+                CreateLeadExample:
+                  value:
+                    name: Jane
+                    email: jane@example.com
+                    message: Hi!
+                  summary: Create lead example
+          description: ''
+  /api/leads/{id}/:
+    get:
+      operationId: leads_retrieve
+      summary: Retrieve a lead (admin only)
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this Lead.
+        required: true
+      tags:
+      - leads
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Lead'
+              examples:
+                LeadExample:
+                  value:
+                    name: Jane Smith
+                    email: jane@example.com
+                    phone: +1 (555) 987-6543
+                    message: Interested in your services
+                    source: website
+                    status: new
+                    is_read: false
+                  summary: Lead Example
+          description: ''
+    put:
+      operationId: leads_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this Lead.
+        required: true
+      tags:
+      - leads
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Lead'
+            examples:
+              LeadExample:
+                value:
+                  name: Jane Smith
+                  email: jane@example.com
+                  phone: +1 (555) 987-6543
+                  message: Interested in your services
+                  source: website
+                  status: new
+                  is_read: false
+                summary: Lead Example
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Lead'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Lead'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Lead'
+              examples:
+                LeadExample:
+                  value:
+                    name: Jane Smith
+                    email: jane@example.com
+                    phone: +1 (555) 987-6543
+                    message: Interested in your services
+                    source: website
+                    status: new
+                    is_read: false
+                  summary: Lead Example
+          description: ''
+    patch:
+      operationId: leads_partial_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this Lead.
+        required: true
+      tags:
+      - leads
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedLead'
+            examples:
+              LeadExample:
+                value:
+                  name: Jane Smith
+                  email: jane@example.com
+                  phone: +1 (555) 987-6543
+                  message: Interested in your services
+                  source: website
+                  status: new
+                  is_read: false
+                summary: Lead Example
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedLead'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedLead'
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Lead'
+              examples:
+                LeadExample:
+                  value:
+                    name: Jane Smith
+                    email: jane@example.com
+                    phone: +1 (555) 987-6543
+                    message: Interested in your services
+                    source: website
+                    status: new
+                    is_read: false
+                  summary: Lead Example
+          description: ''
+    delete:
+      operationId: leads_destroy
+      summary: Delete a lead (admin only)
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this Lead.
+        required: true
+      tags:
+      - leads
+      security:
+      - jwtAuth: []
+      responses:
+        '204':
+          description: No response body
+  /api/leads/mark-read/:
+    post:
+      operationId: leads_mark_read_create
+      tags:
+      - leads
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Lead'
+            examples:
+              LeadExample:
+                value:
+                  name: Jane Smith
+                  email: jane@example.com
+                  phone: +1 (555) 987-6543
+                  message: Interested in your services
+                  source: website
+                  status: new
+                  is_read: false
+                summary: Lead Example
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Lead'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Lead'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Lead'
+              examples:
+                LeadExample:
+                  value:
+                    name: Jane Smith
+                    email: jane@example.com
+                    phone: +1 (555) 987-6543
+                    message: Interested in your services
+                    source: website
+                    status: new
+                    is_read: false
+                  summary: Lead Example
+          description: ''
+  /api/project-categories/:
+    get:
+      operationId: project_categories_list
+      description: Public endpoint listing project categories.
+      summary: List Project Categories
+      parameters:
+      - name: ordering
+        required: false
+        in: query
+        description: Which field to use when ordering the results.
+        schema:
+          type: string
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      - name: search
+        required: false
+        in: query
+        description: A search term.
+        schema:
+          type: string
+      tags:
+      - project-categories
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedProjectCategoryList'
+              examples:
+                ProjectCategoryExample:
+                  value:
+                    count: 123
+                    next: http://api.example.org/accounts/?page=4
+                    previous: http://api.example.org/accounts/?page=2
+                    results:
+                    - name: Residential
+                      slug: residential
+                      description: Houses and apartments
+                      is_active: true
+                  summary: Project Category Example
+          description: ''
+    post:
+      operationId: project_categories_create
+      tags:
+      - project-categories
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProjectCategory'
+            examples:
+              ProjectCategoryExample:
+                value:
+                  name: Residential
+                  slug: residential
+                  description: Houses and apartments
+                  is_active: true
+                summary: Project Category Example
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/ProjectCategory'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/ProjectCategory'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProjectCategory'
+              examples:
+                ProjectCategoryExample:
+                  value:
+                    name: Residential
+                    slug: residential
+                    description: Houses and apartments
+                    is_active: true
+                  summary: Project Category Example
+          description: ''
+  /api/project-categories/{id}/:
+    get:
+      operationId: project_categories_retrieve
+      summary: Get Project Category Details
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this Project Category.
+        required: true
+      tags:
+      - project-categories
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProjectCategory'
+              examples:
+                ProjectCategoryExample:
+                  value:
+                    name: Residential
+                    slug: residential
+                    description: Houses and apartments
+                    is_active: true
+                  summary: Project Category Example
+          description: ''
+    put:
+      operationId: project_categories_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this Project Category.
+        required: true
+      tags:
+      - project-categories
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProjectCategory'
+            examples:
+              ProjectCategoryExample:
+                value:
+                  name: Residential
+                  slug: residential
+                  description: Houses and apartments
+                  is_active: true
+                summary: Project Category Example
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/ProjectCategory'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/ProjectCategory'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProjectCategory'
+              examples:
+                ProjectCategoryExample:
+                  value:
+                    name: Residential
+                    slug: residential
+                    description: Houses and apartments
+                    is_active: true
+                  summary: Project Category Example
+          description: ''
+    patch:
+      operationId: project_categories_partial_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this Project Category.
+        required: true
+      tags:
+      - project-categories
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedProjectCategory'
+            examples:
+              ProjectCategoryExample:
+                value:
+                  name: Residential
+                  slug: residential
+                  description: Houses and apartments
+                  is_active: true
+                summary: Project Category Example
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedProjectCategory'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedProjectCategory'
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProjectCategory'
+              examples:
+                ProjectCategoryExample:
+                  value:
+                    name: Residential
+                    slug: residential
+                    description: Houses and apartments
+                    is_active: true
+                  summary: Project Category Example
+          description: ''
+    delete:
+      operationId: project_categories_destroy
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this Project Category.
+        required: true
+      tags:
+      - project-categories
+      security:
+      - jwtAuth: []
+      responses:
+        '204':
+          description: No response body
+  /api/projects/:
+    get:
+      operationId: projects_list
+      summary: List projects
+      parameters:
+      - in: query
+        name: is_featured
+        schema:
+          type: boolean
+        description: Filter featured projects
+      - name: ordering
+        required: false
+        in: query
+        description: Which field to use when ordering the results.
+        schema:
+          type: string
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      - name: search
+        required: false
+        in: query
+        description: A search term.
+        schema:
+          type: string
+      - in: query
+        name: status
+        schema:
+          type: string
+        description: Filter by status
+      tags:
+      - projects
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedProjectList'
+              examples:
+                ProjectExample:
+                  value:
+                    count: 123
+                    next: http://api.example.org/accounts/?page=4
+                    previous: http://api.example.org/accounts/?page=2
+                    results:
+                    - title: Office Building
+                      slug: office-building
+                      short_description: Commercial building
+                      status: completed
+                      is_featured: true
+                      is_deleted: false
+                  summary: Example project output
+          description: ''
+    post:
+      operationId: projects_create
+      tags:
+      - projects
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Project'
+            examples:
+              ProjectExample:
+                value:
+                  title: Office Building
+                  slug: office-building
+                  short_description: Commercial building
+                  status: completed
+                  is_featured: true
+                  is_deleted: false
+                summary: Example project output
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Project'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Project'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Project'
+              examples:
+                ProjectExample:
+                  value:
+                    title: Office Building
+                    slug: office-building
+                    short_description: Commercial building
+                    status: completed
+                    is_featured: true
+                    is_deleted: false
+                  summary: Example project output
+          description: ''
+  /api/projects/{id}/:
+    get:
+      operationId: projects_retrieve
+      summary: Retrieve a project
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this Project.
+        required: true
+      tags:
+      - projects
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Project'
+              examples:
+                ProjectExample:
+                  value:
+                    title: Office Building
+                    slug: office-building
+                    short_description: Commercial building
+                    status: completed
+                    is_featured: true
+                    is_deleted: false
+                  summary: Example project output
+          description: ''
+    put:
+      operationId: projects_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this Project.
+        required: true
+      tags:
+      - projects
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Project'
+            examples:
+              ProjectExample:
+                value:
+                  title: Office Building
+                  slug: office-building
+                  short_description: Commercial building
+                  status: completed
+                  is_featured: true
+                  is_deleted: false
+                summary: Example project output
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Project'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Project'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Project'
+              examples:
+                ProjectExample:
+                  value:
+                    title: Office Building
+                    slug: office-building
+                    short_description: Commercial building
+                    status: completed
+                    is_featured: true
+                    is_deleted: false
+                  summary: Example project output
+          description: ''
+    patch:
+      operationId: projects_partial_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this Project.
+        required: true
+      tags:
+      - projects
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedProject'
+            examples:
+              ProjectExample:
+                value:
+                  title: Office Building
+                  slug: office-building
+                  short_description: Commercial building
+                  status: completed
+                  is_featured: true
+                  is_deleted: false
+                summary: Example project output
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedProject'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedProject'
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Project'
+              examples:
+                ProjectExample:
+                  value:
+                    title: Office Building
+                    slug: office-building
+                    short_description: Commercial building
+                    status: completed
+                    is_featured: true
+                    is_deleted: false
+                  summary: Example project output
+          description: ''
+    delete:
+      operationId: projects_destroy
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this Project.
+        required: true
+      tags:
+      - projects
+      security:
+      - jwtAuth: []
+      responses:
+        '204':
+          description: No response body
+  /api/register/:
+    post:
+      operationId: register_create
+      description: User registration endpoint using CreateAPIView so schema generator
+        can infer serializer.
+      tags:
+      - register
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserRegistration'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/UserRegistration'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/UserRegistration'
+        required: true
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserRegistration'
+          description: ''
+  /api/schema/:
+    get:
+      operationId: schema_retrieve
+      description: |-
+        OpenApi3 schema for this API. Format can be selected via content negotiation.
+
+        - YAML: application/vnd.oai.openapi
+        - JSON: application/vnd.oai.openapi+json
+      parameters:
+      - in: query
+        name: format
+        schema:
+          type: string
+          enum:
+          - json
+          - yaml
+      - in: query
+        name: lang
+        schema:
+          type: string
+          enum:
+          - af
+          - ar
+          - ar-dz
+          - ast
+          - az
+          - be
+          - bg
+          - bn
+          - br
+          - bs
+          - ca
+          - ckb
+          - cs
+          - cy
+          - da
+          - de
+          - dsb
+          - el
+          - en
+          - en-au
+          - en-gb
+          - eo
+          - es
+          - es-ar
+          - es-co
+          - es-mx
+          - es-ni
+          - es-ve
+          - et
+          - eu
+          - fa
+          - fi
+          - fr
+          - fy
+          - ga
+          - gd
+          - gl
+          - he
+          - hi
+          - hr
+          - hsb
+          - hu
+          - hy
+          - ia
+          - id
+          - ig
+          - io
+          - is
+          - it
+          - ja
+          - ka
+          - kab
+          - kk
+          - km
+          - kn
+          - ko
+          - ky
+          - lb
+          - lt
+          - lv
+          - mk
+          - ml
+          - mn
+          - mr
+          - ms
+          - my
+          - nb
+          - ne
+          - nl
+          - nn
+          - os
+          - pa
+          - pl
+          - pt
+          - pt-br
+          - ro
+          - ru
+          - sk
+          - sl
+          - sq
+          - sr
+          - sr-latn
+          - sv
+          - sw
+          - ta
+          - te
+          - tg
+          - th
+          - tk
+          - tr
+          - tt
+          - udm
+          - ug
+          - uk
+          - ur
+          - uz
+          - vi
+          - zh-hans
+          - zh-hant
+      tags:
+      - schema
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/vnd.oai.openapi:
+              schema:
+                type: object
+                additionalProperties: {}
+            application/yaml:
+              schema:
+                type: object
+                additionalProperties: {}
+            application/vnd.oai.openapi+json:
+              schema:
+                type: object
+                additionalProperties: {}
+            application/json:
+              schema:
+                type: object
+                additionalProperties: {}
+          description: ''
+  /api/service-categories/:
+    get:
+      operationId: service_categories_list
+      description: Public endpoint for service categories.
+      summary: List service categories
+      parameters:
+      - name: ordering
+        required: false
+        in: query
+        description: Which field to use when ordering the results.
+        schema:
+          type: string
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      - name: search
+        required: false
+        in: query
+        description: A search term.
+        schema:
+          type: string
+      tags:
+      - service-categories
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedServiceCategoryList'
+              examples:
+                ServiceCategoryExample:
+                  value:
+                    count: 123
+                    next: http://api.example.org/accounts/?page=4
+                    previous: http://api.example.org/accounts/?page=2
+                    results:
+                    - id: 1
+                      name: Design Services
+                      slug: design-services
+                      description: Professional design solutions
+                      icon: fas fa-building
+                      is_active: true
+                      order: 0
+                  summary: Service Category Example
+          description: ''
+    post:
+      operationId: service_categories_create
+      tags:
+      - service-categories
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ServiceCategory'
+            examples:
+              ServiceCategoryExample:
+                value:
+                  id: 1
+                  name: Design Services
+                  slug: design-services
+                  description: Professional design solutions
+                  icon: fas fa-building
+                  is_active: true
+                  order: 0
+                summary: Service Category Example
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/ServiceCategory'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/ServiceCategory'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ServiceCategory'
+              examples:
+                ServiceCategoryExample:
+                  value:
+                    id: 1
+                    name: Design Services
+                    slug: design-services
+                    description: Professional design solutions
+                    icon: fas fa-building
+                    is_active: true
+                    order: 0
+                  summary: Service Category Example
+          description: ''
+  /api/service-categories/{id}/:
+    get:
+      operationId: service_categories_retrieve
+      summary: Get service category details
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this service category.
+        required: true
+      tags:
+      - service-categories
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ServiceCategory'
+              examples:
+                ServiceCategoryExample:
+                  value:
+                    id: 1
+                    name: Design Services
+                    slug: design-services
+                    description: Professional design solutions
+                    icon: fas fa-building
+                    is_active: true
+                    order: 0
+                  summary: Service Category Example
+          description: ''
+    put:
+      operationId: service_categories_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this service category.
+        required: true
+      tags:
+      - service-categories
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ServiceCategory'
+            examples:
+              ServiceCategoryExample:
+                value:
+                  id: 1
+                  name: Design Services
+                  slug: design-services
+                  description: Professional design solutions
+                  icon: fas fa-building
+                  is_active: true
+                  order: 0
+                summary: Service Category Example
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/ServiceCategory'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/ServiceCategory'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ServiceCategory'
+              examples:
+                ServiceCategoryExample:
+                  value:
+                    id: 1
+                    name: Design Services
+                    slug: design-services
+                    description: Professional design solutions
+                    icon: fas fa-building
+                    is_active: true
+                    order: 0
+                  summary: Service Category Example
+          description: ''
+    patch:
+      operationId: service_categories_partial_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this service category.
+        required: true
+      tags:
+      - service-categories
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedServiceCategory'
+            examples:
+              ServiceCategoryExample:
+                value:
+                  id: 1
+                  name: Design Services
+                  slug: design-services
+                  description: Professional design solutions
+                  icon: fas fa-building
+                  is_active: true
+                  order: 0
+                summary: Service Category Example
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedServiceCategory'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedServiceCategory'
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ServiceCategory'
+              examples:
+                ServiceCategoryExample:
+                  value:
+                    id: 1
+                    name: Design Services
+                    slug: design-services
+                    description: Professional design solutions
+                    icon: fas fa-building
+                    is_active: true
+                    order: 0
+                  summary: Service Category Example
+          description: ''
+    delete:
+      operationId: service_categories_destroy
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this service category.
+        required: true
+      tags:
+      - service-categories
+      security:
+      - jwtAuth: []
+      responses:
+        '204':
+          description: No response body
+  /api/services/:
+    get:
+      operationId: services_list
+      description: Returns a list of published services. Supports filtering by status,
+        category, and featured.
+      summary: List services
+      parameters:
+      - in: query
+        name: category
+        schema:
+          type: integer
+        description: Filter by category ID
+      - in: query
+        name: is_featured
+        schema:
+          type: boolean
+        description: Filter featured services
+      - name: ordering
+        required: false
+        in: query
+        description: Which field to use when ordering the results.
+        schema:
+          type: string
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      - name: search
+        required: false
+        in: query
+        description: A search term.
+        schema:
+          type: string
+      - in: query
+        name: status
+        schema:
+          type: string
+        description: Filter by status (draft, published, archived)
+      tags:
+      - services
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedServiceList'
+              examples:
+                ServiceExample:
+                  value:
+                    count: 123
+                    next: http://api.example.org/accounts/?page=4
+                    previous: http://api.example.org/accounts/?page=2
+                    results:
+                    - title: Architectural Design Services
+                      slug: architectural-design
+                      excerpt: Professional architectural design for residential and
+                        commercial projects
+                      content: |-
+                        # Architectural Design
+
+                        We provide comprehensive architectural design services...
+                      featured_image_alt: Modern building design
+                      reading_time_minutes: 4
+                      status: published
+                      category_id: 1
+                      meta_description: Professional architectural design services
+                        for residential and commercial projects
+                      meta_keywords: architecture, design, services
+                      focus_keyword: architectural design
+                      og_title: Architectural Design Services
+                      og_description: Premium architectural design solutions
+                      robots_meta: index, follow
+                      is_featured: true
+                      is_deleted: false
+                      order: 1
+                  summary: Complete service page with SEO
+          description: ''
+    post:
+      operationId: services_create
+      summary: Create a service (admin only)
+      tags:
+      - services
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Service'
+            examples:
+              ServiceExample:
+                value:
+                  title: Architectural Design Services
+                  slug: architectural-design
+                  excerpt: Professional architectural design for residential and commercial
+                    projects
+                  content: |-
+                    # Architectural Design
+
+                    We provide comprehensive architectural design services...
+                  featured_image_alt: Modern building design
+                  reading_time_minutes: 4
+                  status: published
+                  category_id: 1
+                  meta_description: Professional architectural design services for
+                    residential and commercial projects
+                  meta_keywords: architecture, design, services
+                  focus_keyword: architectural design
+                  og_title: Architectural Design Services
+                  og_description: Premium architectural design solutions
+                  robots_meta: index, follow
+                  is_featured: true
+                  is_deleted: false
+                  order: 1
+                summary: Complete service page with SEO
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Service'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Service'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Service'
+              examples:
+                ServiceExample:
+                  value:
+                    title: Architectural Design Services
+                    slug: architectural-design
+                    excerpt: Professional architectural design for residential and
+                      commercial projects
+                    content: |-
+                      # Architectural Design
+
+                      We provide comprehensive architectural design services...
+                    featured_image_alt: Modern building design
+                    reading_time_minutes: 4
+                    status: published
+                    category_id: 1
+                    meta_description: Professional architectural design services for
+                      residential and commercial projects
+                    meta_keywords: architecture, design, services
+                    focus_keyword: architectural design
+                    og_title: Architectural Design Services
+                    og_description: Premium architectural design solutions
+                    robots_meta: index, follow
+                    is_featured: true
+                    is_deleted: false
+                    order: 1
+                  summary: Complete service page with SEO
+          description: ''
+  /api/services/{id}/:
+    get:
+      operationId: services_retrieve
+      summary: Retrieve a service
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this service.
+        required: true
+      tags:
+      - services
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Service'
+              examples:
+                ServiceExample:
+                  value:
+                    title: Architectural Design Services
+                    slug: architectural-design
+                    excerpt: Professional architectural design for residential and
+                      commercial projects
+                    content: |-
+                      # Architectural Design
+
+                      We provide comprehensive architectural design services...
+                    featured_image_alt: Modern building design
+                    reading_time_minutes: 4
+                    status: published
+                    category_id: 1
+                    meta_description: Professional architectural design services for
+                      residential and commercial projects
+                    meta_keywords: architecture, design, services
+                    focus_keyword: architectural design
+                    og_title: Architectural Design Services
+                    og_description: Premium architectural design solutions
+                    robots_meta: index, follow
+                    is_featured: true
+                    is_deleted: false
+                    order: 1
+                  summary: Complete service page with SEO
+          description: ''
+    put:
+      operationId: services_update
+      summary: Update a service (admin only)
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this service.
+        required: true
+      tags:
+      - services
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Service'
+            examples:
+              ServiceExample:
+                value:
+                  title: Architectural Design Services
+                  slug: architectural-design
+                  excerpt: Professional architectural design for residential and commercial
+                    projects
+                  content: |-
+                    # Architectural Design
+
+                    We provide comprehensive architectural design services...
+                  featured_image_alt: Modern building design
+                  reading_time_minutes: 4
+                  status: published
+                  category_id: 1
+                  meta_description: Professional architectural design services for
+                    residential and commercial projects
+                  meta_keywords: architecture, design, services
+                  focus_keyword: architectural design
+                  og_title: Architectural Design Services
+                  og_description: Premium architectural design solutions
+                  robots_meta: index, follow
+                  is_featured: true
+                  is_deleted: false
+                  order: 1
+                summary: Complete service page with SEO
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Service'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Service'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Service'
+              examples:
+                ServiceExample:
+                  value:
+                    title: Architectural Design Services
+                    slug: architectural-design
+                    excerpt: Professional architectural design for residential and
+                      commercial projects
+                    content: |-
+                      # Architectural Design
+
+                      We provide comprehensive architectural design services...
+                    featured_image_alt: Modern building design
+                    reading_time_minutes: 4
+                    status: published
+                    category_id: 1
+                    meta_description: Professional architectural design services for
+                      residential and commercial projects
+                    meta_keywords: architecture, design, services
+                    focus_keyword: architectural design
+                    og_title: Architectural Design Services
+                    og_description: Premium architectural design solutions
+                    robots_meta: index, follow
+                    is_featured: true
+                    is_deleted: false
+                    order: 1
+                  summary: Complete service page with SEO
+          description: ''
+    patch:
+      operationId: services_partial_update
+      summary: Partially update a service (admin only)
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this service.
+        required: true
+      tags:
+      - services
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedService'
+            examples:
+              ServiceExample:
+                value:
+                  title: Architectural Design Services
+                  slug: architectural-design
+                  excerpt: Professional architectural design for residential and commercial
+                    projects
+                  content: |-
+                    # Architectural Design
+
+                    We provide comprehensive architectural design services...
+                  featured_image_alt: Modern building design
+                  reading_time_minutes: 4
+                  status: published
+                  category_id: 1
+                  meta_description: Professional architectural design services for
+                    residential and commercial projects
+                  meta_keywords: architecture, design, services
+                  focus_keyword: architectural design
+                  og_title: Architectural Design Services
+                  og_description: Premium architectural design solutions
+                  robots_meta: index, follow
+                  is_featured: true
+                  is_deleted: false
+                  order: 1
+                summary: Complete service page with SEO
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedService'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedService'
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Service'
+              examples:
+                ServiceExample:
+                  value:
+                    title: Architectural Design Services
+                    slug: architectural-design
+                    excerpt: Professional architectural design for residential and
+                      commercial projects
+                    content: |-
+                      # Architectural Design
+
+                      We provide comprehensive architectural design services...
+                    featured_image_alt: Modern building design
+                    reading_time_minutes: 4
+                    status: published
+                    category_id: 1
+                    meta_description: Professional architectural design services for
+                      residential and commercial projects
+                    meta_keywords: architecture, design, services
+                    focus_keyword: architectural design
+                    og_title: Architectural Design Services
+                    og_description: Premium architectural design solutions
+                    robots_meta: index, follow
+                    is_featured: true
+                    is_deleted: false
+                    order: 1
+                  summary: Complete service page with SEO
+          description: ''
+    delete:
+      operationId: services_destroy
+      summary: Delete a service (admin only)
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this service.
+        required: true
+      tags:
+      - services
+      security:
+      - jwtAuth: []
+      responses:
+        '204':
+          description: No response body
+  /api/site-config/:
+    get:
+      operationId: site_config_list
+      description: Retrieve the site configuration (singleton resource).
+      summary: Get site configuration
+      tags:
+      - Site Configuration
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/SiteConfig'
+              examples:
+                SiteConfigurationExample:
+                  value:
+                  - id: 1
+                    company_name: 3HC Construction
+                    address: 123 Business Street, City, State 12345
+                    phone: +1 (555) 123-4567
+                    email: info@3hc.com
+                    website: https://www.3hc.com
+                    facebook_url: https://facebook.com/3hc
+                    instagram_url: https://instagram.com/3hc
+                    youtube_url: https://youtube.com/@3hc
+                    x_url: https://x.com/3hc
+                    linkedin_url: https://linkedin.com/company/3hc
+                    custom_link_url: https://example.com
+                    custom_link_text: View Portfolio
+                    logo:
+                      id: 1
+                      alt_text: Company Logo
+                      logo: /media/site_logos/logo.png
+                      updated_at: '2025-01-01T10:00:00Z'
+                    logo_id: 1
+                    created_at: '2025-01-01T10:00:00Z'
+                    updated_at: '2025-01-15T15:30:00Z'
+                  summary: Company details and social media links
+                  description: Complete site configuration with company information,
+                    social media profiles, and assigned logo
+          description: ''
+    post:
+      operationId: site_config_create
+      description: Create or update the site configuration. Only one configuration
+        is maintained.
+      summary: Create or update site configuration
+      tags:
+      - Site Configuration
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SiteConfig'
+            examples:
+              CreateSiteConfiguration:
+                value:
+                  company_name: 3HC Construction
+                  address: 123 Business Street, City, State 12345
+                  phone: +1 (555) 123-4567
+                  email: info@3hc.com
+                  website: https://www.3hc.com
+                  facebook_url: https://facebook.com/3hc
+                  instagram_url: https://instagram.com/3hc
+                  youtube_url: https://youtube.com/@3hc
+                  x_url: https://x.com/3hc
+                  linkedin_url: https://linkedin.com/company/3hc
+                  logo_id: 1
+                summary: Create a new site configuration
+                description: Create configuration with optional logo selection
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/SiteConfig'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/SiteConfig'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SiteConfig'
+              examples:
+                SiteConfigurationExample:
+                  value:
+                    id: 1
+                    company_name: 3HC Construction
+                    address: 123 Business Street, City, State 12345
+                    phone: +1 (555) 123-4567
+                    email: info@3hc.com
+                    website: https://www.3hc.com
+                    facebook_url: https://facebook.com/3hc
+                    instagram_url: https://instagram.com/3hc
+                    youtube_url: https://youtube.com/@3hc
+                    x_url: https://x.com/3hc
+                    linkedin_url: https://linkedin.com/company/3hc
+                    custom_link_url: https://example.com
+                    custom_link_text: View Portfolio
+                    logo:
+                      id: 1
+                      alt_text: Company Logo
+                      logo: /media/site_logos/logo.png
+                      updated_at: '2025-01-01T10:00:00Z'
+                    logo_id: 1
+                    created_at: '2025-01-01T10:00:00Z'
+                    updated_at: '2025-01-15T15:30:00Z'
+                  summary: Company details and social media links
+                  description: Complete site configuration with company information,
+                    social media profiles, and assigned logo
+          description: ''
+  /api/site-config/{id}/:
+    get:
+      operationId: site_config_retrieve
+      description: Retrieve the site configuration (support detail route)
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this Site Configuration.
+        required: true
+      tags:
+      - site-config
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SiteConfig'
+              examples:
+                SiteConfigurationExample:
+                  value:
+                    id: 1
+                    company_name: 3HC Construction
+                    address: 123 Business Street, City, State 12345
+                    phone: +1 (555) 123-4567
+                    email: info@3hc.com
+                    website: https://www.3hc.com
+                    facebook_url: https://facebook.com/3hc
+                    instagram_url: https://instagram.com/3hc
+                    youtube_url: https://youtube.com/@3hc
+                    x_url: https://x.com/3hc
+                    linkedin_url: https://linkedin.com/company/3hc
+                    custom_link_url: https://example.com
+                    custom_link_text: View Portfolio
+                    logo:
+                      id: 1
+                      alt_text: Company Logo
+                      logo: /media/site_logos/logo.png
+                      updated_at: '2025-01-01T10:00:00Z'
+                    logo_id: 1
+                    created_at: '2025-01-01T10:00:00Z'
+                    updated_at: '2025-01-15T15:30:00Z'
+                  summary: Company details and social media links
+                  description: Complete site configuration with company information,
+                    social media profiles, and assigned logo
+          description: ''
+    put:
+      operationId: site_config_update
+      description: Update the site configuration completely.
+      summary: Update site configuration
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this Site Configuration.
+        required: true
+      tags:
+      - Site Configuration
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SiteConfig'
+            examples:
+              CreateSiteConfiguration:
+                value:
+                  company_name: 3HC Construction
+                  address: 123 Business Street, City, State 12345
+                  phone: +1 (555) 123-4567
+                  email: info@3hc.com
+                  website: https://www.3hc.com
+                  facebook_url: https://facebook.com/3hc
+                  instagram_url: https://instagram.com/3hc
+                  youtube_url: https://youtube.com/@3hc
+                  x_url: https://x.com/3hc
+                  linkedin_url: https://linkedin.com/company/3hc
+                  logo_id: 1
+                summary: Create a new site configuration
+                description: Create configuration with optional logo selection
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/SiteConfig'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/SiteConfig'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SiteConfig'
+              examples:
+                SiteConfigurationExample:
+                  value:
+                    id: 1
+                    company_name: 3HC Construction
+                    address: 123 Business Street, City, State 12345
+                    phone: +1 (555) 123-4567
+                    email: info@3hc.com
+                    website: https://www.3hc.com
+                    facebook_url: https://facebook.com/3hc
+                    instagram_url: https://instagram.com/3hc
+                    youtube_url: https://youtube.com/@3hc
+                    x_url: https://x.com/3hc
+                    linkedin_url: https://linkedin.com/company/3hc
+                    custom_link_url: https://example.com
+                    custom_link_text: View Portfolio
+                    logo:
+                      id: 1
+                      alt_text: Company Logo
+                      logo: /media/site_logos/logo.png
+                      updated_at: '2025-01-01T10:00:00Z'
+                    logo_id: 1
+                    created_at: '2025-01-01T10:00:00Z'
+                    updated_at: '2025-01-15T15:30:00Z'
+                  summary: Company details and social media links
+                  description: Complete site configuration with company information,
+                    social media profiles, and assigned logo
+          description: ''
+    patch:
+      operationId: site_config_partial_update
+      description: Partially update site configuration fields.
+      summary: Partially update site configuration
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this Site Configuration.
+        required: true
+      tags:
+      - Site Configuration
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedSiteConfig'
+            examples:
+              CreateSiteConfiguration:
+                value:
+                  company_name: 3HC Construction
+                  address: 123 Business Street, City, State 12345
+                  phone: +1 (555) 123-4567
+                  email: info@3hc.com
+                  website: https://www.3hc.com
+                  facebook_url: https://facebook.com/3hc
+                  instagram_url: https://instagram.com/3hc
+                  youtube_url: https://youtube.com/@3hc
+                  x_url: https://x.com/3hc
+                  linkedin_url: https://linkedin.com/company/3hc
+                  logo_id: 1
+                summary: Create a new site configuration
+                description: Create configuration with optional logo selection
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedSiteConfig'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedSiteConfig'
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SiteConfig'
+              examples:
+                SiteConfigurationExample:
+                  value:
+                    id: 1
+                    company_name: 3HC Construction
+                    address: 123 Business Street, City, State 12345
+                    phone: +1 (555) 123-4567
+                    email: info@3hc.com
+                    website: https://www.3hc.com
+                    facebook_url: https://facebook.com/3hc
+                    instagram_url: https://instagram.com/3hc
+                    youtube_url: https://youtube.com/@3hc
+                    x_url: https://x.com/3hc
+                    linkedin_url: https://linkedin.com/company/3hc
+                    custom_link_url: https://example.com
+                    custom_link_text: View Portfolio
+                    logo:
+                      id: 1
+                      alt_text: Company Logo
+                      logo: /media/site_logos/logo.png
+                      updated_at: '2025-01-01T10:00:00Z'
+                    logo_id: 1
+                    created_at: '2025-01-01T10:00:00Z'
+                    updated_at: '2025-01-15T15:30:00Z'
+                  summary: Company details and social media links
+                  description: Complete site configuration with company information,
+                    social media profiles, and assigned logo
+          description: ''
+  /api/site-config/active/:
+    get:
+      operationId: site_config_active_retrieve
+      description: Get the site configuration (always returns the single config)
+      tags:
+      - site-config
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SiteConfig'
+              examples:
+                SiteConfigurationExample:
+                  value:
+                    id: 1
+                    company_name: 3HC Construction
+                    address: 123 Business Street, City, State 12345
+                    phone: +1 (555) 123-4567
+                    email: info@3hc.com
+                    website: https://www.3hc.com
+                    facebook_url: https://facebook.com/3hc
+                    instagram_url: https://instagram.com/3hc
+                    youtube_url: https://youtube.com/@3hc
+                    x_url: https://x.com/3hc
+                    linkedin_url: https://linkedin.com/company/3hc
+                    custom_link_url: https://example.com
+                    custom_link_text: View Portfolio
+                    logo:
+                      id: 1
+                      alt_text: Company Logo
+                      logo: /media/site_logos/logo.png
+                      updated_at: '2025-01-01T10:00:00Z'
+                    logo_id: 1
+                    created_at: '2025-01-01T10:00:00Z'
+                    updated_at: '2025-01-15T15:30:00Z'
+                  summary: Company details and social media links
+                  description: Complete site configuration with company information,
+                    social media profiles, and assigned logo
+          description: ''
+  /api/site-logo/:
+    get:
+      operationId: site_logo_list
+      description: Retrieve the site logo. Singleton resource - returns single logo
+        if exists.
+      summary: Get site logo
+      tags:
+      - Site Logo
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/SiteLogo'
+          description: ''
+    post:
+      operationId: site_logo_create
+      description: Upload a new logo or update the existing one. Only one logo is
+        maintained.
+      summary: Upload or update site logo
+      tags:
+      - Site Logo
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                logo:
+                  type: string
+                  format: binary
+                  description: Logo image file
+                alt_text:
+                  type: string
+                  description: Alt text for the logo
+              required:
+              - logo
+      security:
+      - jwtAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SiteLogo'
+          description: ''
+  /api/site-logo/{id}/:
+    get:
+      operationId: site_logo_retrieve
+      description: Retrieve a specific logo by ID (supports router detail route).
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this Site Logo.
+        required: true
+      tags:
+      - site-logo
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SiteLogo'
+          description: ''
+    delete:
+      operationId: site_logo_destroy
+      description: Remove the site logo and its file.
+      summary: Delete site logo
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this Site Logo.
+        required: true
+      tags:
+      - Site Logo
+      security:
+      - jwtAuth: []
+      responses:
+        '204':
+          description: Logo deleted successfully
+  /api/team-members/:
+    get:
+      operationId: team_members_list
+      description: Publicly visible team member info.
+      summary: List Team Members
+      parameters:
+      - name: ordering
+        required: false
+        in: query
+        description: Which field to use when ordering the results.
+        schema:
+          type: string
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      - name: search
+        required: false
+        in: query
+        description: A search term.
+        schema:
+          type: string
+      tags:
+      - team-members
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedTeamMemberList'
+              examples:
+                TeamMemberExample:
+                  value:
+                    count: 123
+                    next: http://api.example.org/accounts/?page=4
+                    previous: http://api.example.org/accounts/?page=2
+                    results:
+                    - name: John Doe
+                      position: Civil Engineer
+                      bio: 10 years of experience in structural design.
+                      linkedin_url: https://linkedin.com/in/john
+                      is_active: true
+                  summary: Team Member Example
+          description: ''
+    post:
+      operationId: team_members_create
+      summary: Add new team member (admin only)
+      tags:
+      - team-members
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TeamMember'
+            examples:
+              TeamMemberExample:
+                value:
+                  name: John Doe
+                  position: Civil Engineer
+                  bio: 10 years of experience in structural design.
+                  linkedin_url: https://linkedin.com/in/john
+                  is_active: true
+                summary: Team Member Example
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/TeamMember'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/TeamMember'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TeamMember'
+              examples:
+                TeamMemberExample:
+                  value:
+                    name: John Doe
+                    position: Civil Engineer
+                    bio: 10 years of experience in structural design.
+                    linkedin_url: https://linkedin.com/in/john
+                    is_active: true
+                  summary: Team Member Example
+          description: ''
+  /api/team-members/{id}/:
+    get:
+      operationId: team_members_retrieve
+      summary: Get single team member details
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this team member.
+        required: true
+      tags:
+      - team-members
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TeamMember'
+              examples:
+                TeamMemberExample:
+                  value:
+                    name: John Doe
+                    position: Civil Engineer
+                    bio: 10 years of experience in structural design.
+                    linkedin_url: https://linkedin.com/in/john
+                    is_active: true
+                  summary: Team Member Example
+          description: ''
+    put:
+      operationId: team_members_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this team member.
+        required: true
+      tags:
+      - team-members
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TeamMember'
+            examples:
+              TeamMemberExample:
+                value:
+                  name: John Doe
+                  position: Civil Engineer
+                  bio: 10 years of experience in structural design.
+                  linkedin_url: https://linkedin.com/in/john
+                  is_active: true
+                summary: Team Member Example
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/TeamMember'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/TeamMember'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TeamMember'
+              examples:
+                TeamMemberExample:
+                  value:
+                    name: John Doe
+                    position: Civil Engineer
+                    bio: 10 years of experience in structural design.
+                    linkedin_url: https://linkedin.com/in/john
+                    is_active: true
+                  summary: Team Member Example
+          description: ''
+    patch:
+      operationId: team_members_partial_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this team member.
+        required: true
+      tags:
+      - team-members
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedTeamMember'
+            examples:
+              TeamMemberExample:
+                value:
+                  name: John Doe
+                  position: Civil Engineer
+                  bio: 10 years of experience in structural design.
+                  linkedin_url: https://linkedin.com/in/john
+                  is_active: true
+                summary: Team Member Example
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedTeamMember'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedTeamMember'
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TeamMember'
+              examples:
+                TeamMemberExample:
+                  value:
+                    name: John Doe
+                    position: Civil Engineer
+                    bio: 10 years of experience in structural design.
+                    linkedin_url: https://linkedin.com/in/john
+                    is_active: true
+                  summary: Team Member Example
+          description: ''
+    delete:
+      operationId: team_members_destroy
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this team member.
+        required: true
+      tags:
+      - team-members
+      security:
+      - jwtAuth: []
+      responses:
+        '204':
+          description: No response body
+  /api/token/:
+    post:
+      operationId: token_create
+      description: |-
+        Takes a set of user credentials and returns an access and refresh JSON web
+        token pair to prove the authentication of those credentials.
+      tags:
+      - token
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TokenObtainPair'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/TokenObtainPair'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/TokenObtainPair'
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TokenObtainPair'
+          description: ''
+  /api/token/refresh/:
+    post:
+      operationId: token_refresh_create
+      description: |-
+        Takes a refresh type JSON web token and returns an access type JSON web
+        token if the refresh token is valid.
+      tags:
+      - token
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TokenRefresh'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/TokenRefresh'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/TokenRefresh'
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TokenRefresh'
+          description: ''
+  /api/token/verify/:
+    post:
+      operationId: token_verify_create
+      description: |-
+        Takes a token and indicates if it is valid.  This view provides no
+        information about a token's fitness for a particular use.
+      tags:
+      - token
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TokenVerify'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/TokenVerify'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/TokenVerify'
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TokenVerify'
+          description: ''
+components:
+  schemas:
+    About:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        title:
+          type: string
+          maxLength: 200
+        content:
+          type: string
+        image:
+          type: string
+          format: uri
+          nullable: true
+        mission_title:
+          type: string
+          maxLength: 200
+        mission_content:
+          type: string
+        mission_image:
+          type: string
+          format: uri
+          nullable: true
+        vision_title:
+          type: string
+          maxLength: 200
+        vision_content:
+          type: string
+        vision_image:
+          type: string
+          format: uri
+          nullable: true
+        goals_title:
+          type: string
+          maxLength: 200
+        goals_content:
+          type: string
+        goals_image:
+          type: string
+          format: uri
+          nullable: true
+        achievements_title:
+          type: string
+          maxLength: 200
+        achievements_content:
+          type: string
+        achievements_image:
+          type: string
+          format: uri
+          nullable: true
+        is_published:
+          type: boolean
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+      required:
+      - content
+      - id
+      - title
+      - updated_at
+    Banner:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        title:
+          type: string
+          maxLength: 200
+        subtitle:
+          type: string
+          maxLength: 400
+        video:
+          type: string
+          format: uri
+          nullable: true
+        video_poster:
+          type: string
+          format: uri
+          nullable: true
+        video_autoplay:
+          type: boolean
+        video_muted:
+          type: boolean
+        video_loop:
+          type: boolean
+        is_active:
+          type: boolean
+        order:
+          type: integer
+          maximum: 9223372036854775807
+          minimum: 0
+          format: int64
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+      required:
+      - created_at
+      - id
+      - updated_at
+    BlogCategory:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+          maxLength: 100
+        slug:
+          type: string
+          readOnly: true
+          pattern: ^[-a-zA-Z0-9_]+$
+        description:
+          type: string
+        is_active:
+          type: boolean
+        order:
+          type: integer
+          maximum: 9223372036854775807
+          minimum: 0
+          format: int64
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+      required:
+      - created_at
+      - id
+      - name
+      - slug
+    BlogPost:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        title:
+          type: string
+          maxLength: 255
+        slug:
+          type: string
+          readOnly: true
+          pattern: ^[-a-zA-Z0-9_]+$
+        author:
+          type: string
+          maxLength: 150
+        featured_image:
+          type: string
+          format: uri
+          nullable: true
+        featured_image_alt:
+          type: string
+          maxLength: 255
+        thumbnail:
+          type: string
+          format: uri
+          nullable: true
+        excerpt:
+          type: string
+          maxLength: 500
+        content:
+          type: string
+        reading_time_minutes:
+          type: integer
+          readOnly: true
+          nullable: true
+        status:
+          $ref: '#/components/schemas/PublicationStatusEnum'
+        tags:
+          type: string
+          maxLength: 255
+        category:
+          type: integer
+          nullable: true
+        meta_description:
+          type: string
+          maxLength: 160
+        meta_keywords:
+          type: string
+          maxLength: 255
+        focus_keyword:
+          type: string
+          maxLength: 100
+        og_title:
+          type: string
+          maxLength: 100
+        og_description:
+          type: string
+          maxLength: 160
+        canonical_url:
+          type: string
+          format: uri
+          maxLength: 200
+        robots_meta:
+          $ref: '#/components/schemas/RobotsMetaEnum'
+        view_count:
+          type: integer
+          readOnly: true
+        is_featured:
+          type: boolean
+        is_deleted:
+          type: boolean
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+        published_at:
+          type: string
+          format: date-time
+          readOnly: true
+          nullable: true
+      required:
+      - content
+      - created_at
+      - id
+      - published_at
+      - reading_time_minutes
+      - slug
+      - title
+      - updated_at
+      - view_count
+    Client:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+          maxLength: 255
+        address:
+          type: string
+        phone:
+          type: string
+          maxLength: 50
+        about:
+          type: string
+        website:
+          type: string
+          format: uri
+          maxLength: 200
+        logo:
+          type: string
+          format: uri
+          nullable: true
+        is_active:
+          type: boolean
+        order:
+          type: integer
+          maximum: 9223372036854775807
+          minimum: 0
+          format: int64
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+      required:
+      - created_at
+      - id
+      - name
+      - updated_at
+    Lead:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+          maxLength: 200
+        email:
+          type: string
+          format: email
+          maxLength: 254
+        phone:
+          type: string
+          maxLength: 50
+        message:
+          type: string
+        attached_file:
+          type: string
+          format: uri
+          nullable: true
+        source:
+          type: string
+          maxLength: 100
+        status:
+          $ref: '#/components/schemas/LeadStatusEnum'
+        is_read:
+          type: boolean
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+      required:
+      - created_at
+      - email
+      - id
+      - message
+      - name
+    LeadStatusEnum:
+      enum:
+      - new
+      - contacted
+      - qualified
+      - lost
+      type: string
+      description: |-
+        * `new` - New
+        * `contacted` - Contacted
+        * `qualified` - Qualified
+        * `lost` - Lost
+    PaginatedAboutList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/About'
+    PaginatedBannerList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/Banner'
+    PaginatedBlogCategoryList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/BlogCategory'
+    PaginatedBlogPostList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/BlogPost'
+    PaginatedClientList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/Client'
+    PaginatedLeadList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/Lead'
+    PaginatedProjectCategoryList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/ProjectCategory'
+    PaginatedProjectList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/Project'
+    PaginatedServiceCategoryList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/ServiceCategory'
+    PaginatedServiceList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/Service'
+    PaginatedTeamMemberList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/TeamMember'
+    PatchedAbout:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        title:
+          type: string
+          maxLength: 200
+        content:
+          type: string
+        image:
+          type: string
+          format: uri
+          nullable: true
+        mission_title:
+          type: string
+          maxLength: 200
+        mission_content:
+          type: string
+        mission_image:
+          type: string
+          format: uri
+          nullable: true
+        vision_title:
+          type: string
+          maxLength: 200
+        vision_content:
+          type: string
+        vision_image:
+          type: string
+          format: uri
+          nullable: true
+        goals_title:
+          type: string
+          maxLength: 200
+        goals_content:
+          type: string
+        goals_image:
+          type: string
+          format: uri
+          nullable: true
+        achievements_title:
+          type: string
+          maxLength: 200
+        achievements_content:
+          type: string
+        achievements_image:
+          type: string
+          format: uri
+          nullable: true
+        is_published:
+          type: boolean
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+    PatchedBanner:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        title:
+          type: string
+          maxLength: 200
+        subtitle:
+          type: string
+          maxLength: 400
+        video:
+          type: string
+          format: uri
+          nullable: true
+        video_poster:
+          type: string
+          format: uri
+          nullable: true
+        video_autoplay:
+          type: boolean
+        video_muted:
+          type: boolean
+        video_loop:
+          type: boolean
+        is_active:
+          type: boolean
+        order:
+          type: integer
+          maximum: 9223372036854775807
+          minimum: 0
+          format: int64
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+    PatchedBlogCategory:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+          maxLength: 100
+        slug:
+          type: string
+          readOnly: true
+          pattern: ^[-a-zA-Z0-9_]+$
+        description:
+          type: string
+        is_active:
+          type: boolean
+        order:
+          type: integer
+          maximum: 9223372036854775807
+          minimum: 0
+          format: int64
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+    PatchedBlogPost:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        title:
+          type: string
+          maxLength: 255
+        slug:
+          type: string
+          readOnly: true
+          pattern: ^[-a-zA-Z0-9_]+$
+        author:
+          type: string
+          maxLength: 150
+        featured_image:
+          type: string
+          format: uri
+          nullable: true
+        featured_image_alt:
+          type: string
+          maxLength: 255
+        thumbnail:
+          type: string
+          format: uri
+          nullable: true
+        excerpt:
+          type: string
+          maxLength: 500
+        content:
+          type: string
+        reading_time_minutes:
+          type: integer
+          readOnly: true
+          nullable: true
+        status:
+          $ref: '#/components/schemas/PublicationStatusEnum'
+        tags:
+          type: string
+          maxLength: 255
+        category:
+          type: integer
+          nullable: true
+        meta_description:
+          type: string
+          maxLength: 160
+        meta_keywords:
+          type: string
+          maxLength: 255
+        focus_keyword:
+          type: string
+          maxLength: 100
+        og_title:
+          type: string
+          maxLength: 100
+        og_description:
+          type: string
+          maxLength: 160
+        canonical_url:
+          type: string
+          format: uri
+          maxLength: 200
+        robots_meta:
+          $ref: '#/components/schemas/RobotsMetaEnum'
+        view_count:
+          type: integer
+          readOnly: true
+        is_featured:
+          type: boolean
+        is_deleted:
+          type: boolean
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+        published_at:
+          type: string
+          format: date-time
+          readOnly: true
+          nullable: true
+    PatchedClient:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+          maxLength: 255
+        address:
+          type: string
+        phone:
+          type: string
+          maxLength: 50
+        about:
+          type: string
+        website:
+          type: string
+          format: uri
+          maxLength: 200
+        logo:
+          type: string
+          format: uri
+          nullable: true
+        is_active:
+          type: boolean
+        order:
+          type: integer
+          maximum: 9223372036854775807
+          minimum: 0
+          format: int64
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+    PatchedLead:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+          maxLength: 200
+        email:
+          type: string
+          format: email
+          maxLength: 254
+        phone:
+          type: string
+          maxLength: 50
+        message:
+          type: string
+        attached_file:
+          type: string
+          format: uri
+          nullable: true
+        source:
+          type: string
+          maxLength: 100
+        status:
+          $ref: '#/components/schemas/LeadStatusEnum'
+        is_read:
+          type: boolean
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+    PatchedProject:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        title:
+          type: string
+          maxLength: 255
+        slug:
+          type: string
+          readOnly: true
+          pattern: ^[-a-zA-Z0-9_]+$
+        short_description:
+          type: string
+          maxLength: 500
+        long_description:
+          type: string
+        cover_image:
+          type: string
+          format: uri
+          nullable: true
+        status:
+          $ref: '#/components/schemas/ProjectStatusEnum'
+        start_date:
+          type: string
+          format: date
+          nullable: true
+        end_date:
+          type: string
+          format: date
+          nullable: true
+        is_featured:
+          type: boolean
+        category:
+          allOf:
+          - $ref: '#/components/schemas/ProjectCategory'
+          readOnly: true
+        category_id:
+          type: integer
+          writeOnly: true
+          nullable: true
+        is_deleted:
+          type: boolean
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+        images:
+          type: array
+          items:
+            $ref: '#/components/schemas/ProjectImage'
+          readOnly: true
+    PatchedProjectCategory:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+          maxLength: 100
+        slug:
+          type: string
+          readOnly: true
+          pattern: ^[-a-zA-Z0-9_]+$
+        description:
+          type: string
+        is_active:
+          type: boolean
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+    PatchedService:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        title:
+          type: string
+          maxLength: 255
+        slug:
+          type: string
+          readOnly: true
+          pattern: ^[-a-zA-Z0-9_]+$
+        excerpt:
+          type: string
+          maxLength: 500
+        featured_image:
+          type: string
+          format: uri
+          nullable: true
+        featured_image_alt:
+          type: string
+          maxLength: 255
+        content:
+          type: string
+        reading_time_minutes:
+          type: integer
+          readOnly: true
+          nullable: true
+        category:
+          allOf:
+          - $ref: '#/components/schemas/ServiceCategory'
+          readOnly: true
+        category_id:
+          type: integer
+          writeOnly: true
+          nullable: true
+        meta_description:
+          type: string
+          maxLength: 160
+        meta_keywords:
+          type: string
+          maxLength: 255
+        focus_keyword:
+          type: string
+          maxLength: 100
+        og_title:
+          type: string
+          maxLength: 100
+        og_description:
+          type: string
+          maxLength: 160
+        canonical_url:
+          type: string
+          format: uri
+          maxLength: 200
+        robots_meta:
+          $ref: '#/components/schemas/RobotsMetaEnum'
+        status:
+          $ref: '#/components/schemas/PublicationStatusEnum'
+        is_featured:
+          type: boolean
+        order:
+          type: integer
+          maximum: 9223372036854775807
+          minimum: 0
+          format: int64
+        view_count:
+          type: integer
+          readOnly: true
+        is_deleted:
+          type: boolean
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+        published_at:
+          type: string
+          format: date-time
+          readOnly: true
+          nullable: true
+    PatchedServiceCategory:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+          maxLength: 100
+        slug:
+          type: string
+          readOnly: true
+          pattern: ^[-a-zA-Z0-9_]+$
+        description:
+          type: string
+        icon:
+          type: string
+          maxLength: 100
+        is_active:
+          type: boolean
+        order:
+          type: integer
+          maximum: 9223372036854775807
+          minimum: 0
+          format: int64
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+    PatchedSiteConfig:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        company_name:
+          type: string
+          maxLength: 255
+        about_excerpt:
+          type: string
+        address:
+          type: string
+        phone:
+          type: string
+          maxLength: 50
+        email:
+          type: string
+          format: email
+          maxLength: 254
+        website:
+          type: string
+          format: uri
+          maxLength: 200
+        facebook_url:
+          type: string
+          format: uri
+          maxLength: 200
+        instagram_url:
+          type: string
+          format: uri
+          maxLength: 200
+        youtube_url:
+          type: string
+          format: uri
+          maxLength: 200
+        x_url:
+          type: string
+          format: uri
+          maxLength: 200
+        linkedin_url:
+          type: string
+          format: uri
+          maxLength: 200
+        custom_link_url:
+          type: string
+          format: uri
+          maxLength: 200
+        custom_link_text:
+          type: string
+          maxLength: 255
+        logo:
+          type: string
+          format: uri
+          readOnly: true
+        logo_alt_text:
+          type: string
+          maxLength: 255
+        google_analytics_id:
+          type: string
+          description: Google Analytics ID (GA4)
+          maxLength: 100
+        google_tag_manager_id:
+          type: string
+          description: Google Tag Manager ID (GTM)
+          maxLength: 100
+        facebook_pixel_id:
+          type: string
+          description: Facebook Pixel ID
+          maxLength: 100
+        hotjar_id:
+          type: string
+          description: Hotjar Site ID
+          maxLength: 100
+        clarity_id:
+          type: string
+          description: Microsoft Clarity Project ID
+          maxLength: 100
+        custom_tracking_code:
+          type: string
+          description: Custom tracking/analytics code snippet
+        enable_analytics:
+          type: boolean
+        enable_tracking:
+          type: boolean
+        recaptcha_site_key:
+          type: string
+          description: Google reCAPTCHA v3 Site Key
+          maxLength: 255
+        recaptcha_secret_key:
+          type: string
+          description: Google reCAPTCHA v3 Secret Key
+          maxLength: 255
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+    PatchedTeamMember:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+          maxLength: 150
+        position:
+          type: string
+          maxLength: 150
+        bio:
+          type: string
+        photo:
+          type: string
+          format: uri
+          nullable: true
+        linkedin_url:
+          type: string
+          format: uri
+          maxLength: 200
+        facebook_url:
+          type: string
+          format: uri
+          maxLength: 200
+        instagram_url:
+          type: string
+          format: uri
+          maxLength: 200
+        is_active:
+          type: boolean
+        order:
+          type: integer
+          maximum: 9223372036854775807
+          minimum: 0
+          format: int64
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+    Project:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        title:
+          type: string
+          maxLength: 255
+        slug:
+          type: string
+          readOnly: true
+          pattern: ^[-a-zA-Z0-9_]+$
+        short_description:
+          type: string
+          maxLength: 500
+        long_description:
+          type: string
+        cover_image:
+          type: string
+          format: uri
+          nullable: true
+        status:
+          $ref: '#/components/schemas/ProjectStatusEnum'
+        start_date:
+          type: string
+          format: date
+          nullable: true
+        end_date:
+          type: string
+          format: date
+          nullable: true
+        is_featured:
+          type: boolean
+        category:
+          allOf:
+          - $ref: '#/components/schemas/ProjectCategory'
+          readOnly: true
+        category_id:
+          type: integer
+          writeOnly: true
+          nullable: true
+        is_deleted:
+          type: boolean
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+        images:
+          type: array
+          items:
+            $ref: '#/components/schemas/ProjectImage'
+          readOnly: true
+      required:
+      - category
+      - created_at
+      - id
+      - images
+      - slug
+      - title
+      - updated_at
+    ProjectCategory:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+          maxLength: 100
+        slug:
+          type: string
+          readOnly: true
+          pattern: ^[-a-zA-Z0-9_]+$
+        description:
+          type: string
+        is_active:
+          type: boolean
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+      required:
+      - created_at
+      - id
+      - name
+      - slug
+    ProjectImage:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        project:
+          type: integer
+        image:
+          type: string
+          format: uri
+        caption:
+          type: string
+          maxLength: 255
+        alt_text:
+          type: string
+          maxLength: 255
+        order:
+          type: integer
+          maximum: 9223372036854775807
+          minimum: 0
+          format: int64
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+      required:
+      - created_at
+      - id
+      - image
+      - project
+    ProjectStatusEnum:
+      enum:
+      - ongoing
+      - completed
+      - planned
+      type: string
+      description: |-
+        * `ongoing` - Ongoing
+        * `completed` - Completed
+        * `planned` - Planned
+    PublicationStatusEnum:
+      enum:
+      - draft
+      - published
+      - archived
+      type: string
+      description: |-
+        * `draft` - Draft
+        * `published` - Published
+        * `archived` - Archived
+    RobotsMetaEnum:
+      enum:
+      - index, follow
+      - noindex, follow
+      - index, nofollow
+      - noindex, nofollow
+      type: string
+      description: |-
+        * `index, follow` - Index & Follow
+        * `noindex, follow` - No Index, Follow
+        * `index, nofollow` - Index, No Follow
+        * `noindex, nofollow` - No Index, No Follow
+    Service:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        title:
+          type: string
+          maxLength: 255
+        slug:
+          type: string
+          readOnly: true
+          pattern: ^[-a-zA-Z0-9_]+$
+        excerpt:
+          type: string
+          maxLength: 500
+        featured_image:
+          type: string
+          format: uri
+          nullable: true
+        featured_image_alt:
+          type: string
+          maxLength: 255
+        content:
+          type: string
+        reading_time_minutes:
+          type: integer
+          readOnly: true
+          nullable: true
+        category:
+          allOf:
+          - $ref: '#/components/schemas/ServiceCategory'
+          readOnly: true
+        category_id:
+          type: integer
+          writeOnly: true
+          nullable: true
+        meta_description:
+          type: string
+          maxLength: 160
+        meta_keywords:
+          type: string
+          maxLength: 255
+        focus_keyword:
+          type: string
+          maxLength: 100
+        og_title:
+          type: string
+          maxLength: 100
+        og_description:
+          type: string
+          maxLength: 160
+        canonical_url:
+          type: string
+          format: uri
+          maxLength: 200
+        robots_meta:
+          $ref: '#/components/schemas/RobotsMetaEnum'
+        status:
+          $ref: '#/components/schemas/PublicationStatusEnum'
+        is_featured:
+          type: boolean
+        order:
+          type: integer
+          maximum: 9223372036854775807
+          minimum: 0
+          format: int64
+        view_count:
+          type: integer
+          readOnly: true
+        is_deleted:
+          type: boolean
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+        published_at:
+          type: string
+          format: date-time
+          readOnly: true
+          nullable: true
+      required:
+      - category
+      - content
+      - created_at
+      - id
+      - published_at
+      - reading_time_minutes
+      - slug
+      - title
+      - updated_at
+      - view_count
+    ServiceCategory:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+          maxLength: 100
+        slug:
+          type: string
+          readOnly: true
+          pattern: ^[-a-zA-Z0-9_]+$
+        description:
+          type: string
+        icon:
+          type: string
+          maxLength: 100
+        is_active:
+          type: boolean
+        order:
+          type: integer
+          maximum: 9223372036854775807
+          minimum: 0
+          format: int64
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+      required:
+      - created_at
+      - id
+      - name
+      - slug
+    SiteConfig:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        company_name:
+          type: string
+          maxLength: 255
+        about_excerpt:
+          type: string
+        address:
+          type: string
+        phone:
+          type: string
+          maxLength: 50
+        email:
+          type: string
+          format: email
+          maxLength: 254
+        website:
+          type: string
+          format: uri
+          maxLength: 200
+        facebook_url:
+          type: string
+          format: uri
+          maxLength: 200
+        instagram_url:
+          type: string
+          format: uri
+          maxLength: 200
+        youtube_url:
+          type: string
+          format: uri
+          maxLength: 200
+        x_url:
+          type: string
+          format: uri
+          maxLength: 200
+        linkedin_url:
+          type: string
+          format: uri
+          maxLength: 200
+        custom_link_url:
+          type: string
+          format: uri
+          maxLength: 200
+        custom_link_text:
+          type: string
+          maxLength: 255
+        logo:
+          type: string
+          format: uri
+          readOnly: true
+        logo_alt_text:
+          type: string
+          maxLength: 255
+        google_analytics_id:
+          type: string
+          description: Google Analytics ID (GA4)
+          maxLength: 100
+        google_tag_manager_id:
+          type: string
+          description: Google Tag Manager ID (GTM)
+          maxLength: 100
+        facebook_pixel_id:
+          type: string
+          description: Facebook Pixel ID
+          maxLength: 100
+        hotjar_id:
+          type: string
+          description: Hotjar Site ID
+          maxLength: 100
+        clarity_id:
+          type: string
+          description: Microsoft Clarity Project ID
+          maxLength: 100
+        custom_tracking_code:
+          type: string
+          description: Custom tracking/analytics code snippet
+        enable_analytics:
+          type: boolean
+        enable_tracking:
+          type: boolean
+        recaptcha_site_key:
+          type: string
+          description: Google reCAPTCHA v3 Site Key
+          maxLength: 255
+        recaptcha_secret_key:
+          type: string
+          description: Google reCAPTCHA v3 Secret Key
+          maxLength: 255
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+      required:
+      - address
+      - company_name
+      - created_at
+      - email
+      - id
+      - logo
+      - phone
+      - updated_at
+    SiteLogo:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        logo:
+          type: string
+          format: uri
+        alt_text:
+          type: string
+          maxLength: 255
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+      required:
+      - id
+      - logo
+      - updated_at
+    TeamMember:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+          maxLength: 150
+        position:
+          type: string
+          maxLength: 150
+        bio:
+          type: string
+        photo:
+          type: string
+          format: uri
+          nullable: true
+        linkedin_url:
+          type: string
+          format: uri
+          maxLength: 200
+        facebook_url:
+          type: string
+          format: uri
+          maxLength: 200
+        instagram_url:
+          type: string
+          format: uri
+          maxLength: 200
+        is_active:
+          type: boolean
+        order:
+          type: integer
+          maximum: 9223372036854775807
+          minimum: 0
+          format: int64
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+      required:
+      - created_at
+      - id
+      - name
+      - position
+      - updated_at
+    TokenObtainPair:
+      type: object
+      properties:
+        username:
+          type: string
+          writeOnly: true
+        password:
+          type: string
+          writeOnly: true
+        access:
+          type: string
+          readOnly: true
+        refresh:
+          type: string
+          readOnly: true
+      required:
+      - access
+      - password
+      - refresh
+      - username
+    TokenRefresh:
+      type: object
+      properties:
+        access:
+          type: string
+          readOnly: true
+        refresh:
+          type: string
+          writeOnly: true
+      required:
+      - access
+      - refresh
+    TokenVerify:
+      type: object
+      properties:
+        token:
+          type: string
+          writeOnly: true
+      required:
+      - token
+    UserRegistration:
+      type: object
+      properties:
+        username:
+          type: string
+          description: Required. 150 characters or fewer. Letters, digits and @/./+/-/_
+            only.
+          pattern: ^[\w.@+-]+$
+          maxLength: 150
+        email:
+          type: string
+          format: email
+          title: Email address
+          maxLength: 254
+        password:
+          type: string
+          writeOnly: true
+          minLength: 8
+        first_name:
+          type: string
+          maxLength: 150
+        last_name:
+          type: string
+          maxLength: 150
+      required:
+      - password
+      - username
+  securitySchemes:
+    jwtAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT

@@ -1,0 +1,367 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>BUILDSTATE - Register</title>
+    <meta content="" name="description" />
+    <meta content="" name="author" />
+    <meta
+      content="width=device-width, initial-scale=1, maximum-scale=1"
+      name="viewport"
+    />
+    <!-- favicon -->
+    <link
+      href="{% static 'img/favicon.png' %}"
+      rel="icon"
+      sizes="32x32"
+      type="image/png"
+    />
+    <!-- Bootstrap CSS -->
+    <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet" />
+    <!-- font awesome CSS -->
+    <link href="{% static 'font-awesome/css/font-awesome.css' %}" rel="stylesheet" />
+    <!-- on3step CSS -->
+    <link href="{% static 'css/on3step-style.css' %}" rel="stylesheet" />
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        background: #f5f5f5;
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Arial', sans-serif;
+        padding: 20px;
+      }
+
+      .register-container {
+        background: white;
+        border-radius: 8px;
+        box-shadow: 0 2px 8px rgba(255, 102, 0, 0.08);
+        overflow: hidden;
+        width: 100%;
+        max-width: 420px;
+      }
+
+      .register-header {
+        background: #ff6600;
+        color: white;
+        padding: 40px 30px;
+        text-align: center;
+      }
+
+      .register-header h1 {
+        margin: 0;
+        font-size: 32px;
+        font-weight: 700;
+        margin-bottom: 8px;
+        letter-spacing: -0.5px;
+      }
+
+      .register-header p {
+        margin: 0;
+        font-size: 14px;
+        opacity: 0.95;
+        font-weight: 500;
+      }
+
+      .register-body {
+        padding: 35px 30px;
+      }
+
+      .form-group {
+        margin-bottom: 22px;
+        position: relative;
+      }
+
+      .form-group label {
+        display: block;
+        margin-bottom: 10px;
+        color: #333;
+        font-weight: 700;
+        font-size: 12px;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+      }
+
+      .form-group input {
+        width: 100%;
+        padding: 12px 14px;
+        border: 1px solid #e0e0e0;
+        border-radius: 4px;
+        font-size: 14px;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        background: #fafafa;
+        box-sizing: border-box;
+      }
+
+      .form-group input:focus {
+        outline: none;
+        border-color: #ff6600;
+        background: white;
+        box-shadow: 0 0 0 3px rgba(255, 102, 0, 0.1);
+      }
+
+      .form-group .hint {
+        font-size: 12px;
+        color: #999;
+        margin-top: 6px;
+        font-weight: 500;
+      }
+
+      .btn-register {
+        width: 100%;
+        padding: 13px;
+        background: #ff6600;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        font-size: 14px;
+        font-weight: 700;
+        cursor: pointer;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        letter-spacing: 0.3px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+      }
+
+      .btn-register:hover {
+        background: #e55a00;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(255, 102, 0, 0.2);
+      }
+
+      .btn-register:active {
+        transform: translateY(0);
+      }
+
+      .btn-register:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+        transform: none;
+      }
+
+      .alert {
+        padding: 14px;
+        margin-bottom: 22px;
+        border-radius: 4px;
+        font-size: 13px;
+        display: none;
+        border-left: 4px solid transparent;
+      }
+
+      .alert-success {
+        background: #d4edda;
+        color: #155724;
+        border-left-color: #28a745;
+      }
+
+      .alert-danger {
+        background: #f8d7da;
+        color: #721c24;
+        border-left-color: #dc3545;
+      }
+
+      .register-footer {
+        padding: 25px 30px;
+        background: #fafafa;
+        text-align: center;
+        color: #666;
+        font-size: 13px;
+        border-top: 1px solid #e8e8e8;
+      }
+
+      .register-footer a {
+        color: #ff6600;
+        text-decoration: none;
+        font-weight: 700;
+        transition: color 0.3s ease;
+      }
+
+      .register-footer a:hover {
+        color: #e55a00;
+      }
+
+      .spinner {
+        display: none;
+        width: 14px;
+        height: 14px;
+      }
+
+      .spinner.show {
+        display: inline-block;
+        border: 2px solid rgba(255, 255, 255, 0.3);
+        border-top-color: white;
+        border-radius: 50%;
+        animation: spin 0.6s linear infinite;
+      }
+
+      @keyframes spin {
+        to {
+          transform: rotate(360deg);
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="register-container">
+      <div class="register-header">
+        <h1>BUILDSTATE</h1>
+        <p>Create Your Account</p>
+      </div>
+
+      <div class="register-body">
+        <div id="alert" class="alert"></div>
+
+        <form id="registerForm">
+          <div class="form-group">
+            <label for="username">Username</label>
+            <input
+              type="text"
+              id="username"
+              name="username"
+              placeholder="Choose a username"
+              required
+              minlength="3"
+              autocomplete="username"
+            />
+            <div class="hint">At least 3 characters, alphanumeric</div>
+          </div>
+
+          <div class="form-group">
+            <label for="email">Email</label>
+            <input
+              type="email"
+              id="email"
+              name="email"
+              placeholder="your@email.com"
+              required
+              autocomplete="email"
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="password">Password</label>
+            <input
+              type="password"
+              id="password"
+              name="password"
+              placeholder="Strong password"
+              required
+              minlength="8"
+              autocomplete="new-password"
+            />
+            <div class="hint">At least 8 characters</div>
+          </div>
+
+          <div class="form-group">
+            <label for="password2">Confirm Password</label>
+            <input
+              type="password"
+              id="password2"
+              name="password2"
+              placeholder="Confirm password"
+              required
+              autocomplete="new-password"
+            />
+          </div>
+
+          <button type="submit" class="btn-register" id="submitBtn" title="Submit registration form">
+            <span class="spinner" id="spinner"></span>
+            <span id="btnText">Create Account</span>
+          </button>
+        </form>
+      </div>
+
+      <div class="register-footer">
+        Already have an account? <a href="{% url 'login' %}">Login here</a>
+      </div>
+    </div>
+
+    <script>
+      const form = document.getElementById('registerForm');
+      const submitBtn = document.getElementById('submitBtn');
+      const spinner = document.getElementById('spinner');
+      const btnText = document.getElementById('btnText');
+      const alertDiv = document.getElementById('alert');
+
+      function showAlert(message, type = 'danger') {
+        alertDiv.textContent = message;
+        alertDiv.className = `alert alert-${type}`;
+        alertDiv.style.display = 'block';
+        setTimeout(() => {
+          alertDiv.style.display = 'none';
+        }, 5000);
+      }
+
+      form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+
+        const username = document.getElementById('username').value.trim();
+        const email = document.getElementById('email').value.trim();
+        const password = document.getElementById('password').value;
+        const password2 = document.getElementById('password2').value;
+
+        if (!username || !email || !password || !password2) {
+          showAlert('Please fill in all fields', 'danger');
+          return;
+        }
+
+        if (password !== password2) {
+          showAlert('Passwords do not match', 'danger');
+          return;
+        }
+
+        if (password.length < 8) {
+          showAlert('Password must be at least 8 characters', 'danger');
+          return;
+        }
+
+        submitBtn.disabled = true;
+        spinner.classList.add('show');
+        btnText.textContent = 'Creating account...';
+
+        try {
+          const response = await fetch('/api/register/', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              username: username,
+              email: email,
+              password: password,
+            }),
+          });
+
+          const data = await response.json();
+
+          if (response.ok) {
+            showAlert('Registration successful! Redirecting to login...', 'success');
+            setTimeout(() => {
+              window.location.href = '/login/';
+            }, 1500);
+          } else {
+            const errorMsg = data.username?.[0] || data.email?.[0] || data.password?.[0] || JSON.stringify(data);
+            showAlert(errorMsg, 'danger');
+          }
+        } catch (error) {
+          console.error('Registration error:', error);
+          showAlert('Network error. Please try again.', 'danger');
+        } finally {
+          submitBtn.disabled = false;
+          spinner.classList.remove('show');
+          btnText.textContent = 'Create Account';
+        }
+      });
+    </script>
+  </body>
+</html>

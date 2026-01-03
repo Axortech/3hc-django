@@ -1,0 +1,249 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="zxx">
+  <head>
+    <meta charset="utf-8">
+    <title>BUILDSTATE - Construction</title>
+    <meta content="" name="description">
+    <meta content="" name="author">
+    <meta content="" name="keywords">
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1" name="viewport">
+    <!-- favicon -->
+    <link href="{% static 'img/favicon.png' %}" rel="icon" sizes="32x32" type="image/png">
+    <!-- Bootstrap CSS -->
+    <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet">
+    <!-- font themify CSS -->
+    <link rel="stylesheet" href="{% static 'css/themify-icons.css' %}">
+    <!-- font awesome CSS -->
+    <link href="{% static 'font-awesome/css/font-awesome.css' %}" rel="stylesheet">
+    <!-- revolution slider css -->
+    <link rel="stylesheet" type="text/css" href="{% static 'css/fullscreen.css' %}" media="screen" />
+	<link rel="stylesheet" type="text/css" href="{% static 'rs-plugin/css/settings.css' %}" media="screen" />
+    <link rel="stylesheet" href="{% static 'css/rev-settings.css' %}" type="text/css">
+    <!-- on3step CSS -->
+    <link href="{% static 'css/animated-on3step.css' %}" rel="stylesheet">
+    <link href="{% static 'css/owl.carousel.css' %}" rel="stylesheet">
+    <link href="{% static 'css/owl.theme.css' %}" rel="stylesheet">
+    <link href="{% static 'css/owl.transitions.css' %}" rel="stylesheet">
+    <link href="{% static 'css/on3step-style.css' %}" rel="stylesheet">
+    <link href="{% static 'css/queries-on3step.css' %}" media="all" rel="stylesheet" type="text/css">
+  </head>
+  <body>
+  
+    <!-- preloader -->
+    <div class="bg-preloader"></div>
+    <div class="preloader">
+      <div class="mainpreloader">
+      <span></span>
+      </div>
+  </div>
+    <!-- preloader end -->
+    
+    <!-- content wraper -->
+    <div class="content-wrapper">
+    
+    <!-- subnav -->
+    {% include "components/header.html" %}
+      
+      <!-- subheader -->
+      <section id="subheader">
+        <div class="container">
+          <div class="row">
+            <div class="col-md-12">
+              <h1>
+                CONTACT US
+              </h1>
+            </div>
+            <!-- devider -->
+
+            <div class="col-md-12">
+              <div class="devider-page">
+                <div class="devider-img-right">
+                </div>
+              </div>
+            </div>
+
+            <div class="col-md-12">
+              <ul class="subdetail">
+                <li>
+                  <a href="index.html">Home</a>
+                </li>
+
+                <li class="sep">/
+                </li>
+
+                <li>CONTACT
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </section>
+      <!-- subheader end -->
+      
+              <!-- map -->
+              <div class="onStep" data-animation="fadeIn" data-time="300" id="map-1"></div>
+              <!-- map end -->
+      
+      <!-- section contact -->
+      <section aria-label="contact" class="whitepage">
+        <div class="container">
+          <div class="row">
+          
+            <div class="col-md-8">
+                <form id="form-contact1">
+                            <div class="form-group user-name">
+                                <label for="name-contact-1" style="display: none;">Name</label>
+                                <input type="text" class="form-control" required="" id="name-contact-1" placeholder="Your Name" title="Enter your full name">
+                            </div>
+
+                            <div class="form-group user-email">
+                                <label for="email-contact" style="display: none;">Email</label>
+                                <input type="email" class="form-control" required="" id="email-contact" placeholder="Your Email" title="Enter your email address">
+                            </div>
+                        
+                            <div class="form-group user-message">
+                                <label for="message-contact" style="display: none;">Message</label>
+                                <textarea class="form-control" required="" id="message-contact" placeholder="Your Message" title="Enter your message"></textarea>
+                                <div class="success" id="mail_success">Thank you. Your message has been sent</div>
+                                <div class="error" id="mail_failed">Error, email not sent</div>
+                            </div>
+                    <button type="submit" id="send-contact-1" class="btn-contact" title="Send contact form">Send Now</button>
+                </form>
+            </div>
+            
+            <!-- address -->
+              <div class="col-md-3 col-md-offset-1">
+                <h3 class="heading-cont">Contact Information</h3>
+                  <address class="cont-1">
+                    <span>Chyasa Dekwo Marg, New York 10903</span> 
+                    <span><strong>PHONE:</strong> +977-9876543211</span> 
+                    <span><strong>EMAIL:</strong><a href="mailto:companyname@gmail.com"> youremail@gmail.com</a></span> 
+                    <span><strong>WEB:</strong><a href="#"> www.yourdomain.com</a></span>
+                  </address>
+              </div>
+              <!-- address end -->
+            
+            
+          </div>
+        </div>
+      </section>
+      <!-- section contact end -->
+
+      <!-- subfooter -->
+      <section aria-label="footer" class="subfooter">
+        <div class="container">
+          <div class="row">
+            <div class="col-md-3 col-xs-12">
+                <div class="logo">
+                  <img alt="logo" src="{% static 'img/logo.png' %}">
+                </div>
+
+                <p>
+                  Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Donec mollis. Quisque convallis libero in sapien pharetra tincidunt. Aliquam elit ante, malesuada id, tempor eu, gravida
+                  id, odio. Maecenas suscipit, risus et eleifend imperdiet, nisi orci ullamcorper massa adipiscing.
+                </p>
+            </div>
+
+            <div class="col-md-3 col-xs-12">
+
+                <h3>LINKS</h3>
+                <ul style="list-style: none; padding: 0; line-height: 2;">
+                <li><a href="notices.html" style="color: #666; text-decoration: none;">Notices</a></li>
+                <li><a href="careers.html" style="color: #666; text-decoration: none;">Careers</a></li>
+                <li><a href="blog.html" style="color: #666; text-decoration: none;">Blog</a></li>
+                <li><a href="contact.html" style="color: #666; text-decoration: none;">Contact</a></li>
+                </ul>
+
+            </div>
+
+            <div class="col-md-3 col-xs-12">
+                <h3>
+                  CONTACT INFO
+                </h3>
+
+                <address>
+                  <span>Chyasa Dekwo Marg, Lalitpur</span> <span><strong>PHONE:</strong> +977-9876543211</span> <span><strong>EMAIL:</strong> <a href=
+                  "mailto:companyname@gmail.com">companyname@gmail.com</a></span> <span><strong>SITE:</strong> <a href="#">www.companyname.com</a></span>
+                </address>
+            </div>
+
+            <div class="col-md-3 col-xs-12">
+                <h3>
+                  PHOTO STREAM
+                </h3>
+
+                <div id="flickr-photo-stream">
+                  <script src="http://www.flickr.com/badge_code_v2.gne?count=8&amp;display=random&amp;size=s&amp;layout=x&amp;source=user&amp;user=52617155@N08" type="text/javascript">
+                  </script>
+                  <div class="clearfix">
+                  </div>
+                </div>
+              </div>
+            </div>
+        </div>
+      </section>
+      <!-- subfooter end -->
+      
+      <!-- footer -->
+      <footer>
+        <div class="container">
+          <div class="row">
+            <div class="col-md-6">
+              Buildstate &copy; Copyright 2025 by reflex
+            </div>
+
+            <div class="col-md-6">
+              <div class="right">
+                <div class="social-icons">
+                  <a href="#"><span class="ti-facebook"></span></a> <a href="#"><span class="ti-dribbble"></span></a> <a href="#"><span class="ti-twitter"></span></a> <a href="#"><span class=
+                  "ti-linkedin"></span></a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </footer>
+      <!-- footer end -->
+      
+      <!-- ScrolltoTop -->
+      <div id="totop">
+        <span class="ti-angle-up"></span>
+      </div>
+      
+    </div>
+    <!-- content wraper end -->
+    
+    <!-- Subscribe start -->
+    <div class="white-popup-block mfp-hide animbounceInDown" data-time="0" id="subwrap">
+      <h5>
+        PLEASE FILL YOUR EMAIL BELOW
+      </h5>
+
+      <div class="space-half">
+      </div>
+
+      <form action="subscribe.php" id="subscribe" method="post" name="subscribe">
+        <label for="subscribeemail" style="display: none;">Email Address</label>
+        <input class="subscribfield subscribeemail" id="subscribeemail" name="subscribeemail" type="text" placeholder="your email" title="Enter your email to subscribe"> <button class="btn-form" id="submit-2" type="submit">Subscribe</button>
+      </form>
+
+      <div class="subscribesuccess">
+        Thank you for fill your email
+      </div>
+    </div>
+    <!-- Subscribe end -->
+    
+    <!-- plugin JS -->
+    <script src="{% static 'plugin/pluginson3step.js' %}" type="text/javascript"></script> 
+    <!-- slider revolution  -->
+    <script type="text/javascript" src="{% static 'rs-plugin/js/jquery.themepunch.revolution.min.js' %}"></script>
+    <!--  map google  -->
+    <script src="https://maps.googleapis.com/maps/api/js?v=3&key=AIzaSyCQ5KODzqooIP496GPLRaMAsZ4eN8Vro_U"></script> 
+    <script src="{% static 'js/map-1.js' %}" type="text/javascript"></script> 
+    <!-- on3step JS -->
+    <script src="{% static 'js/on3step.js' %}" type="text/javascript"></script>
+    <script src="{% static 'js/plugin-set.js' %}" type="text/javascript"></script>
+    
+  </body>
+</html>

@@ -1,0 +1,287 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="zxx">
+  <head>
+    <meta charset="utf-8" />
+    <title>BUILDSTATE - Careers</title>
+    <meta content="" name="description" />
+    <meta content="" name="author" />
+    <meta content="" name="keywords" />
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1" name="viewport" />
+    <!-- favicon -->
+    <link href="{% static 'img/favicon.png' %}" rel="icon" sizes="32x32" type="image/png" />
+    <!-- Bootstrap CSS -->
+    <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet" />
+    <!-- font themify CSS -->
+    <link rel="stylesheet" href="{% static 'css/themify-icons.css' %}" />
+    <!-- font awesome CSS -->
+    <link href="{% static 'font-awesome/css/font-awesome.css' %}" rel="stylesheet" />
+    <!-- on3step CSS -->
+    <link href="{% static 'css/animated-on3step.css' %}" rel="stylesheet" />
+    <link href="{% static 'css/owl.carousel.css' %}" rel="stylesheet" />
+    <link href="{% static 'css/owl.theme.css' %}" rel="stylesheet" />
+    <link href="{% static 'css/owl.transitions.css' %}" rel="stylesheet" />
+    <link href="{% static 'css/on3step-style.css' %}" rel="stylesheet" />
+    <link href="{% static 'css/queries-on3step.css' %}" media="all" rel="stylesheet" type="text/css" />
+    <style>
+      .job-card {
+        background: white;
+        border-radius: 8px;
+        padding: 25px;
+        margin-bottom: 25px;
+        border-left: 5px solid #ff6600;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        transition: all 0.3s ease;
+      }
+      .job-card:hover {
+        box-shadow: 0 4px 15px rgba(255, 102, 0, 0.15);
+        transform: translateY(-2px);
+      }
+      .job-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: start;
+        margin-bottom: 15px;
+        flex-wrap: wrap;
+        gap: 15px;
+      }
+      .job-title {
+        margin: 0;
+        color: #333;
+        font-size: 20px;
+        font-weight: bold;
+      }
+      .job-badges {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+      }
+      .badge {
+        padding: 6px 12px;
+        border-radius: 4px;
+        font-size: 12px;
+        font-weight: bold;
+        color: white;
+      }
+      .badge-primary {
+        background: #007bff;
+      }
+      .badge-success {
+        background: #28a745;
+      }
+      .badge-info {
+        background: #17a2b8;
+      }
+      .job-meta {
+        display: flex;
+        gap: 30px;
+        margin-bottom: 15px;
+        flex-wrap: wrap;
+        font-size: 14px;
+        color: #666;
+      }
+      .job-meta-item {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+      .job-meta-item i {
+        color: #ff6600;
+      }
+      .job-description {
+        color: #666;
+        margin-bottom: 15px;
+        line-height: 1.6;
+      }
+      .job-footer {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-top: 20px;
+        padding-top: 20px;
+        border-top: 1px solid #e8e8e8;
+        flex-wrap: wrap;
+        gap: 15px;
+      }
+      .apply-btn {
+        padding: 10px 25px;
+        background: #ff6600;
+        color: white;
+        text-decoration: none;
+        border-radius: 4px;
+        font-weight: bold;
+        transition: all 0.3s ease;
+        display: inline-block;
+      }
+      .apply-btn:hover {
+        background: #e55a00;
+        transform: translateY(-2px);
+      }
+      .job-meta-label {
+        font-weight: bold;
+        color: #333;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- preloader -->
+    <div class="bg-preloader"></div>
+    <div class="preloader">
+      <div class="mainpreloader">
+        <span></span>
+      </div>
+    </div>
+    <!-- preloader end -->
+
+    <!-- content wraper -->
+    <div class="content-wrapper">
+      {% include "components/header.html" %}
+
+      <!-- Careers Page Header -->
+      <section aria-label="Careers" class="blog-1 page-top" style="background: url('{% static 'img/portfolio-top.jpg' %}') no-repeat center; background-size: cover;">
+        <div class="bg-alpha-80">
+          <div class="container">
+            <div class="row">
+              <div class="col-md-12">
+                <div class="breadcrumb-box">
+                  <h1>JOIN OUR TEAM</h1>
+                  <p>Build your career with us - explore exciting opportunities</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Careers Content -->
+      <section aria-label="careers-list" class="news-1">
+        <div class="container">
+          <div class="row">
+            <div class="col-md-12">
+              <!-- Careers Container -->
+              <div id="careersContainer">
+                <div class="text-center">
+                  <p>Loading career opportunities...</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {% include "components/footer.html" %}
+    </div>
+    <!-- content wraper end -->
+
+    <!-- plugin JS -->
+    <script src="{% static 'js/jquery.js' %}"></script>
+    <script src="{% static 'js/bootstrap.js' %}"></script>
+    <script src="{% static 'js/jquery.easing.js' %}"></script>
+    <script src="{% static 'js/jquery.waypoints.min.js' %}"></script>
+    <script src="{% static 'js/jquery.appear.js' %}"></script>
+    <script src="{% static 'js/owl.carousel.min.js' %}"></script>
+    <script src="{% static 'js/jquery.magnific-popup.min.js' %}"></script>
+    <script src="{% static 'js/jquery.isotope.min.js' %}"></script>
+    <script src="{% static 'js/jquery.masonry.min.js' %}"></script>
+    <script src="{% static 'js/parallax.js' %}"></script>
+    <script src="{% static 'js/on3step-functions.js' %}"></script>
+
+    <script>
+      // Fetch careers from API
+      async function fetchCareers() {
+        const container = document.getElementById('careersContainer');
+        try {
+          // Try the public endpoint first
+          const response = await fetch('/api/careers/active/', {
+            method: 'GET',
+            headers: {
+              'Content-Type': 'application/json',
+              'Accept': 'application/json'
+            }
+          });
+
+          if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+          }
+
+          // Check if response is JSON array or object with results
+          const data = await response.json();
+          const careers = Array.isArray(data) ? data : (data.results || []);
+
+          if (careers.length === 0) {
+            container.innerHTML = '<p class="text-center" style="padding: 40px; color: #999;">No active job openings at the moment. Please check back later.</p>';
+            return;
+          }
+
+          let html = '';
+          careers.forEach(career => {
+            const jobTypeClass = career.job_type === 'full_time' ? 'badge-success' : career.job_type === 'part_time' ? 'badge-info' : 'badge-primary';
+            const jobTypeLabel = (career.job_type || '').replace('_', ' ').toUpperCase();
+
+            html += `
+              <div class="job-card">
+                <div class="job-header">
+                  <h3 class="job-title">${career.title || 'Untitled Position'}</h3>
+                  <div class="job-badges">
+                    ${jobTypeLabel ? `<span class="badge ${jobTypeClass}">${jobTypeLabel}</span>` : ''}
+                  </div>
+                </div>
+
+                <div class="job-meta">
+                  <div class="job-meta-item">
+                    <span class="ti-location-pin"></span>
+                    <span><span class="job-meta-label">Location:</span> ${career.location || 'Not specified'}</span>
+                  </div>
+                  ${career.department ? `
+                  <div class="job-meta-item">
+                    <span class="ti-bag"></span>
+                    <span><span class="job-meta-label">Department:</span> ${career.department}</span>
+                  </div>
+                  ` : ''}
+                  ${career.experience_required ? `
+                  <div class="job-meta-item">
+                    <span class="ti-user"></span>
+                    <span><span class="job-meta-label">Experience:</span> ${career.experience_required}</span>
+                  </div>
+                  ` : ''}
+                </div>
+
+                <p class="job-description">${career.short_description || (career.requirements ? career.requirements.substring(0, 200) : 'No description available')}</p>
+
+                ${career.salary_range ? `<p style="color: #ff6600; font-weight: bold;">Salary Range: ${career.salary_range}</p>` : ''}
+
+                <div class="job-footer">
+                  <div>
+                    ${career.application_deadline ? `<small style="color: #999;">Application Deadline: ${new Date(career.application_deadline).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })}</small>` : ''}
+                  </div>
+                  <div>
+                    ${career.application_url ? `
+                      <a href="${career.application_url}" target="_blank" class="apply-btn">Apply Now</a>
+                    ` : career.application_email ? `
+                      <a href="mailto:${career.application_email}?subject=Job Application - ${career.title}" class="apply-btn">Apply Now</a>
+                    ` : ''}
+                  </div>
+                </div>
+              </div>
+            `;
+          });
+
+          container.innerHTML = html;
+        } catch (error) {
+          console.error('Error fetching careers:', error);
+          container.innerHTML = `
+            <div style="padding: 40px; text-align: center; background: #f8f9fa; border-radius: 8px;">
+              <p style="color: #999; margin: 0;">Error loading career opportunities. Please try again later.</p>
+              <small style="color: #ccc; display: block; margin-top: 10px;">Debug: ${error.message}</small>
+            </div>
+          `;
+        }
+      }
+
+      // Load careers when page loads
+      document.addEventListener('DOMContentLoaded', function() {
+        fetchCareers();
+      });
+    </script>
+  </body>
+</html>
