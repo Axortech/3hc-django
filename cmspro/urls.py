@@ -106,8 +106,9 @@ def flatpage(request, page):
     except TemplateDoesNotExist:
         raise Http404()
 
-# Serve media files in development (must be before catch-all routes)
+# Serve static and media files in development (must be before catch-all routes)
 if settings.DEBUG:
+    urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 # catch-all for other frontend pages (must come after other routes)
