@@ -27,6 +27,46 @@
     <link href="{% static 'css/owl.transitions.css' %}" rel="stylesheet">
     <link href="{% static 'css/on3step-style.css' %}" rel="stylesheet">
     <link href="{% static 'css/queries-on3step.css' %}" media="all" rel="stylesheet" type="text/css">
+
+    {# Make team member boxes uniform regardless of uploaded photo dimensions #}
+    <style>
+      /* Scope to about page team section to avoid affecting other pages */
+      #team .team-wrapper {
+        background: #ffffff;
+        border: 1px solid #e5e5e5;
+        border-radius: 4px;
+        overflow: hidden;
+        margin-bottom: 30px;
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+      }
+
+      /* Force all team photos into the same box size with cropping, not stretching */
+      #team .team-wrapper img {
+        width: 100%;
+        height: 260px;          /* fixed visual height for uniform cards */
+        object-fit: cover;      /* crop to fill the box while keeping aspect ratio */
+        display: block;
+      }
+
+      /* Ensure description area is consistent and doesn’t squish the image */
+      #team .team-wrapper .team-des {
+        padding: 12px 15px 15px;
+        flex: 1 0 auto;
+      }
+
+      #team .team-wrapper .team-des h3 {
+        margin-top: 0;
+      }
+
+      @media (max-width: 767px) {
+        /* Slightly shorter images on small screens for better fit */
+        #team .team-wrapper img {
+          height: 220px;
+        }
+      }
+    </style>
   </head>
   <body>
   
@@ -190,60 +230,16 @@
       
       <!-- section team -->
       <section class="whitepage" id="team">
-        
+
         <!-- team -->
         <div class="container">
           <div class="row">
-          <div class="onStep" data-animation="fadeInUp" data-time="200">
-            <div class="col-md-3 col-sm-6">
-              <div class="team-wrapper">
-                <img alt="team img 1" class="img-responsive" src="{% static 'img/team-img1.jpg' %}">
-                <div class="team-des">
-                  <h3>
-                    John Doe
-                  </h3>
-                  <span>Project Manager</span> <a href="#"><span class="ti-facebook"></span></a> <a href="#"><span class="ti-twitter"></span></a> <a href="#"><span class="ti-linkedin"></span></a>
-                </div>
-              </div>
+          <div class="onStep" data-animation="fadeInUp" data-time="200" id="team-members-container">
+            <!-- Team members will be loaded dynamically here -->
+            <div class="col-12 text-center" id="team-loading">
+              <i class="fa fa-spinner fa-spin"></i> Loading team members...
             </div>
-
-            <div class="col-md-3 col-sm-6">
-              <div class="team-wrapper">
-                <img alt="team img 4" class="img-responsive" src="{% static 'img/team-img4.jpg' %}">
-                <div class="team-des">
-                  <h3>
-                    Renita
-                  </h3>
-                  <span>Project Director</span> <a href="#"><span class="ti-facebook"></span></a> <a href="#"><span class="ti-twitter"></span></a> <a href="#"><span class="ti-linkedin"></span></a>
-                </div>
-              </div>
-            </div>
-
-            <div class="col-md-3 col-sm-6">
-              <div class="team-wrapper">
-                <img alt="team img 3" class="img-responsive" src="{% static 'img/team-img3.jpg' %}">
-                <div class="team-des">
-                  <h3>
-                    Steve Makelew
-                  </h3>
-                  <span>C E O</span> <a href="#"><span class="ti-facebook"></span></a> <a href="#"><span class="ti-twitter"></span></a> <a href="#"><span class="ti-linkedin"></span></a>
-                </div>
-              </div>
-            </div>
-
-            <div class="col-md-3 col-sm-6">
-              <div class="team-wrapper">
-                <img alt="team img 4" class="img-responsive" src="{% static 'img/team-img2.jpg' %}">
-                <div class="team-des">
-                  <h3>
-                    Jess Parker
-                  </h3>
-                  <span>Bussines Dev</span> <a href="#"><span class="ti-facebook"></span></a> <a href="#"><span class="ti-twitter"></span></a> <a href="#"><span class="ti-linkedin"></span></a>
-                </div>
-              </div>
-            </div>
-            
-           </div>  
+          </div>
           </div>
         </div>
         <!-- team end -->
