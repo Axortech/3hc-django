@@ -48,6 +48,19 @@
 /* font-buildstate */
 @import url('https://fonts.googleapis.com/css?family=Montserrat:300,400,500');
 
+/* onStep animation elements - default visible state */
+.onStep {
+  opacity: 1 !important;
+  visibility: visible !important;
+}
+
+/* Service items - ensure visibility */
+.service {
+  opacity: 1 !important;
+  visibility: visible !important;
+  display: block !important;
+}
+
 /** general **/
 body {
   font-family: 'Montserrat', sans-serif;
