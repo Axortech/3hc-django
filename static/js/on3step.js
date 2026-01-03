@@ -168,61 +168,19 @@ $(window).on("load", function() {
         disabled: "true",
         value: "Sending..."
       }), $.ajax({
-        type: "POST",
-        url: "send.php",
-        data: "name=" + e + "&email=" + a + "&subject=You Got Email&message=" + s,
-        success: function(e) {
-          "success" == e ? (successent.fadeIn(500)) : (failedsent.html(e).fadeIn(500), contactsent.removeAttr("disabled").attr("value", "send").remove())
-        }
+      type: "POST",
+      url: "/api/leads/",
+      data: "name=" + e + "&email=" + a + "&subject=You Got Email&message=" + s,
+      success: function(e) {
+        "success" == e ? (successent.fadeIn(500)) : (failedsent.html(e).fadeIn(500), contactsent.removeAttr("disabled").attr("value", "send").remove())
+      }
       })), !1
     })
   });
   
   // contact-1 form
-  $(function() {
-    contactsent1.on('click', function(e) {
-      e.preventDefault();
-      var e = contactname1.val(),
-        a = contactemail.val(),
-        s = contactmessage.val(),
-        r = !1;
-      if (0 == a.length || "-1" == a.indexOf("@") || "-1" == a.indexOf(".")) {
-        var r = !0;
-        contactemail.css({
-          "border": "2px solid #31aae2"
-        });
-      } else contactemail.css({
-        "border": "2px solid #f1f1f1"
-      });
-      if (0 == e.length) {
-        var r = !0;
-        contactname1.css({
-          "border": "2px solid #31aae2"
-        });
-      } else contactname1.css({
-        "border": "2px solid #f1f1f1"
-      });
-      if (0 == s.length) {
-        var r = !0;
-        contactmessage.css({
-          "border": "2px solid #31aae2"
-        });
-      } else contactmessage.css({
-        "border": "2px solid #f1f1f1"
-      });
-      return 0 == r && (contactsent.attr({
-        disabled: "true",
-        value: "Sending..."
-      }), $.ajax({
-        type: "POST",
-        url: "send.php",
-        data: "name=" + e + "&email=" + a + "&subject=You Got Email&message=" + s,
-        success: function(e) {
-          "success" == e ? (successent.fadeIn(500)) : (failedsent.html(e).fadeIn(500), contactsent.removeAttr("disabled").attr("value", "send").remove())
-        }
-      })), !1
-    })
-  });
+  // Handled via custom script in contact-1.html (posts to /api/leads/ with CSRF).
+  // Legacy jQuery handler removed to avoid duplicate submissions and old send.php endpoint.
   
 
 });

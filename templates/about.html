@@ -30,6 +30,18 @@
 
     {# Make team member boxes uniform regardless of uploaded photo dimensions #}
     <style>
+      /* Fix spacing between About section and Team section & avoid overlap */
+      #about {
+        padding-bottom: 60px;
+      }
+
+      #team {
+        padding-top: 40px;
+        clear: both;
+        position: relative;
+        z-index: 1;
+      }
+
       /* Scope to about page team section to avoid affecting other pages */
       #team .team-wrapper {
         background: #ffffff;
@@ -126,103 +138,118 @@
         <div class="container">
           <div class="row">
           
-            <div class="col-md-5 col-xs-11">
+            <!-- Main About Section -->
+            <div class="col-md-12">
               <div class="onStep" data-animation="fadeInUp" data-time="300">
-                <article>
-                  <h2 data-about-title>
+                <div class="text-center" style="margin-bottom: 50px;">
+                  <h2 data-about-title style="font-size: 36px; font-weight: 700; color: #172434; margin-bottom: 20px;">
                     Who we are
                   </h2>
-                  <span class="devider-cont"></span>
-                  <div data-about-content>
-                    <p>
-                      <em>Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, quasi architecto beatae vitae dicta sunt explicabo.</em> Etiam purus lorem, aliquet a eros sit
-                      amet, vestibulum finibus augue. Cras egestas neque vitae dui tincidunt, vitae tristique tellus volutpat. Fusce justo ante, interdum Praesent vel augue rutrum, scelerisque velit
-                      non, interdum nisl. Nunc acumsan comodo.
-                    </p>
-                  </div>
-                </article>
+                  <span class="devider-cont" style="display: inline-block; width: 80px; height: 3px; background: #ff6600; margin-bottom: 25px;"></span>
+                </div>
               </div>
+            </div>
+
+            <!-- About Content with Image -->
+            <div class="col-md-6 col-xs-12">
+              <div class="onStep" data-animation="fadeInLeft" data-time="400">
+                <div data-about-image-container style="position: relative; border-radius: 8px; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.1); margin-bottom: 30px;">
+                  <img data-about-image src="{% static 'img/about-placeholder.jpg' %}" alt="About Us" class="img-responsive" style="width: 100%; height: auto; display: block;">
+                </div>
+              </div>
+            </div>
+
+            <div class="col-md-6 col-xs-12">
+              <div class="onStep" data-animation="fadeInRight" data-time="400">
+                <div data-about-content style="font-size: 15px; line-height: 1.8; color: #666; padding: 0 15px;">
+                  <p>
+                    <em>Loading about content...</em>
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-md-12">
               <div class="space-half"></div>
             </div>
-            <!-- text end -->
             
-            <!-- col -->
-            <div class="col-md-7 col-xs-11">
+            <!-- Mission, Vision, Goals Grid -->
+            <div class="col-md-12">
               <div class="onStep" data-animation="fadeInUp" data-time="600">
-                <div class="filter-wraper">
-                  <ul class="animfadeInUpBig" data-time="1200" id="filters">
-                    <li class="filt-serv selected" data-filter=".mission">
-                      <span data-mission-title>OUR MISSION</span>
-                    </li>
+                <div class="row">
+                  
+                  <!-- Mission Card -->
+                  <div class="col-md-4 col-sm-6">
+                    <div class="about-card" data-mission-card style="background: #fff; border-radius: 8px; padding: 30px; margin-bottom: 30px; box-shadow: 0 5px 20px rgba(0,0,0,0.08); transition: all 0.3s ease; height: 100%;">
+                      <div style="text-align: center; margin-bottom: 20px;">
+                        <div style="width: 80px; height: 80px; background: linear-gradient(135deg, #ff6600 0%, #ff8533 100%); border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; margin-bottom: 20px; box-shadow: 0 5px 15px rgba(255, 102, 0, 0.3);">
+                          <i class="fa fa-bullseye" style="font-size: 32px; color: #fff;"></i>
+                        </div>
+                        <h3 data-mission-title style="font-size: 22px; font-weight: 700; color: #172434; margin: 0;">
+                          Our Mission
+                        </h3>
+                      </div>
+                      <div data-mission-content style="font-size: 14px; line-height: 1.7; color: #666; text-align: center;">
+                        <p>Loading mission...</p>
+                      </div>
+                    </div>
+                  </div>
 
-                    <li class="space">•
-                    </li>
+                  <!-- Vision Card -->
+                  <div class="col-md-4 col-sm-6">
+                    <div class="about-card" data-vision-card style="background: #fff; border-radius: 8px; padding: 30px; margin-bottom: 30px; box-shadow: 0 5px 20px rgba(0,0,0,0.08); transition: all 0.3s ease; height: 100%;">
+                      <div style="text-align: center; margin-bottom: 20px;">
+                        <div style="width: 80px; height: 80px; background: linear-gradient(135deg, #ff6600 0%, #ff8533 100%); border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; margin-bottom: 20px; box-shadow: 0 5px 15px rgba(255, 102, 0, 0.3);">
+                          <i class="fa fa-eye" style="font-size: 32px; color: #fff;"></i>
+                        </div>
+                        <h3 data-vision-title style="font-size: 22px; font-weight: 700; color: #172434; margin: 0;">
+                          Our Vision
+                        </h3>
+                      </div>
+                      <div data-vision-content style="font-size: 14px; line-height: 1.7; color: #666; text-align: center;">
+                        <p>Loading vision...</p>
+                      </div>
+                    </div>
+                  </div>
 
-                    <li class="filt-serv" data-filter=".vision">
-                      <span data-vision-title>OUR VISION</span>
-                    </li>
+                  <!-- Goals Card -->
+                  <div class="col-md-4 col-sm-6">
+                    <div class="about-card" data-goals-card style="background: #fff; border-radius: 8px; padding: 30px; margin-bottom: 30px; box-shadow: 0 5px 20px rgba(0,0,0,0.08); transition: all 0.3s ease; height: 100%;">
+                      <div style="text-align: center; margin-bottom: 20px;">
+                        <div style="width: 80px; height: 80px; background: linear-gradient(135deg, #ff6600 0%, #ff8533 100%); border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; margin-bottom: 20px; box-shadow: 0 5px 15px rgba(255, 102, 0, 0.3);">
+                          <i class="fa fa-flag-checkered" style="font-size: 32px; color: #fff;"></i>
+                        </div>
+                        <h3 data-goals-title style="font-size: 22px; font-weight: 700; color: #172434; margin: 0;">
+                          Our Goals
+                        </h3>
+                      </div>
+                      <div data-goals-content style="font-size: 14px; line-height: 1.7; color: #666; text-align: center;">
+                        <p>Loading goals...</p>
+                      </div>
+                    </div>
+                  </div>
 
-                    <li class="space">•
-                    </li>
-
-                    <li class="filt-serv" data-filter=".goals">
-                      <span data-goals-title>OUR GOALS</span>
-                    </li>
-                  </ul>
-                </div>
-
-                <div class="space-half">
                 </div>
               </div>
+            </div>
 
-              <div class="onStep" data-animation="fadeInUp" data-time="900" id="services">
-                <div class="service mission">
-                  <img alt="Mission" class="img-responsive" data-mission-image src="{% static 'img/img-service-1.jpg' %}">
-                  <h4 data-mission-title>
-                    OUR MISSION
-                  </h4>
-
-                  <div data-mission-content>
-                    <p>
-                      Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi
-                      architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione
-                      voluptatem sequi nesciunt.
-                    </p>
+            <!-- Achievements Section -->
+            <div class="col-md-12" data-achievements-section style="display: none;">
+              <div class="onStep" data-animation="fadeInUp" data-time="800">
+                <div style="background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%); border-radius: 8px; padding: 50px 30px; margin-top: 20px; margin-bottom: 30px; border-left: 5px solid #ff6600;">
+                  <div class="text-center" style="margin-bottom: 30px;">
+                    <h3 data-achievements-title style="font-size: 28px; font-weight: 700; color: #172434; margin-bottom: 15px;">
+                      Our Achievements
+                    </h3>
+                    <span style="display: inline-block; width: 60px; height: 3px; background: #ff6600;"></span>
                   </div>
-                </div>
-
-                <div class="service vision">
-                  <img alt="Vision" class="img-responsive" data-vision-image src="{% static 'img/img-service-2.jpg' %}">
-                  <h4 data-vision-title>
-                    OUR VISION
-                  </h4>
-
-                  <div data-vision-content>
-                    <p>
-                      Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi
-                      architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione
-                      voluptatem sequi nesciunt.
-                    </p>
-                  </div>
-                </div>
-
-                <div class="service goals">
-                  <img alt="Goals" class="img-responsive" data-goals-image src="{% static 'img/img-service-3.jpg' %}">
-                  <h4 data-goals-title>
-                    OUR GOALS
-                  </h4>
-
-                  <div data-goals-content>
-                    <p>
-                      Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi
-                      architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione
-                      voluptatem sequi nesciunt.
-                    </p>
+                  <div data-achievements-content style="font-size: 16px; line-height: 1.9; color: #495057; max-width: 900px; margin: 0 auto;">
+                    <p>Loading achievements...</p>
                   </div>
                 </div>
               </div>
             </div>
-            <!-- col end -->
+            
           </div>
         </div>
       </section>

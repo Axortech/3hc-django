@@ -2279,6 +2279,9 @@
           <div class="tab-content" id="leads">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px;">
               <h2 style="margin: 0;"><i class="fa fa-envelope"></i> Leads Management</h2>
+              <button type="button" class="btn btn-primary" onclick="loadLeadsTable()" title="Refresh leads list">
+                <i class="fa fa-refresh"></i> Refresh
+              </button>
             </div>
             <p style="color: #999; margin-bottom: 25px;">Manage contact form submissions and lead information.</p>
 
@@ -2289,7 +2292,7 @@
                     <th>Name</th>
                     <th>Email</th>
                     <th>Phone</th>
-                    <th>Message</th>
+                    <th>Message Preview</th>
                     <th>Status</th>
                     <th>Source</th>
                     <th>Date</th>
@@ -2305,6 +2308,44 @@
                   </tr>
                 </tbody>
               </table>
+            </div>
+          </div>
+
+          <!-- Lead Detail Modal -->
+          <div id="leadDetailModal" class="modal">
+            <div class="modal-content" style="max-width: 700px;">
+              <div class="modal-header">
+                <h3><i class="fa fa-envelope-open"></i> Lead Details</h3>
+                <button type="button" class="modal-close" onclick="closeLeadDetailModal()" title="Close modal">&times;</button>
+              </div>
+              <div class="modal-body">
+                <div id="leadDetailContent" style="padding: 20px;">
+                  <!-- Lead details will be loaded here -->
+                </div>
+                <div style="margin-top: 30px; padding-top: 20px; border-top: 2px solid #e5e5e5;">
+                  <h4 style="margin-bottom: 15px; color: #172434;"><i class="fa fa-cog"></i> Update Status</h4>
+                  <div class="form-group">
+                    <label for="leadStatus">Status</label>
+                    <select id="leadStatus" class="form-control">
+                      <option value="new">New</option>
+                      <option value="contacted">Contacted</option>
+                      <option value="qualified">Qualified</option>
+                      <option value="lost">Lost</option>
+                    </select>
+                  </div>
+                  <div class="form-actions" style="margin-top: 20px;">
+                    <button type="button" class="btn btn-secondary" onclick="closeLeadDetailModal()">
+                      <i class="fa fa-times"></i> Close
+                    </button>
+                    <button type="button" class="btn btn-primary" onclick="updateLeadStatus()">
+                      <i class="fa fa-save"></i> Update Status
+                    </button>
+                    <button type="button" class="btn btn-danger" onclick="deleteLeadFromModal()" style="float: right;">
+                      <i class="fa fa-trash"></i> Delete Lead
+                    </button>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
 
@@ -7192,61 +7233,200 @@
 
         tbody.innerHTML = leads.map(lead => {
           const date = new Date(lead.created_at).toLocaleDateString();
-          const statusColor = lead.status === 'new' ? '#ff6600' : lead.status === 'qualified' ? '#4CAF50' : '#999';
+          const statusColor = {
+            'new': '#ff6600',
+            'contacted': '#2196F3',
+            'qualified': '#4CAF50',
+            'lost': '#999'
+          }[lead.status] || '#999';
+          
+          const isRead = lead.is_read;
+          const rowStyle = isRead ? '' : 'background: #fffbf5; font-weight: 500;';
+          
           return `
-            <tr>
-              <td>${DashboardApp.sanitize(lead.name)}</td>
-              <td><a href="mailto:${lead.email}">${DashboardApp.sanitize(lead.email)}</a></td>
-              <td>${lead.phone || 'N/A'}</td>
-              <td style="max-width: 200px; overflow: hidden; text-overflow: ellipsis;">${DashboardApp.sanitize(lead.message.substring(0, 50))}...</td>
-              <td><span style="color: ${statusColor}; font-weight: 500; text-transform: capitalize;">${lead.status}</span></td>
-              <td>${DashboardApp.sanitize(lead.source || 'contact-form')}</td>
-              <td>${date}</td>
+            <tr style="${rowStyle}">
               <td>
-                <button type="button" class="btn-action btn-sm" onclick="markLeadRead(${lead.id})" title="Mark as read">
+                ${!isRead ? '<i class="fa fa-envelope" style="color: #ff6600; margin-right: 5px;" title="Unread"></i>' : ''}
+                ${DashboardApp.sanitize(lead.name)}
+              </td>
+              <td><a href="mailto:${lead.email}" style="color: #ff6600;">${DashboardApp.sanitize(lead.email)}</a></td>
+              <td>${lead.phone ? `<a href="tel:${lead.phone}">${lead.phone}</a>` : '<span style="color: #999;">N/A</span>'}</td>
+              <td style="max-width: 250px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" title="${DashboardApp.sanitize(lead.message)}">
+                ${DashboardApp.sanitize(lead.message.substring(0, 60))}${lead.message.length > 60 ? '...' : ''}
+              </td>
+              <td>
+                <span style="display: inline-block; padding: 5px 12px; background: ${statusColor}; color: #fff; border-radius: 20px; font-size: 11px; font-weight: 600; text-transform: capitalize;">
+                  ${lead.status}
+                </span>
+              </td>
+              <td><span style="color: #666; font-size: 12px;">${DashboardApp.sanitize(lead.source || 'contact-form')}</span></td>
+              <td style="white-space: nowrap;">${date}</td>
+              <td style="white-space: nowrap;">
+                <button type="button" class="btn btn-sm btn-primary" onclick="openLeadDetailModal(${lead.id})" title="View details" style="margin-right: 5px;">
                   <i class="fa fa-eye"></i>
                 </button>
-                <button type="button" class="btn-action btn-sm" onclick="openEditLeadModal(${lead.id})" title="View details">
-                  <i class="fa fa-edit"></i>
-                </button>
-                <button type="button" class="btn-danger btn-sm" onclick="deleteLead(${lead.id})" title="Delete lead">
+                <button type="button" class="btn btn-sm btn-danger" onclick="deleteLeadQuick(${lead.id})" title="Delete lead">
                   <i class="fa fa-trash"></i>
                 </button>
               </td>
             </tr>
           `;
         }).join('');
+        
+        console.log(`[Leads] Loaded ${leads.length} leads`);
       } catch (error) {
+        console.error('[Leads] Error loading leads:', error);
         const tbody = document.getElementById('leadsTableBody');
         if (tbody) {
-          tbody.innerHTML = `<tr><td colspan="8" class="error-message" style="text-align: center; padding: 20px;">
-            <i class="fa fa-warning"></i> Error loading leads: ${DashboardApp.sanitize(error.message)}
+          tbody.innerHTML = `<tr><td colspan="8" class="error-message" style="text-align: center; padding: 20px; color: #dc3545;">
+            <i class="fa fa-exclamation-triangle"></i> Error loading leads: ${DashboardApp.sanitize(error.message)}
           </td></tr>`;
         }
+        DashboardApp.Toast.show('Error loading leads: ' + error.message, 'error');
       }
     }
 
-    // Mark Lead as Read
-    async function markLeadRead(leadId) {
+    // Global variable to track current lead
+    let currentLeadId = null;
+
+    // Open Lead Detail Modal
+    async function openLeadDetailModal(leadId) {
+      currentLeadId = leadId;
+      
       try {
-        await DashboardApp.API.put(`/api/leads/${leadId}/`, { is_read: true });
-        DashboardApp.Toast.show('Lead marked as read', 'success');
-        loadLeadsTable();
+        const lead = await DashboardApp.API.get(`/api/leads/${leadId}/`);
+        
+        // Mark as read automatically when viewing
+        if (!lead.is_read) {
+          await DashboardApp.API.patch(`/api/leads/${leadId}/`, { is_read: true });
+        }
+        
+        // Format the lead details
+        const content = document.getElementById('leadDetailContent');
+        content.innerHTML = `
+          <div style="display: grid; gap: 20px;">
+            <div style="background: linear-gradient(135deg, #ff6600 0%, #ff8533 100%); padding: 20px; border-radius: 8px; color: white;">
+              <h3 style="margin: 0 0 10px 0; color: white;"><i class="fa fa-user"></i> ${DashboardApp.sanitize(lead.name)}</h3>
+              <p style="margin: 0; opacity: 0.9; font-size: 13px;">
+                <i class="fa fa-calendar"></i> Submitted on ${new Date(lead.created_at).toLocaleString()}
+              </p>
+            </div>
+            
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px;">
+              <div style="background: #f8f9fa; padding: 15px; border-radius: 6px; border-left: 3px solid #ff6600;">
+                <div style="font-size: 11px; color: #999; text-transform: uppercase; font-weight: 600; margin-bottom: 5px;">Email</div>
+                <a href="mailto:${lead.email}" style="color: #ff6600; font-weight: 500; word-break: break-all;">${DashboardApp.sanitize(lead.email)}</a>
+              </div>
+              
+              <div style="background: #f8f9fa; padding: 15px; border-radius: 6px; border-left: 3px solid #ff6600;">
+                <div style="font-size: 11px; color: #999; text-transform: uppercase; font-weight: 600; margin-bottom: 5px;">Phone</div>
+                <div style="font-weight: 500;">${lead.phone ? `<a href="tel:${lead.phone}" style="color: #172434;">${lead.phone}</a>` : '<span style="color: #999;">Not provided</span>'}</div>
+              </div>
+              
+              <div style="background: #f8f9fa; padding: 15px; border-radius: 6px; border-left: 3px solid #ff6600;">
+                <div style="font-size: 11px; color: #999; text-transform: uppercase; font-weight: 600; margin-bottom: 5px;">Source</div>
+                <div style="font-weight: 500; text-transform: capitalize;">${DashboardApp.sanitize(lead.source || 'contact-form')}</div>
+              </div>
+            </div>
+            
+            <div style="background: #f8f9fa; padding: 20px; border-radius: 6px;">
+              <div style="font-size: 11px; color: #999; text-transform: uppercase; font-weight: 600; margin-bottom: 10px;">
+                <i class="fa fa-comment"></i> Message
+              </div>
+              <div style="color: #172434; line-height: 1.7; white-space: pre-wrap; font-size: 14px;">${DashboardApp.sanitize(lead.message)}</div>
+            </div>
+            
+            ${lead.attached_file ? `
+            <div style="background: #fff3cd; padding: 15px; border-radius: 6px; border-left: 3px solid #ffc107;">
+              <div style="font-size: 11px; color: #856404; text-transform: uppercase; font-weight: 600; margin-bottom: 10px;">
+                <i class="fa fa-paperclip"></i> Attachment
+              </div>
+              <a href="${lead.attached_file}" target="_blank" style="color: #856404; font-weight: 500;" download>
+                <i class="fa fa-download"></i> Download Attachment
+              </a>
+            </div>
+            ` : ''}
+          </div>
+        `;
+        
+        // Set current status in dropdown
+        document.getElementById('leadStatus').value = lead.status;
+        
+        // Show modal
+        document.getElementById('leadDetailModal').classList.add('active');
+        
       } catch (error) {
-        DashboardApp.Toast.show('Error marking lead as read: ' + error.message, 'error');
+        console.error('[Leads] Error loading lead details:', error);
+        DashboardApp.Toast.show('Error loading lead details: ' + error.message, 'error');
       }
     }
 
-    // Delete Lead
-    async function deleteLead(leadId) {
+    // Close Lead Detail Modal
+    function closeLeadDetailModal() {
+      document.getElementById('leadDetailModal').classList.remove('active');
+      currentLeadId = null;
+      loadLeadsTable(); // Refresh the table to show updated read status
+    }
+
+    // Update Lead Status
+    async function updateLeadStatus() {
+      if (!currentLeadId) return;
+      
+      const status = document.getElementById('leadStatus').value;
+      
+      try {
+        await DashboardApp.API.patch(`/api/leads/${currentLeadId}/`, { status: status });
+        DashboardApp.Toast.show('Lead status updated successfully', 'success');
+        closeLeadDetailModal();
+      } catch (error) {
+        console.error('[Leads] Error updating lead status:', error);
+        DashboardApp.Toast.show('Error updating lead status: ' + error.message, 'error');
+      }
+    }
+
+    // Delete Lead from Modal
+    async function deleteLeadFromModal() {
+      if (!currentLeadId) return;
+      
+      if (!confirm('Are you sure you want to delete this lead? This action cannot be undone.')) {
+        return;
+      }
+      
+      try {
+        await DashboardApp.API.delete(`/api/leads/${currentLeadId}/`);
+        DashboardApp.Toast.show('Lead deleted successfully', 'success');
+        closeLeadDetailModal();
+      } catch (error) {
+        console.error('[Leads] Error deleting lead:', error);
+        DashboardApp.Toast.show('Error deleting lead: ' + error.message, 'error');
+      }
+    }
+
+    // Quick Delete Lead (from table)
+    async function deleteLeadQuick(leadId) {
       if (!confirm('Are you sure you want to delete this lead?')) return;
+      
       try {
         await DashboardApp.API.delete(`/api/leads/${leadId}/`);
         DashboardApp.Toast.show('Lead deleted successfully', 'success');
         loadLeadsTable();
       } catch (error) {
+        console.error('[Leads] Error deleting lead:', error);
         DashboardApp.Toast.show('Error deleting lead: ' + error.message, 'error');
       }
+    }
+
+    // Legacy functions (kept for compatibility)
+    function markLeadRead(leadId) {
+      openLeadDetailModal(leadId);
+    }
+    
+    function openEditLeadModal(leadId) {
+      openLeadDetailModal(leadId);
+    }
+    
+    function deleteLead(leadId) {
+      deleteLeadQuick(leadId);
     }
 
     // Load Clients into Table

@@ -8,6 +8,7 @@
     <meta content="" name="author">
     <meta content="" name="keywords">
     <meta content="width=device-width, initial-scale=1, maximum-scale=1" name="viewport">
+    <meta name="csrf-token" content="{{ csrf_token }}">
     <!-- favicon -->
     <link href="{% static 'img/favicon.png' %}" rel="icon" sizes="32x32" type="image/png">
     <!-- Bootstrap CSS -->
@@ -27,6 +28,159 @@
     <link href="{% static 'css/owl.transitions.css' %}" rel="stylesheet">
     <link href="{% static 'css/on3step-style.css' %}" rel="stylesheet">
     <link href="{% static 'css/queries-on3step.css' %}" media="all" rel="stylesheet" type="text/css">
+    
+    <!-- Leaflet CSS for map (no API key required) -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
+    
+    <style>
+      /* Modern 2-column layout for contact page */
+      .contact-container {
+        display: flex;
+        min-height: 600px;
+        box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+        border-radius: 8px;
+        overflow: hidden;
+        margin: 40px auto;
+        background: #fff;
+      }
+      
+      .contact-map-column {
+        flex: 1;
+        min-height: 600px;
+        position: relative;
+      }
+      
+      #contact-map {
+        width: 100%;
+        height: 100%;
+        min-height: 600px;
+      }
+      
+      .contact-form-column {
+        flex: 1;
+        padding: 60px 50px;
+        background: #fff;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+      }
+      
+      .contact-form-column h2 {
+        font-size: 32px;
+        font-weight: 700;
+        color: #172434;
+        margin-bottom: 15px;
+      }
+      
+      .contact-form-column p {
+        font-size: 15px;
+        color: #666;
+        margin-bottom: 35px;
+        line-height: 1.6;
+      }
+      
+      .contact-form-column .form-group {
+        margin-bottom: 25px;
+      }
+      
+      .contact-form-column .form-control {
+        width: 100%;
+        padding: 15px 20px;
+        border: 2px solid #e5e5e5;
+        border-radius: 6px;
+        font-size: 14px;
+        transition: all 0.3s ease;
+        background: #fafafa;
+      }
+      
+      .contact-form-column .form-control:focus {
+        border-color: #ff6600;
+        background: #fff;
+        outline: none;
+        box-shadow: 0 0 0 3px rgba(255, 102, 0, 0.1);
+      }
+      
+      .contact-form-column textarea.form-control {
+        min-height: 150px;
+        resize: vertical;
+      }
+      
+      .contact-form-column .btn-contact {
+        width: 100%;
+        padding: 16px 30px;
+        background: linear-gradient(135deg, #ff6600 0%, #ff8533 100%);
+        color: #fff;
+        border: none;
+        border-radius: 6px;
+        font-size: 16px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        box-shadow: 0 4px 15px rgba(255, 102, 0, 0.3);
+      }
+      
+      .contact-form-column .btn-contact:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(255, 102, 0, 0.4);
+      }
+      
+      .contact-form-column .btn-contact:active {
+        transform: translateY(0);
+      }
+      
+      .contact-form-column .success,
+      .contact-form-column .error {
+        padding: 15px;
+        border-radius: 6px;
+        margin-top: 20px;
+        font-size: 14px;
+        font-weight: 500;
+        display: none;
+      }
+      
+      .contact-form-column .success {
+        background: #d4edda;
+        color: #155724;
+        border: 1px solid #c3e6cb;
+      }
+      
+      .contact-form-column .error {
+        background: #f8d7da;
+        color: #721c24;
+        border: 1px solid #f5c6cb;
+      }
+      
+      /* Responsive design */
+      @media (max-width: 991px) {
+        .contact-container {
+          flex-direction: column;
+        }
+        
+        .contact-map-column {
+          min-height: 400px;
+        }
+        
+        #contact-map {
+          min-height: 400px;
+        }
+        
+        .contact-form-column {
+          padding: 40px 30px;
+        }
+      }
+      
+      @media (max-width: 767px) {
+        .contact-form-column {
+          padding: 30px 20px;
+        }
+        
+        .contact-form-column h2 {
+          font-size: 26px;
+        }
+      }
+    </style>
   </head>
   <body>
   
@@ -81,51 +235,59 @@
       </section>
       <!-- subheader end -->
       
-              <!-- map -->
-              <div class="onStep" data-animation="fadeIn" data-time="300" id="map-1"></div>
-              <!-- map end -->
-      
       <!-- section contact -->
-      <section aria-label="contact" class="whitepage">
+      <section aria-label="contact" class="whitepage" style="padding: 60px 0;">
         <div class="container">
-          <div class="row">
           
-            <div class="col-md-8">
-                <form id="form-contact1">
-                            <div class="form-group user-name">
-                                <label for="name-contact-1" style="display: none;">Name</label>
-                                <input type="text" class="form-control" required="" id="name-contact-1" placeholder="Your Name" title="Enter your full name">
-                            </div>
-
-                            <div class="form-group user-email">
-                                <label for="email-contact" style="display: none;">Email</label>
-                                <input type="email" class="form-control" required="" id="email-contact" placeholder="Your Email" title="Enter your email address">
-                            </div>
-                        
-                            <div class="form-group user-message">
-                                <label for="message-contact" style="display: none;">Message</label>
-                                <textarea class="form-control" required="" id="message-contact" placeholder="Your Message" title="Enter your message"></textarea>
-                                <div class="success" id="mail_success">Thank you. Your message has been sent</div>
-                                <div class="error" id="mail_failed">Error, email not sent</div>
-                            </div>
-                    <button type="submit" id="send-contact-1" class="btn-contact" title="Send contact form">Send Now</button>
-                </form>
+          <!-- 2-Column Layout: Map + Form -->
+          <div class="contact-container">
+            
+            <!-- Left Column: Map -->
+            <div class="contact-map-column">
+              <div id="contact-map"></div>
             </div>
             
-            <!-- address -->
-              <div class="col-md-3 col-md-offset-1">
-                <h3 class="heading-cont">Contact Information</h3>
-                  <address class="cont-1">
-                    <span>Chyasa Dekwo Marg, New York 10903</span> 
-                    <span><strong>PHONE:</strong> +977-9876543211</span> 
-                    <span><strong>EMAIL:</strong><a href="mailto:companyname@gmail.com"> youremail@gmail.com</a></span> 
-                    <span><strong>WEB:</strong><a href="#"> www.yourdomain.com</a></span>
-                  </address>
-              </div>
-              <!-- address end -->
+            <!-- Right Column: Contact Form -->
+            <div class="contact-form-column">
+              <h2>Get In Touch</h2>
+              <p>Have a question or want to work together? Drop us a message and we'll get back to you as soon as possible.</p>
+              
+              <form id="form-contact1">
+                <div class="form-group user-name">
+                  <label for="name-contact-1" style="display: none;">Name</label>
+                  <input type="text" class="form-control" required="" id="name-contact-1" placeholder="Your Name *" title="Enter your full name">
+                </div>
+
+                <div class="form-group user-email">
+                  <label for="email-contact" style="display: none;">Email</label>
+                  <input type="email" class="form-control" required="" id="email-contact" placeholder="Your Email *" title="Enter your email address">
+                </div>
+                
+                <div class="form-group user-phone">
+                  <label for="phone-contact" style="display: none;">Phone</label>
+                  <input type="tel" class="form-control" id="phone-contact" placeholder="Your Phone (Optional)" title="Enter your phone number">
+                </div>
             
+                <div class="form-group user-message">
+                  <label for="message-contact" style="display: none;">Message</label>
+                  <textarea class="form-control" required="" id="message-contact" placeholder="Your Message *" title="Enter your message"></textarea>
+                </div>
+                
+                <button type="submit" id="send-contact-1" class="btn-contact" title="Send contact form">
+                  <i class="fa fa-paper-plane" style="margin-right: 8px;"></i>Send Message
+                </button>
+                
+                <div class="success" id="mail_success">
+                  <i class="fa fa-check-circle" style="margin-right: 8px;"></i>Thank you! Your message has been sent successfully.
+                </div>
+                <div class="error" id="mail_failed">
+                  <i class="fa fa-exclamation-circle" style="margin-right: 8px;"></i>Error sending message. Please try again.
+                </div>
+              </form>
+            </div>
             
           </div>
+          
         </div>
       </section>
       <!-- section contact end -->
@@ -160,13 +322,251 @@
     </div>
     <!-- Subscribe end -->
     
+    <!-- Leaflet JS for map (no API key required) -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+    
+    <!-- Initialize Map & Contact Form Script -->
+    <script>
+      document.addEventListener('DOMContentLoaded', function() {
+        console.log('[Contact Page] DOM loaded, initializing...');
+        
+        // ============================================
+        // CSRF TOKEN HELPER (for Django/DRF)
+        // ============================================
+        function getCsrfToken() {
+          // Try meta tag first (set in <head>)
+          const meta = document.querySelector('meta[name="csrf-token"]');
+          if (meta && meta.getAttribute('content')) {
+            return meta.getAttribute('content');
+          }
+          
+          // Fallback to cookie
+          const match = document.cookie.match(/(^|;)\s*csrftoken=([^;]+)/);
+          if (match) {
+            return decodeURIComponent(match[2]);
+          }
+          
+          console.warn('[Contact Form] CSRF token not found. POST to /api/leads/ may be rejected.');
+          return null;
+        }
+        
+        // ============================================
+        // MAP INITIALIZATION
+        // ============================================
+        const latitude = 27.7172;  // Change to your desired latitude
+        const longitude = 85.3240; // Change to your desired longitude
+        const companyName = 'BUILDSTATE'; // Change to your company name
+        
+        // Initialize the map
+        const map = L.map('contact-map', {
+          center: [latitude, longitude],
+          zoom: 15,
+          scrollWheelZoom: false,
+          zoomControl: true
+        });
+        
+        // Add OpenStreetMap tile layer (free, no API key needed)
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+          attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+          maxZoom: 19
+        }).addTo(map);
+        
+        // Custom marker icon (orange)
+        const customIcon = L.divIcon({
+          className: 'custom-marker',
+          html: '<div style="background: #ff6600; width: 40px; height: 40px; border-radius: 50% 50% 50% 0; transform: rotate(-45deg); border: 3px solid #fff; box-shadow: 0 3px 10px rgba(0,0,0,0.3); display: flex; align-items: center; justify-content: center;"><i class="fa fa-building" style="color: #fff; font-size: 16px; transform: rotate(45deg);"></i></div>',
+          iconSize: [40, 40],
+          iconAnchor: [20, 40],
+          popupAnchor: [0, -40]
+        });
+        
+        // Add marker to the map
+        const marker = L.marker([latitude, longitude], { icon: customIcon }).addTo(map);
+        
+        // Add popup to marker
+        marker.bindPopup(`
+          <div style="text-align: center; padding: 10px;">
+            <h4 style="margin: 0 0 8px 0; color: #ff6600; font-size: 16px; font-weight: 700;">${companyName}</h4>
+            <p style="margin: 0; color: #666; font-size: 13px;">Visit us at our location</p>
+          </div>
+        `).openPopup();
+        
+        // Re-center map on window resize
+        window.addEventListener('resize', function() {
+          map.invalidateSize();
+        });
+        
+        console.log('[Contact Map] Map initialized at:', latitude, longitude);
+        
+        // ============================================
+        // CONTACT FORM SUBMISSION HANDLER
+        // ============================================
+        const contactForm = document.getElementById('form-contact1');
+        const submitButton = document.getElementById('send-contact-1');
+        const successMessage = document.getElementById('mail_success');
+        const errorMessage = document.getElementById('mail_failed');
+        
+        console.log('[Contact Form] Form element:', contactForm);
+        console.log('[Contact Form] Submit button:', submitButton);
+        
+        if (!contactForm) {
+          console.error('[Contact Form] Form not found! ID: form-contact1');
+          return;
+        }
+        
+        if (!submitButton) {
+          console.error('[Contact Form] Submit button not found! ID: send-contact-1');
+          return;
+        }
+        
+        // Helper functions to show success/error messages
+        function showSuccess(message) {
+          if (successMessage) {
+            successMessage.innerHTML = '<i class="fa fa-check-circle" style="margin-right: 8px;"></i>' + message;
+            successMessage.style.display = 'block';
+          }
+          if (errorMessage) {
+            errorMessage.style.display = 'none';
+          }
+          
+          // Auto-hide after 10 seconds
+          setTimeout(() => {
+            if (successMessage) {
+              successMessage.style.display = 'none';
+            }
+          }, 10000);
+        }
+        
+        function showError(message) {
+          if (errorMessage) {
+            errorMessage.innerHTML = '<i class="fa fa-exclamation-circle" style="margin-right: 8px;"></i>' + message;
+            errorMessage.style.display = 'block';
+          }
+          if (successMessage) {
+            successMessage.style.display = 'none';
+          }
+          
+          // Auto-hide after 8 seconds
+          setTimeout(() => {
+            if (errorMessage) {
+              errorMessage.style.display = 'none';
+            }
+          }, 8000);
+        }
+        
+        // Attach form submission handler
+        contactForm.addEventListener('submit', async function(e) {
+          e.preventDefault();
+          console.log('[Contact Form] Form submitted!');
+          
+          // Get form values
+          const nameInput = document.getElementById('name-contact-1');
+          const emailInput = document.getElementById('email-contact');
+          const phoneInput = document.getElementById('phone-contact');
+          const messageInput = document.getElementById('message-contact');
+          
+          if (!nameInput || !emailInput || !messageInput) {
+            console.error('[Contact Form] Form inputs not found!');
+            showError('Form configuration error. Please refresh the page.');
+            return;
+          }
+          
+          const name = nameInput.value.trim();
+          const email = emailInput.value.trim();
+          const phone = phoneInput ? phoneInput.value.trim() : '';
+          const message = messageInput.value.trim();
+          
+          console.log('[Contact Form] Form data:', { name, email, phone, message });
+          
+          // Basic validation
+          if (!name || !email || !message) {
+            showError('Please fill in all required fields (Name, Email, and Message)');
+            return;
+          }
+          
+          // Validate email format
+          const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+          if (!emailRegex.test(email)) {
+            showError('Please enter a valid email address');
+            return;
+          }
+          
+          // Disable submit button and show loading state
+          submitButton.disabled = true;
+          const originalButtonText = submitButton.innerHTML;
+          submitButton.innerHTML = '<i class="fa fa-spinner fa-spin" style="margin-right: 8px;"></i>Sending...';
+          
+          // Hide previous messages
+          if (successMessage) successMessage.style.display = 'none';
+          if (errorMessage) errorMessage.style.display = 'none';
+          
+          try {
+            // Get API base URL
+            const apiBaseUrl = window.location.origin;
+            const csrfToken = getCsrfToken();
+            
+            // Prepare lead data
+            const leadData = {
+              name: name,
+              email: email,
+              phone: phone || '',
+              message: message,
+              source: 'contact-form'
+            };
+            
+            console.log('[Contact Form] Submitting to:', `${apiBaseUrl}/api/leads/`);
+            console.log('[Contact Form] Lead data:', leadData);
+            
+            // Submit to leads API (public endpoint)
+            const response = await fetch(`${apiBaseUrl}/api/leads/`, {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+                ...(csrfToken ? { 'X-CSRFToken': csrfToken } : {}),
+              },
+              body: JSON.stringify(leadData),
+              credentials: 'include'
+            });
+            
+            console.log('[Contact Form] Response status:', response.status);
+            
+            let data;
+            try {
+              data = await response.json();
+              console.log('[Contact Form] Response data:', data);
+            } catch (e) {
+              console.error('[Contact Form] Failed to parse JSON response:', e);
+              data = {};
+            }
+            
+            if (response.ok) {
+              console.log('[Contact Form] ✅ Lead submitted successfully!');
+              showSuccess('Thank you! Your message has been sent successfully. We will get back to you soon.');
+              contactForm.reset();
+            } else {
+              console.error('[Contact Form] ❌ Server error:', response.status, data);
+              const errorMsg = data.detail || data.message || data.error || `Server error (${response.status}). Please try again.`;
+              showError(errorMsg);
+            }
+            
+          } catch (error) {
+            console.error('[Contact Form] ❌ Network error:', error);
+            showError('Network error. Please check your connection and try again.');
+          } finally {
+            // Re-enable submit button
+            submitButton.disabled = false;
+            submitButton.innerHTML = originalButtonText;
+          }
+        });
+        
+        console.log('[Contact Form] ✅ Form handler attached successfully!');
+      });
+    </script>
+    
     <!-- plugin JS -->
     <script src="{% static 'plugin/pluginson3step.js' %}" type="text/javascript"></script> 
     <!-- slider revolution  -->
     <script type="text/javascript" src="{% static 'rs-plugin/js/jquery.themepunch.revolution.min.js' %}"></script>
-    <!--  map google  -->
-    <script src="https://maps.googleapis.com/maps/api/js?v=3&key=AIzaSyCQ5KODzqooIP496GPLRaMAsZ4eN8Vro_U"></script> 
-    <script src="{% static 'js/map-1.js' %}" type="text/javascript"></script> 
     <!-- on3step JS -->
     <script src="{% static 'js/on3step.js' %}" type="text/javascript"></script>
     <script src="{% static 'js/plugin-set.js' %}" type="text/javascript"></script>

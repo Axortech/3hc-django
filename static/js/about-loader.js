@@ -114,40 +114,38 @@
       if (aboutData.title) {
         aboutTitle.textContent = aboutData.title;
         console.log('[AboutLoader] Updated title:', aboutData.title);
-      } else {
-        console.warn('[AboutLoader] Title element found but no title data');
       }
-    } else {
-      console.warn('[AboutLoader] Title element [data-about-title] not found');
     }
 
     const aboutContent = document.querySelector('[data-about-content]');
     if (aboutContent) {
       if (aboutData.content) {
-        aboutContent.innerHTML = aboutData.content;
+        // Format content with proper paragraphs
+        const formattedContent = aboutData.content
+          .split('\n')
+          .filter(line => line.trim())
+          .map(line => `<p>${line.trim()}</p>`)
+          .join('');
+        aboutContent.innerHTML = formattedContent || aboutData.content;
         console.log('[AboutLoader] Updated content');
-      } else {
-        console.warn('[AboutLoader] Content element found but no content data');
       }
-    } else {
-      console.warn('[AboutLoader] Content element [data-about-content] not found');
     }
 
     // Update main about image
     const aboutImage = document.querySelector('[data-about-image]');
-    if (aboutImage) {
-      if (aboutData.image) {
-        aboutImage.src = aboutData.image;
-        aboutImage.style.display = '';
-        if (aboutData.title) {
-          aboutImage.alt = aboutData.title;
-        }
-        console.log('[AboutLoader] Updated main image:', aboutData.image);
-      } else {
-        console.warn('[AboutLoader] No main image data available');
+    const aboutImageContainer = document.querySelector('[data-about-image-container]');
+    if (aboutImage && aboutData.image) {
+      aboutImage.src = aboutData.image;
+      aboutImage.style.display = 'block';
+      if (aboutData.title) {
+        aboutImage.alt = aboutData.title;
       }
-    } else {
-      console.warn('[AboutLoader] Main image element [data-about-image] not found');
+      if (aboutImageContainer) {
+        aboutImageContainer.style.display = 'block';
+      }
+      console.log('[AboutLoader] Updated main image:', aboutData.image);
+    } else if (!aboutData.image && aboutImageContainer) {
+      aboutImageContainer.style.display = 'none';
     }
 
     // Update mission section
@@ -158,31 +156,13 @@
 
     const missionContent = document.querySelector('[data-mission-content]');
     if (missionContent && aboutData.mission_content) {
-      missionContent.innerHTML = aboutData.mission_content;
-    }
-
-    const missionImage = document.querySelector('[data-mission-image]');
-    if (missionImage) {
-      if (aboutData.mission_image) {
-        // Force reload by clearing src first
-        missionImage.src = '';
-        missionImage.src = aboutData.mission_image;
-        missionImage.style.display = '';
-        missionImage.onerror = function() {
-          console.error('[AboutLoader] Failed to load mission image:', aboutData.mission_image);
-        };
-        missionImage.onload = function() {
-          console.log('[AboutLoader] Mission image loaded successfully:', aboutData.mission_image);
-        };
-        if (aboutData.mission_title) {
-          missionImage.alt = aboutData.mission_title;
-        }
-        console.log('[AboutLoader] Updated mission image:', aboutData.mission_image);
-      } else {
-        console.warn('[AboutLoader] No mission image data available');
-      }
-    } else {
-      console.warn('[AboutLoader] Mission image element [data-mission-image] not found');
+      // Format mission content with proper line breaks
+      const formattedMission = aboutData.mission_content
+        .split('\n')
+        .filter(line => line.trim())
+        .map(line => `<p>${line.trim()}</p>`)
+        .join('');
+      missionContent.innerHTML = formattedMission || aboutData.mission_content;
     }
 
     // Update vision section
@@ -193,31 +173,13 @@
 
     const visionContent = document.querySelector('[data-vision-content]');
     if (visionContent && aboutData.vision_content) {
-      visionContent.innerHTML = aboutData.vision_content;
-    }
-
-    const visionImage = document.querySelector('[data-vision-image]');
-    if (visionImage) {
-      if (aboutData.vision_image) {
-        // Force reload by clearing src first
-        visionImage.src = '';
-        visionImage.src = aboutData.vision_image;
-        visionImage.style.display = '';
-        visionImage.onerror = function() {
-          console.error('[AboutLoader] Failed to load vision image:', aboutData.vision_image);
-        };
-        visionImage.onload = function() {
-          console.log('[AboutLoader] Vision image loaded successfully:', aboutData.vision_image);
-        };
-        if (aboutData.vision_title) {
-          visionImage.alt = aboutData.vision_title;
-        }
-        console.log('[AboutLoader] Updated vision image:', aboutData.vision_image);
-      } else {
-        console.warn('[AboutLoader] No vision image data available');
-      }
-    } else {
-      console.warn('[AboutLoader] Vision image element [data-vision-image] not found');
+      // Format vision content with proper line breaks
+      const formattedVision = aboutData.vision_content
+        .split('\n')
+        .filter(line => line.trim())
+        .map(line => `<p>${line.trim()}</p>`)
+        .join('');
+      visionContent.innerHTML = formattedVision || aboutData.vision_content;
     }
 
     // Update goals section
@@ -228,59 +190,101 @@
 
     const goalsContent = document.querySelector('[data-goals-content]');
     if (goalsContent && aboutData.goals_content) {
-      goalsContent.innerHTML = aboutData.goals_content;
-    }
-
-    const goalsImage = document.querySelector('[data-goals-image]');
-    if (goalsImage) {
-      if (aboutData.goals_image) {
-        // Force reload by clearing src first
-        goalsImage.src = '';
-        goalsImage.src = aboutData.goals_image;
-        goalsImage.style.display = '';
-        goalsImage.onerror = function() {
-          console.error('[AboutLoader] Failed to load goals image:', aboutData.goals_image);
-        };
-        goalsImage.onload = function() {
-          console.log('[AboutLoader] Goals image loaded successfully:', aboutData.goals_image);
-        };
-        if (aboutData.goals_title) {
-          goalsImage.alt = aboutData.goals_title;
+      // Format goals content - handle lists better
+      let formattedGoals = aboutData.goals_content;
+      
+      // Check if it's a numbered or bulleted list
+      if (aboutData.goals_content.includes('\n')) {
+        const lines = aboutData.goals_content.split('\n').filter(line => line.trim());
+        
+        // Check if it looks like a list (starts with numbers or bullets)
+        const isList = lines.some(line => /^[\d•\-\*]/.test(line.trim()));
+        
+        if (isList) {
+          formattedGoals = '<ul style="list-style: none; padding-left: 0; text-align: left; display: inline-block;">';
+          lines.forEach(line => {
+            const cleanLine = line.trim().replace(/^[\d\.\)•\-\*]\s*/, '');
+            if (cleanLine) {
+              formattedGoals += `<li style="margin-bottom: 10px; padding-left: 25px; position: relative;">
+                <i class="fa fa-check" style="position: absolute; left: 0; top: 3px; color: #ff6600;"></i>
+                ${cleanLine}
+              </li>`;
+            }
+          });
+          formattedGoals += '</ul>';
+        } else {
+          formattedGoals = lines.map(line => `<p>${line.trim()}</p>`).join('');
         }
-        console.log('[AboutLoader] Updated goals image:', aboutData.goals_image);
-      } else {
-        console.warn('[AboutLoader] No goals image data available');
       }
-    } else {
-      console.warn('[AboutLoader] Goals image element [data-goals-image] not found');
+      
+      goalsContent.innerHTML = formattedGoals;
     }
 
     // Update achievements section
+    const achievementsSection = document.querySelector('[data-achievements-section]');
     const achievementsTitle = document.querySelector('[data-achievements-title]');
-    if (achievementsTitle && aboutData.achievements_title) {
-      achievementsTitle.textContent = aboutData.achievements_title;
-    }
-
     const achievementsContent = document.querySelector('[data-achievements-content]');
-    if (achievementsContent && aboutData.achievements_content) {
-      achievementsContent.innerHTML = aboutData.achievements_content;
+    
+    if (aboutData.achievements_content && achievementsContent) {
+      // Show achievements section
+      if (achievementsSection) {
+        achievementsSection.style.display = 'block';
+      }
+      
+      if (achievementsTitle && aboutData.achievements_title) {
+        achievementsTitle.textContent = aboutData.achievements_title;
+      }
+      
+      // Format achievements content - handle lists better
+      let formattedAchievements = aboutData.achievements_content;
+      
+      if (aboutData.achievements_content.includes('\n')) {
+        const lines = aboutData.achievements_content.split('\n').filter(line => line.trim());
+        
+        // Check if it looks like a list
+        const isList = lines.some(line => /^[\d•\-\*]/.test(line.trim()));
+        
+        if (isList) {
+          formattedAchievements = '<div class="row" style="margin-top: 20px;">';
+          lines.forEach((line, index) => {
+            const cleanLine = line.trim().replace(/^[\d\.\)•\-\*]\s*/, '');
+            if (cleanLine) {
+              formattedAchievements += `
+                <div class="col-md-4 col-sm-6" style="margin-bottom: 20px;">
+                  <div style="text-align: center; padding: 20px; background: #fff; border-radius: 8px; box-shadow: 0 3px 10px rgba(0,0,0,0.05);">
+                    <div style="width: 60px; height: 60px; background: linear-gradient(135deg, #ff6600 0%, #ff8533 100%); border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; margin-bottom: 15px;">
+                      <i class="fa fa-trophy" style="font-size: 24px; color: #fff;"></i>
+                    </div>
+                    <p style="margin: 0; font-size: 15px; font-weight: 600; color: #172434;">${cleanLine}</p>
+                  </div>
+                </div>
+              `;
+            }
+          });
+          formattedAchievements += '</div>';
+        } else {
+          formattedAchievements = lines.map(line => `<p style="margin-bottom: 15px;">${line.trim()}</p>`).join('');
+        }
+      }
+      
+      achievementsContent.innerHTML = formattedAchievements;
+      console.log('[AboutLoader] Updated achievements');
+    } else if (achievementsSection) {
+      // Hide achievements section if no content
+      achievementsSection.style.display = 'none';
     }
 
-    const achievementsImage = document.querySelector('[data-achievements-image]');
-    if (achievementsImage) {
-      if (aboutData.achievements_image) {
-        achievementsImage.src = aboutData.achievements_image;
-        achievementsImage.style.display = '';
-        if (aboutData.achievements_title) {
-          achievementsImage.alt = aboutData.achievements_title;
-        }
-        console.log('[AboutLoader] Updated achievements image:', aboutData.achievements_image);
-      } else {
-        console.warn('[AboutLoader] No achievements image data available');
-      }
-    } else {
-      console.warn('[AboutLoader] Achievements image element [data-achievements-image] not found');
-    }
+    // Add hover effects to cards
+    document.querySelectorAll('.about-card').forEach(card => {
+      card.addEventListener('mouseenter', function() {
+        this.style.transform = 'translateY(-10px)';
+        this.style.boxShadow = '0 15px 40px rgba(0,0,0,0.15)';
+      });
+      card.addEventListener('mouseleave', function() {
+        this.style.transform = 'translateY(0)';
+        this.style.boxShadow = '0 5px 20px rgba(0,0,0,0.08)';
+      });
+    });
 
     console.log('[AboutLoader] About content update completed');
   };
