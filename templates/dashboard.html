@@ -576,10 +576,14 @@
       animation: fadeIn 0.4s cubic-bezier(0.4, 0, 0.2, 1);
       backdrop-filter: blur(2px);
       -webkit-backdrop-filter: blur(2px);
+      align-items: center;
+      justify-content: center;
     }
 
-    .modal.active {
-      display: flex;
+    .modal.active,
+    .modal[style*="display: block"],
+    .modal[style*="display:flex"] {
+      display: flex !important;
       align-items: center;
       justify-content: center;
     }
@@ -1664,6 +1668,7 @@
           <div class="tabs-header">
             <button type="button" class="tab-button active" data-tab="add-article" title="Add new article"><i class="fa fa-plus"></i> Add Article</button>
             <button type="button" class="tab-button" data-tab="articles-list" title="View all articles"><i class="fa fa-list"></i> Articles List</button>
+            <button type="button" class="tab-button" data-tab="about" title="Manage about page"><i class="fa fa-info-circle"></i> About</button>
             <button type="button" class="tab-button" data-tab="projects" title="Manage projects"><i class="fa fa-building"></i> Projects</button>
             <button type="button" class="tab-button" data-tab="project-categories" title="Manage project categories"><i class="fa fa-folder"></i> Project Categories</button>
             <button type="button" class="tab-button" data-tab="services" title="Manage services"><i class="fa fa-cogs"></i> Services</button>
@@ -1678,6 +1683,33 @@
             <button type="button" class="tab-button" data-tab="analytics" title="View analytics"><i class="fa fa-bar-chart"></i> Analytics</button>
           </div>
           <div class="tabs-content-wrapper">
+          <!-- Tab: About -->
+          <div class="tab-content" id="about">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px;">
+              <h2 style="margin: 0;">About Page Management</h2>
+              <button type="button" class="btn btn-primary" onclick="openAddAboutModal()" title="Add new about content">
+                <i class="fa fa-plus"></i> Add About Content
+              </button>
+            </div>
+            
+            <!-- About List Table -->
+            <div style="overflow-x: auto;">
+              <table class="articles-table" id="aboutTable">
+                <thead>
+                  <tr>
+                    <th>Title</th>
+                    <th>Published</th>
+                    <th>Last Updated</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="aboutTableBody">
+                  <tr><td colspan="4" class="no-data">Loading...</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
           <!-- Tab: Projects -->
           <div class="tab-content" id="projects">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px;">
@@ -2759,6 +2791,46 @@
             <label for="articleExcerpt">Excerpt</label>
             <input type="text" id="articleExcerpt" name="excerpt" placeholder="Brief summary (max 500 chars)" maxlength="500" />
           </div>
+          
+          <!-- Image Fields Section -->
+          <div style="background: #f8f9fa; padding: 20px; border-radius: 8px; margin-bottom: 20px; border: 1px solid #e0e0e0;">
+            <h4 style="margin-top: 0; margin-bottom: 15px; color: #ff6600; font-size: 16px; font-weight: 600;">
+              <i class="fa fa-image" style="margin-right: 8px;"></i>Images
+            </h4>
+            
+            <div class="form-row">
+              <div class="form-group">
+                <label for="articleFeaturedImage">Featured Image</label>
+                <input type="file" id="articleFeaturedImage" name="featured_image" accept="image/*" />
+                <small style="color: #666; font-size: 12px; display: block; margin-top: 5px;">Main image displayed with the article (JPG, PNG, WebP)</small>
+              </div>
+              <div class="form-group">
+                <label for="articleFeaturedImageAlt">Featured Image Alt Text</label>
+                <input type="text" id="articleFeaturedImageAlt" name="featured_image_alt" placeholder="Description of the image" maxlength="255" />
+                <small style="color: #666; font-size: 12px; display: block; margin-top: 5px;">For accessibility and SEO</small>
+              </div>
+            </div>
+            
+            <div class="form-group">
+              <label for="articleThumbnail">Thumbnail Image</label>
+              <input type="file" id="articleThumbnail" name="thumbnail" accept="image/*" />
+              <small style="color: #666; font-size: 12px; display: block; margin-top: 5px;">Small preview image for lists and cards (JPG, PNG, WebP)</small>
+            </div>
+            
+            <!-- Image Previews -->
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 15px;">
+              <div style="border: 2px dashed #ddd; border-radius: 8px; padding: 15px; text-align: center; background: #fff;">
+                <label style="font-size: 12px; color: #666; display: block; margin-bottom: 8px;">Featured Image Preview</label>
+                <img id="articleFeaturedImagePreview" src="" alt="Featured Image Preview" style="max-width: 100%; max-height: 150px; display: none; border-radius: 4px; margin: 0 auto;" />
+                <span id="articleFeaturedImagePlaceholder" style="color: #999; font-size: 12px; display: block; margin-top: 10px;">No featured image</span>
+              </div>
+              <div style="border: 2px dashed #ddd; border-radius: 8px; padding: 15px; text-align: center; background: #fff;">
+                <label style="font-size: 12px; color: #666; display: block; margin-bottom: 8px;">Thumbnail Preview</label>
+                <img id="articleThumbnailPreview" src="" alt="Thumbnail Preview" style="max-width: 100%; max-height: 150px; display: none; border-radius: 4px; margin: 0 auto;" />
+                <span id="articleThumbnailPlaceholder" style="color: #999; font-size: 12px; display: block; margin-top: 10px;">No thumbnail</span>
+              </div>
+            </div>
+          </div>
           <div class="form-group">
             <label for="articleContent">Content *</label>
             <div id="articleContentEditor" style="height: 300px;"></div>
@@ -3016,6 +3088,185 @@
           <div class="form-actions">
             <button type="button" class="btn btn-secondary" onclick="closeConfigModal()" title="Cancel and close form"><i class="fa fa-times"></i> Cancel</button>
             <button type="submit" class="btn btn-primary" title="Save configuration"><i class="fa fa-save"></i> <span id="configSubmitText">Save Configuration</span></button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- About Modal -->
+  <div id="aboutModal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3><i class="fa fa-info-circle"></i> <span id="aboutModalTitle">Add About Content</span></h3>
+        <button type="button" class="modal-close" onclick="closeAboutModal()" title="Close modal">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div id="aboutSuccessMessage" class="success-message">
+          <i class="fa fa-check-circle"></i> <span id="aboutSuccessText">About content saved successfully!</span>
+        </div>
+        <div id="aboutErrorMessage" class="error-message">
+          <i class="fa fa-exclamation-circle"></i> <span id="aboutErrorText">An error occurred.</span>
+        </div>
+        <form id="aboutForm" enctype="multipart/form-data">
+          <input type="hidden" id="aboutId" name="id">
+          
+          <!-- Main About Section -->
+          <div class="form-group">
+            <label for="aboutTitle">Title *</label>
+            <input type="text" id="aboutTitle" name="title" placeholder="About page title" required />
+          </div>
+          
+          <div class="form-group">
+            <label for="aboutContent">Content *</label>
+            <textarea id="aboutContent" name="content" placeholder="Main about content" required style="min-height: 100px;"></textarea>
+          </div>
+          
+          <div class="form-group">
+            <label for="aboutImage">Main Image</label>
+            <input type="file" id="aboutImage" name="image" accept="image/*" />
+            <small style="color: #666; font-size: 12px; display: block; margin-top: 5px;">Main about page image (JPG, PNG, GIF)</small>
+          </div>
+          
+          <div class="form-group" style="margin-bottom: 20px;">
+            <label>Main Image Preview</label>
+            <div style="border: 2px dashed #ddd; border-radius: 8px; padding: 15px; text-align: center; background: #fff; min-height: 120px; display: flex; align-items: center; justify-content: center;">
+              <img id="aboutImagePreview" src="" alt="About Image Preview" style="max-width: 100%; max-height: 200px; display: none; border-radius: 4px;" />
+              <span id="aboutImagePlaceholder" style="color: #999; font-size: 12px;">No image selected</span>
+            </div>
+          </div>
+
+          <hr style="margin: 20px 0; border: none; border-top: 2px solid #e0e0e0;">
+          
+          <!-- Mission Section -->
+          <h4 style="margin-bottom: 15px; color: #007bff; font-size: 16px; font-weight: 600;">Mission Section</h4>
+          
+          <div class="form-group">
+            <label for="missionTitle">Mission Title</label>
+            <input type="text" id="missionTitle" name="mission_title" placeholder="Our Mission" />
+          </div>
+          
+          <div class="form-group">
+            <label for="missionContent">Mission Content</label>
+            <textarea id="missionContent" name="mission_content" placeholder="Mission description" style="min-height: 80px;"></textarea>
+          </div>
+          
+          <div class="form-group">
+            <label for="missionImage">Mission Image</label>
+            <input type="file" id="missionImage" name="mission_image" accept="image/*" />
+            <small style="color: #666; font-size: 12px; display: block; margin-top: 5px;">Mission section image (JPG, PNG, GIF)</small>
+          </div>
+          
+          <div class="form-group" style="margin-bottom: 20px;">
+            <label>Mission Image Preview</label>
+            <div style="border: 2px dashed #ddd; border-radius: 8px; padding: 15px; text-align: center; background: #fff; min-height: 100px; display: flex; align-items: center; justify-content: center;">
+              <img id="missionImagePreview" src="" alt="Mission Image Preview" style="max-width: 100%; max-height: 150px; display: none; border-radius: 4px;" />
+              <span id="missionImagePlaceholder" style="color: #999; font-size: 12px;">No image selected</span>
+            </div>
+          </div>
+
+          <hr style="margin: 20px 0; border: none; border-top: 2px solid #e0e0e0;">
+          
+          <!-- Vision Section -->
+          <h4 style="margin-bottom: 15px; color: #6f42c1; font-size: 16px; font-weight: 600;">Vision Section</h4>
+          
+          <div class="form-group">
+            <label for="visionTitle">Vision Title</label>
+            <input type="text" id="visionTitle" name="vision_title" placeholder="Our Vision" />
+          </div>
+          
+          <div class="form-group">
+            <label for="visionContent">Vision Content</label>
+            <textarea id="visionContent" name="vision_content" placeholder="Vision description" style="min-height: 80px;"></textarea>
+          </div>
+          
+          <div class="form-group">
+            <label for="visionImage">Vision Image</label>
+            <input type="file" id="visionImage" name="vision_image" accept="image/*" />
+            <small style="color: #666; font-size: 12px; display: block; margin-top: 5px;">Vision section image (JPG, PNG, GIF)</small>
+          </div>
+          
+          <div class="form-group" style="margin-bottom: 20px;">
+            <label>Vision Image Preview</label>
+            <div style="border: 2px dashed #ddd; border-radius: 8px; padding: 15px; text-align: center; background: #fff; min-height: 100px; display: flex; align-items: center; justify-content: center;">
+              <img id="visionImagePreview" src="" alt="Vision Image Preview" style="max-width: 100%; max-height: 150px; display: none; border-radius: 4px;" />
+              <span id="visionImagePlaceholder" style="color: #999; font-size: 12px;">No image selected</span>
+            </div>
+          </div>
+
+          <hr style="margin: 20px 0; border: none; border-top: 2px solid #e0e0e0;">
+          
+          <!-- Goals Section -->
+          <h4 style="margin-bottom: 15px; color: #ffc107; font-size: 16px; font-weight: 600;">Goals Section</h4>
+          
+          <div class="form-group">
+            <label for="goalsTitle">Goals Title</label>
+            <input type="text" id="goalsTitle" name="goals_title" placeholder="Our Goals" />
+          </div>
+          
+          <div class="form-group">
+            <label for="goalsContent">Goals Content</label>
+            <textarea id="goalsContent" name="goals_content" placeholder="Goals description" style="min-height: 80px;"></textarea>
+          </div>
+          
+          <div class="form-group">
+            <label for="goalsImage">Goals Image</label>
+            <input type="file" id="goalsImage" name="goals_image" accept="image/*" />
+            <small style="color: #666; font-size: 12px; display: block; margin-top: 5px;">Goals section image (JPG, PNG, GIF)</small>
+          </div>
+          
+          <div class="form-group" style="margin-bottom: 20px;">
+            <label>Goals Image Preview</label>
+            <div style="border: 2px dashed #ddd; border-radius: 8px; padding: 15px; text-align: center; background: #fff; min-height: 100px; display: flex; align-items: center; justify-content: center;">
+              <img id="goalsImagePreview" src="" alt="Goals Image Preview" style="max-width: 100%; max-height: 150px; display: none; border-radius: 4px;" />
+              <span id="goalsImagePlaceholder" style="color: #999; font-size: 12px;">No image selected</span>
+            </div>
+          </div>
+
+          <hr style="margin: 20px 0; border: none; border-top: 2px solid #e0e0e0;">
+          
+          <!-- Achievements Section -->
+          <h4 style="margin-bottom: 15px; color: #28a745; font-size: 16px; font-weight: 600;">Achievements Section</h4>
+          
+          <div class="form-group">
+            <label for="achievementsTitle">Achievements Title</label>
+            <input type="text" id="achievementsTitle" name="achievements_title" placeholder="Our Achievements" />
+          </div>
+          
+          <div class="form-group">
+            <label for="achievementsContent">Achievements Content</label>
+            <textarea id="achievementsContent" name="achievements_content" placeholder="Achievements description" style="min-height: 80px;"></textarea>
+          </div>
+          
+          <div class="form-group">
+            <label for="achievementsImage">Achievements Image</label>
+            <input type="file" id="achievementsImage" name="achievements_image" accept="image/*" />
+            <small style="color: #666; font-size: 12px; display: block; margin-top: 5px;">Achievements section image (JPG, PNG, GIF)</small>
+          </div>
+          
+          <div class="form-group" style="margin-bottom: 20px;">
+            <label>Achievements Image Preview</label>
+            <div style="border: 2px dashed #ddd; border-radius: 8px; padding: 15px; text-align: center; background: #fff; min-height: 100px; display: flex; align-items: center; justify-content: center;">
+              <img id="achievementsImagePreview" src="" alt="Achievements Image Preview" style="max-width: 100%; max-height: 150px; display: none; border-radius: 4px;" />
+              <span id="achievementsImagePlaceholder" style="color: #999; font-size: 12px;">No image selected</span>
+            </div>
+          </div>
+
+          <hr style="margin: 20px 0; border: none; border-top: 2px solid #e0e0e0;">
+          
+          <div class="form-group">
+            <label style="display: flex; align-items: center; cursor: pointer;">
+              <input type="checkbox" id="aboutPublished" name="is_published" style="margin-right: 10px; width: 18px; height: 18px;" />
+              <span style="font-weight: 600;">Publish this content</span>
+            </label>
+            <small style="color: #666; display: block; margin-top: 5px;">Make this content visible on the website</small>
+          </div>
+
+          <div class="form-actions">
+            <button type="button" class="btn btn-secondary" onclick="closeAboutModal()">Cancel</button>
+            <button type="submit" class="btn btn-primary">
+              <i class="fa fa-save"></i> <span id="aboutSubmitText">Save</span>
+            </button>
           </div>
         </form>
       </div>
@@ -5352,6 +5603,15 @@
           document.getElementById('articleExcerpt').value = article.excerpt || '';
           document.getElementById('articleCategory').value = article.category || '';
           document.getElementById('articleStatus').value = article.status;
+          
+          // Image fields
+          document.getElementById('articleFeaturedImage').value = article.featured_image || '';
+          document.getElementById('articleFeaturedImageAlt').value = article.featured_image_alt || '';
+          document.getElementById('articleThumbnail').value = article.thumbnail || '';
+          
+          // Update image previews
+          updateArticleImagePreviews();
+          
           DashboardApp.Editor.setContent('articleContentEditor', article.content || '');
           document.getElementById('articleModalTitle').textContent = 'Edit Article';
           document.getElementById('articleSubmitText').textContent = 'Update Article';
@@ -5363,10 +5623,49 @@
           handleApiError(error.message, 'openEditArticleModal');
         });
     }
+    
+    // Function to update image previews
+    function updateArticleImagePreviews() {
+      const featuredImageUrl = document.getElementById('articleFeaturedImage').value;
+      const thumbnailUrl = document.getElementById('articleThumbnail').value;
+      const featuredPreview = document.getElementById('articleFeaturedImagePreview');
+      const featuredPlaceholder = document.getElementById('articleFeaturedImagePlaceholder');
+      const thumbnailPreview = document.getElementById('articleThumbnailPreview');
+      const thumbnailPlaceholder = document.getElementById('articleThumbnailPlaceholder');
+      
+      // Featured image preview
+      if (featuredImageUrl) {
+        featuredPreview.src = featuredImageUrl;
+        featuredPreview.style.display = 'block';
+        featuredPlaceholder.style.display = 'none';
+      } else {
+        featuredPreview.style.display = 'none';
+        featuredPlaceholder.style.display = 'block';
+      }
+      
+      // Thumbnail preview
+      if (thumbnailUrl) {
+        thumbnailPreview.src = thumbnailUrl;
+        thumbnailPreview.style.display = 'block';
+        thumbnailPlaceholder.style.display = 'none';
+      } else {
+        thumbnailPreview.style.display = 'none';
+        thumbnailPlaceholder.style.display = 'block';
+      }
+    }
+    
+    // Add event listeners for image URL changes
+    document.getElementById('articleFeaturedImage').addEventListener('input', updateArticleImagePreviews);
+    document.getElementById('articleThumbnail').addEventListener('input', updateArticleImagePreviews);
 
     function closeArticleModal() {
       document.getElementById('articleModal').classList.remove('active');
       document.getElementById('articleForm').reset();
+      // Reset image previews
+      document.getElementById('articleFeaturedImagePreview').style.display = 'none';
+      document.getElementById('articleFeaturedImagePlaceholder').style.display = 'block';
+      document.getElementById('articleThumbnailPreview').style.display = 'none';
+      document.getElementById('articleThumbnailPlaceholder').style.display = 'block';
       isEditingArticle = false;
     }
 
@@ -5409,7 +5708,10 @@
         excerpt: document.getElementById('articleExcerpt').value,
         content: content,
         category: parseInt(categoryId),
-        status: document.getElementById('articleStatus').value
+        status: document.getElementById('articleStatus').value,
+        featured_image: document.getElementById('articleFeaturedImage').value || null,
+        featured_image_alt: document.getElementById('articleFeaturedImageAlt').value || '',
+        thumbnail: document.getElementById('articleThumbnail').value || null
       };
       try {
         if (method === 'POST') {
@@ -6112,6 +6414,491 @@
     // Note: Logout functionality is handled by the logout() function above (line ~3544)
     // The logout button uses onclick="logout()" which shows a confirmation modal
     // DO NOT add event listeners here as they will conflict with the onclick handler
+
+    // ============================================
+    // ABOUT PAGE MANAGEMENT
+    // ============================================
+    let aboutList = [];
+
+    // Load all about content entries
+    async function loadAboutList() {
+      try {
+        const response = await DashboardApp.API.get('/api/about/');
+        console.log('[About] Raw API response:', response);
+        
+        // Handle different response structures
+        let data = null;
+        if (response && response.data) {
+          data = response.data;
+        } else if (response) {
+          data = response;
+        }
+        
+        // Handle paginated response structure
+        if (data && data.results && Array.isArray(data.results)) {
+          aboutList = data.results;
+        } else if (Array.isArray(data)) {
+          aboutList = data;
+        } else if (data && typeof data === 'object') {
+          // Single object response, wrap in array
+          aboutList = [data];
+        } else {
+          aboutList = [];
+        }
+        
+        console.log('[About] Processed about list:', aboutList);
+        displayAboutTable();
+      } catch (error) {
+        console.error('[About] Error loading about list:', error);
+        console.error('[About] Error details:', error.response || error);
+        DashboardApp.Toast.show('Error loading about list', 'error');
+        document.getElementById('aboutTableBody').innerHTML = '<tr><td colspan="4" class="no-data" style="text-align: center; color: #999;">Error loading data</td></tr>';
+      }
+    }
+
+    function displayAboutTable() {
+      const tbody = document.getElementById('aboutTableBody');
+      
+      if (!aboutList || aboutList.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="4" class="no-data" style="text-align: center; color: #999;">No about content yet. Click "Add About Content" to create one.</td></tr>';
+        return;
+      }
+
+      tbody.innerHTML = aboutList.map(about => `
+        <tr>
+          <td>
+            <strong>${about.title || 'Untitled'}</strong>
+            <div style="font-size: 0.9em; color: #666; margin-top: 5px;">
+              ${about.content ? (about.content.substring(0, 100) + (about.content.length > 100 ? '...' : '')) : 'No content'}
+            </div>
+          </td>
+          <td>
+            <span class="badge ${about.is_published ? 'badge-success' : 'badge-secondary'}">
+              ${about.is_published ? 'Published' : 'Draft'}
+            </span>
+          </td>
+          <td>${about.updated_at ? new Date(about.updated_at).toLocaleDateString() : 'N/A'}</td>
+          <td>
+            <button onclick="openEditAboutModal(${about.id})" class="btn btn-sm btn-primary" title="Edit">
+              <i class="fa fa-edit"></i>
+            </button>
+            <button onclick="deleteAbout(${about.id})" class="btn btn-sm btn-danger" title="Delete">
+              <i class="fa fa-trash"></i>
+            </button>
+          </td>
+        </tr>
+      `).join('');
+    }
+
+    function openAddAboutModal() {
+      // Reset form
+      document.getElementById('aboutForm').reset();
+      document.getElementById('aboutId').value = '';
+      document.getElementById('aboutModalTitle').textContent = 'Add About Content';
+      document.getElementById('aboutSubmitText').textContent = 'Save';
+      
+      // Reset image previews
+      resetAboutImagePreviews();
+      
+      // Hide messages
+      document.getElementById('aboutSuccessMessage').style.display = 'none';
+      document.getElementById('aboutErrorMessage').style.display = 'none';
+      
+      // Open modal
+      document.getElementById('aboutModal').classList.add('active');
+    }
+    
+    // Function to update image preview from file input
+    function updateImagePreview(fileInput, previewId, placeholderId) {
+      const preview = document.getElementById(previewId);
+      const placeholder = document.getElementById(placeholderId);
+      const file = fileInput.files[0];
+      
+      if (file && preview && placeholder) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          preview.src = e.target.result;
+          preview.style.display = 'block';
+          placeholder.style.display = 'none';
+        };
+        reader.readAsDataURL(file);
+      } else if (preview && placeholder) {
+        preview.style.display = 'none';
+        placeholder.style.display = 'block';
+      }
+    }
+    
+    // Function to update all image previews
+    function updateAboutImagePreviews() {
+      const images = [
+        { inputId: 'aboutImage', previewId: 'aboutImagePreview', placeholderId: 'aboutImagePlaceholder' },
+        { inputId: 'missionImage', previewId: 'missionImagePreview', placeholderId: 'missionImagePlaceholder' },
+        { inputId: 'visionImage', previewId: 'visionImagePreview', placeholderId: 'visionImagePlaceholder' },
+        { inputId: 'goalsImage', previewId: 'goalsImagePreview', placeholderId: 'goalsImagePlaceholder' },
+        { inputId: 'achievementsImage', previewId: 'achievementsImagePreview', placeholderId: 'achievementsImagePlaceholder' }
+      ];
+      
+      images.forEach(img => {
+        const fileInput = document.getElementById(img.inputId);
+        if (fileInput && fileInput.files && fileInput.files[0]) {
+          updateImagePreview(fileInput, img.previewId, img.placeholderId);
+        } else {
+          // If no file selected, check if there's an existing image URL (for edit mode)
+          const preview = document.getElementById(img.previewId);
+          const placeholder = document.getElementById(img.placeholderId);
+          if (preview && preview.src && preview.src !== window.location.href) {
+            // Keep existing preview if it's a valid image URL
+            preview.style.display = 'block';
+            if (placeholder) placeholder.style.display = 'none';
+          } else {
+            if (preview) preview.style.display = 'none';
+            if (placeholder) placeholder.style.display = 'block';
+          }
+        }
+      });
+    }
+    
+    // Function to reset all image previews
+    function resetAboutImagePreviews() {
+      const previews = [
+        'aboutImagePreview', 'missionImagePreview', 'visionImagePreview',
+        'goalsImagePreview', 'achievementsImagePreview'
+      ];
+      const placeholders = [
+        'aboutImagePlaceholder', 'missionImagePlaceholder', 'visionImagePlaceholder',
+        'goalsImagePlaceholder', 'achievementsImagePlaceholder'
+      ];
+      
+      previews.forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.style.display = 'none';
+      });
+      
+      placeholders.forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.style.display = 'block';
+      });
+    }
+    
+    // Add event listeners for file input changes
+    document.addEventListener('DOMContentLoaded', function() {
+      const imageInputs = [
+        { id: 'aboutImage', previewId: 'aboutImagePreview', placeholderId: 'aboutImagePlaceholder' },
+        { id: 'missionImage', previewId: 'missionImagePreview', placeholderId: 'missionImagePlaceholder' },
+        { id: 'visionImage', previewId: 'visionImagePreview', placeholderId: 'visionImagePlaceholder' },
+        { id: 'goalsImage', previewId: 'goalsImagePreview', placeholderId: 'goalsImagePlaceholder' },
+        { id: 'achievementsImage', previewId: 'achievementsImagePreview', placeholderId: 'achievementsImagePlaceholder' }
+      ];
+      
+      imageInputs.forEach(img => {
+        const input = document.getElementById(img.id);
+        if (input) {
+          input.addEventListener('change', function() {
+            updateImagePreview(input, img.previewId, img.placeholderId);
+          });
+        }
+      });
+    });
+
+    function openEditAboutModal(aboutId) {
+      // Set modal title
+      document.getElementById('aboutModalTitle').textContent = 'Edit About Content';
+      document.getElementById('aboutSubmitText').textContent = 'Update';
+      
+      // Hide messages
+      document.getElementById('aboutSuccessMessage').style.display = 'none';
+      document.getElementById('aboutErrorMessage').style.display = 'none';
+      
+      // Load current data into form
+      DashboardApp.API.get(`/api/about/${aboutId}/`).then(response => {
+        const about = response.data || response;
+        document.getElementById('aboutId').value = about.id || '';
+        document.getElementById('aboutTitle').value = about.title || '';
+        document.getElementById('aboutContent').value = about.content || '';
+        document.getElementById('missionTitle').value = about.mission_title || '';
+        document.getElementById('missionContent').value = about.mission_content || '';
+        document.getElementById('visionTitle').value = about.vision_title || '';
+        document.getElementById('visionContent').value = about.vision_content || '';
+        document.getElementById('goalsTitle').value = about.goals_title || '';
+        document.getElementById('goalsContent').value = about.goals_content || '';
+        document.getElementById('achievementsTitle').value = about.achievements_title || '';
+        document.getElementById('achievementsContent').value = about.achievements_content || '';
+        document.getElementById('aboutPublished').checked = about.is_published || false;
+        
+        // Show existing images in previews (if they exist)
+        if (about.image) {
+          const preview = document.getElementById('aboutImagePreview');
+          const placeholder = document.getElementById('aboutImagePlaceholder');
+          if (preview && placeholder) {
+            preview.src = about.image;
+            preview.style.display = 'block';
+            placeholder.style.display = 'none';
+          }
+        }
+        if (about.mission_image) {
+          const preview = document.getElementById('missionImagePreview');
+          const placeholder = document.getElementById('missionImagePlaceholder');
+          if (preview && placeholder) {
+            preview.src = about.mission_image;
+            preview.style.display = 'block';
+            placeholder.style.display = 'none';
+          }
+        }
+        if (about.vision_image) {
+          const preview = document.getElementById('visionImagePreview');
+          const placeholder = document.getElementById('visionImagePlaceholder');
+          if (preview && placeholder) {
+            preview.src = about.vision_image;
+            preview.style.display = 'block';
+            placeholder.style.display = 'none';
+          }
+        }
+        if (about.goals_image) {
+          const preview = document.getElementById('goalsImagePreview');
+          const placeholder = document.getElementById('goalsImagePlaceholder');
+          if (preview && placeholder) {
+            preview.src = about.goals_image;
+            preview.style.display = 'block';
+            placeholder.style.display = 'none';
+          }
+        }
+        if (about.achievements_image) {
+          const preview = document.getElementById('achievementsImagePreview');
+          const placeholder = document.getElementById('achievementsImagePlaceholder');
+          if (preview && placeholder) {
+            preview.src = about.achievements_image;
+            preview.style.display = 'block';
+            placeholder.style.display = 'none';
+          }
+        }
+        
+        // Open modal
+        document.getElementById('aboutModal').classList.add('active');
+      }).catch(error => {
+        console.error('[About] Error loading about data:', error);
+        DashboardApp.Toast.show('Error loading about data', 'error');
+      });
+    }
+
+    function closeAboutModal() {
+      document.getElementById('aboutModal').classList.remove('active');
+      document.getElementById('aboutForm').reset();
+      resetAboutImagePreviews();
+    }
+
+    // Handle form submission
+    document.getElementById('aboutForm').addEventListener('submit', async function(e) {
+      e.preventDefault();
+      
+      const aboutId = document.getElementById('aboutId').value;
+      const title = document.getElementById('aboutTitle').value.trim();
+      const content = document.getElementById('aboutContent').value.trim();
+      
+      if (!title) {
+        DashboardApp.Toast.show('Please enter a title', 'warning');
+        return;
+      }
+      
+      if (!content) {
+        DashboardApp.Toast.show('Please enter content', 'warning');
+        return;
+      }
+
+      // Create FormData for file uploads
+      const formData = new FormData();
+      formData.append('title', title);
+      formData.append('content', content);
+      formData.append('mission_title', document.getElementById('missionTitle').value.trim());
+      formData.append('mission_content', document.getElementById('missionContent').value.trim());
+      formData.append('vision_title', document.getElementById('visionTitle').value.trim());
+      formData.append('vision_content', document.getElementById('visionContent').value.trim());
+      formData.append('goals_title', document.getElementById('goalsTitle').value.trim());
+      formData.append('goals_content', document.getElementById('goalsContent').value.trim());
+      formData.append('achievements_title', document.getElementById('achievementsTitle').value.trim());
+      formData.append('achievements_content', document.getElementById('achievementsContent').value.trim());
+      formData.append('is_published', document.getElementById('aboutPublished').checked);
+      
+      // Add image files if selected
+      const aboutImageFile = document.getElementById('aboutImage').files[0];
+      if (aboutImageFile) formData.append('image', aboutImageFile);
+      
+      const missionImageFile = document.getElementById('missionImage').files[0];
+      if (missionImageFile) formData.append('mission_image', missionImageFile);
+      
+      const visionImageFile = document.getElementById('visionImage').files[0];
+      if (visionImageFile) formData.append('vision_image', visionImageFile);
+      
+      const goalsImageFile = document.getElementById('goalsImage').files[0];
+      if (goalsImageFile) formData.append('goals_image', goalsImageFile);
+      
+      const achievementsImageFile = document.getElementById('achievementsImage').files[0];
+      if (achievementsImageFile) formData.append('achievements_image', achievementsImageFile);
+
+      // Hide messages
+      document.getElementById('aboutSuccessMessage').style.display = 'none';
+      document.getElementById('aboutErrorMessage').style.display = 'none';
+
+      try {
+        // Use FormData for file uploads
+        const endpoint = aboutId ? `/api/about/${aboutId}/` : '/api/about/';
+        const method = aboutId ? 'PUT' : 'POST';
+        
+        // Get CSRF token
+        const csrfToken = getCsrfToken();
+        
+        const apiBaseUrl = (DashboardApp && DashboardApp.config && DashboardApp.config.apiBaseUrl) || '';
+        const response = await fetch(apiBaseUrl + endpoint, {
+          method: method,
+          headers: {
+            'X-CSRFToken': csrfToken
+          },
+          body: formData,
+          credentials: 'include'
+        });
+        
+        if (!response.ok) {
+          const errorData = await response.json().catch(() => ({ detail: 'Error saving about content' }));
+          throw new Error(errorData.detail || 'Error saving about content');
+        }
+        
+        document.getElementById('aboutSuccessText').textContent = aboutId ? 'About content updated successfully!' : 'About content created successfully!';
+        document.getElementById('aboutSuccessMessage').style.display = 'block';
+        
+        DashboardApp.Toast.show(aboutId ? 'About content updated successfully' : 'About content created successfully', 'success');
+        
+        // Reload list and close modal after a short delay
+        setTimeout(() => {
+          loadAboutList();
+          closeAboutModal();
+        }, 1000);
+      } catch (error) {
+        console.error('[About] Error saving about content:', error);
+        document.getElementById('aboutErrorText').textContent = error.response?.data?.detail || 'Error saving about content';
+        document.getElementById('aboutErrorMessage').style.display = 'block';
+        DashboardApp.Toast.show('Error saving about content', 'error');
+      }
+    });
+
+    function viewAboutDetails(aboutId) {
+      const about = aboutList.find(a => a.id === aboutId);
+      if (!about) return;
+
+      let detailsHtml = '<div style="max-height: 600px; overflow-y: auto; padding: 10px;">';
+      
+      // Main About
+      if (about.title || about.content) {
+        detailsHtml += '<div style="margin-bottom: 25px;">';
+        if (about.title) detailsHtml += `<h3 style="margin-bottom: 10px;">${about.title}</h3>`;
+        if (about.content) detailsHtml += `<p style="line-height: 1.6;">${about.content}</p>`;
+        if (about.image) detailsHtml += `<img src="${about.image}" alt="${about.title}" style="max-width: 100%; height: auto; margin: 10px 0; border-radius: 8px;">`;
+        detailsHtml += '</div>';
+      }
+
+      // Mission
+      if (about.mission_title || about.mission_content) {
+        detailsHtml += '<div style="margin-bottom: 25px; padding: 15px; background: #e3f2fd; border-radius: 8px;">';
+        if (about.mission_title) detailsHtml += `<h4 style="color: #007bff; margin-bottom: 10px;">${about.mission_title}</h4>`;
+        if (about.mission_content) detailsHtml += `<p style="line-height: 1.6;">${about.mission_content}</p>`;
+        if (about.mission_image) detailsHtml += `<img src="${about.mission_image}" alt="${about.mission_title}" style="max-width: 100%; height: auto; margin: 10px 0; border-radius: 8px;">`;
+        detailsHtml += '</div>';
+      }
+
+      // Vision
+      if (about.vision_title || about.vision_content) {
+        detailsHtml += '<div style="margin-bottom: 25px; padding: 15px; background: #f3e5f5; border-radius: 8px;">';
+        if (about.vision_title) detailsHtml += `<h4 style="color: #6f42c1; margin-bottom: 10px;">${about.vision_title}</h4>`;
+        if (about.vision_content) detailsHtml += `<p style="line-height: 1.6;">${about.vision_content}</p>`;
+        if (about.vision_image) detailsHtml += `<img src="${about.vision_image}" alt="${about.vision_title}" style="max-width: 100%; height: auto; margin: 10px 0; border-radius: 8px;">`;
+        detailsHtml += '</div>';
+      }
+
+      // Goals
+      if (about.goals_title || about.goals_content) {
+        detailsHtml += '<div style="margin-bottom: 25px; padding: 15px; background: #fff3cd; border-radius: 8px;">';
+        if (about.goals_title) detailsHtml += `<h4 style="color: #856404; margin-bottom: 10px;">${about.goals_title}</h4>`;
+        if (about.goals_content) detailsHtml += `<p style="line-height: 1.6;">${about.goals_content}</p>`;
+        if (about.goals_image) detailsHtml += `<img src="${about.goals_image}" alt="${about.goals_title}" style="max-width: 100%; height: auto; margin: 10px 0; border-radius: 8px;">`;
+        detailsHtml += '</div>';
+      }
+
+      // Achievements
+      if (about.achievements_title || about.achievements_content) {
+        detailsHtml += '<div style="margin-bottom: 25px; padding: 15px; background: #d4edda; border-radius: 8px;">';
+        if (about.achievements_title) detailsHtml += `<h4 style="color: #155724; margin-bottom: 10px;">${about.achievements_title}</h4>`;
+        if (about.achievements_content) detailsHtml += `<p style="line-height: 1.6;">${about.achievements_content}</p>`;
+        if (about.achievements_image) detailsHtml += `<img src="${about.achievements_image}" alt="${about.achievements_title}" style="max-width: 100%; height: auto; margin: 10px 0; border-radius: 8px;">`;
+        detailsHtml += '</div>';
+      }
+
+      detailsHtml += '</div>';
+
+      DashboardApp.Modal.create('aboutDetailsModal', {
+        title: `About: ${about.title || 'Details'}`,
+        content: detailsHtml,
+        buttons: [
+          {
+            text: 'Close',
+            type: 'default',
+            onClick: () => {}
+          },
+          {
+            text: 'Edit',
+            type: 'primary',
+            onClick: () => {
+              DashboardApp.Modal.close('aboutDetailsModal');
+              openEditAboutModal(aboutId);
+            }
+          }
+        ]
+      });
+
+      DashboardApp.Modal.open('aboutDetailsModal');
+    }
+
+    async function deleteAbout(aboutId) {
+      const about = aboutList.find(a => a.id === aboutId);
+      if (!about) return;
+
+      DashboardApp.Modal.create('confirmDeleteAbout', {
+        title: 'Confirm Delete',
+        content: `<p>Are you sure you want to delete "<strong>${about.title || 'this about content'}</strong>"?</p><p style="color: #dc3545;">This action cannot be undone.</p>`,
+        buttons: [
+          {
+            text: 'Cancel',
+            type: 'default',
+            onClick: () => {}
+          },
+          {
+            text: 'Delete',
+            type: 'danger',
+            onClick: async () => {
+              try {
+                await DashboardApp.API.delete(`/api/about/${aboutId}/`);
+                DashboardApp.Toast.show('About content deleted successfully', 'success');
+                DashboardApp.Modal.close('confirmDeleteAbout');
+                loadAboutList();
+              } catch (error) {
+                console.error('[About] Error deleting about content:', error);
+                DashboardApp.Toast.show('Error deleting about content', 'error');
+              }
+            }
+          }
+        ]
+      });
+
+      DashboardApp.Modal.open('confirmDeleteAbout');
+    }
+
+    // Initialize about content when About tab is loaded
+    document.addEventListener('DOMContentLoaded', function() {
+      // Load about list when the about tab is clicked
+      const aboutTabButton = document.querySelector('[data-tab="about"]');
+      if (aboutTabButton) {
+        aboutTabButton.addEventListener('click', function() {
+          loadAboutList();
+        });
+      }
+    });
   </script>
   <script>
     const quillOptions = {

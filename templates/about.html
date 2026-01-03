@@ -89,15 +89,17 @@
             <div class="col-md-5 col-xs-11">
               <div class="onStep" data-animation="fadeInUp" data-time="300">
                 <article>
-                  <h2>
+                  <h2 data-about-title>
                     Who we are
                   </h2>
                   <span class="devider-cont"></span>
-                  <p>
-                    <em>Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, quasi architecto beatae vitae dicta sunt explicabo.</em> Etiam purus lorem, aliquet a eros sit
-                    amet, vestibulum finibus augue. Cras egestas neque vitae dui tincidunt, vitae tristique tellus volutpat. Fusce justo ante, interdum Praesent vel augue rutrum, scelerisque velit
-                    non, interdum nisl. Nunc acumsan comodo.
-                  </p>
+                  <div data-about-content>
+                    <p>
+                      <em>Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, quasi architecto beatae vitae dicta sunt explicabo.</em> Etiam purus lorem, aliquet a eros sit
+                      amet, vestibulum finibus augue. Cras egestas neque vitae dui tincidunt, vitae tristique tellus volutpat. Fusce justo ante, interdum Praesent vel augue rutrum, scelerisque velit
+                      non, interdum nisl. Nunc acumsan comodo.
+                    </p>
+                  </div>
                 </article>
               </div>
               <div class="space-half"></div>
@@ -109,19 +111,22 @@
               <div class="onStep" data-animation="fadeInUp" data-time="600">
                 <div class="filter-wraper">
                   <ul class="animfadeInUpBig" data-time="1200" id="filters">
-                    <li class="filt-serv selected" data-filter=".passion">WE ARE PASSIONATE
+                    <li class="filt-serv selected" data-filter=".mission">
+                      <span data-mission-title>OUR MISSION</span>
                     </li>
 
                     <li class="space">•
                     </li>
 
-                    <li class="filt-serv" data-filter=".honcap">HONEST AND CAPABLE
+                    <li class="filt-serv" data-filter=".vision">
+                      <span data-vision-title>OUR VISION</span>
                     </li>
 
                     <li class="space">•
                     </li>
 
-                    <li class="filt-serv" data-filter=".webuild">WE BUILD YOUR DREAM
+                    <li class="filt-serv" data-filter=".goals">
+                      <span data-goals-title>OUR GOALS</span>
                     </li>
                   </ul>
                 </div>
@@ -131,46 +136,49 @@
               </div>
 
               <div class="onStep" data-animation="fadeInUp" data-time="900" id="services">
-                <div class="service passion">
-                  <img alt="img" class="img-responsive" src="{% static 'img/img-service-1.jpg' %}">
-                  <h4>
-                    WE ARE PASSIONATE
+                <div class="service mission">
+                  <img alt="Mission" class="img-responsive" data-mission-image src="{% static 'img/img-service-1.jpg' %}">
+                  <h4 data-mission-title>
+                    OUR MISSION
                   </h4>
 
-                  <p>
-                    Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi
-                    architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione
-                    voluptatem sequi nesciunt. Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit, sed quia non numquam eius modi tempora incidunt ut labore
-                    et dolore magnam aliquam quaerat voluptatem. Ut enim ad minima veniam.
-                  </p>
+                  <div data-mission-content>
+                    <p>
+                      Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi
+                      architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione
+                      voluptatem sequi nesciunt.
+                    </p>
+                  </div>
                 </div>
 
-                <div class="service honcap">
-                  <img alt="img" class="img-responsive" src="{% static 'img/img-service-2.jpg' %}">
-                  <h4>
-                    HONEST AND CAPABLE
+                <div class="service vision">
+                  <img alt="Vision" class="img-responsive" data-vision-image src="{% static 'img/img-service-2.jpg' %}">
+                  <h4 data-vision-title>
+                    OUR VISION
                   </h4>
 
-                  <p>
-                    Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi
-                    architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione
-                    voluptatem sequi nesciunt. Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit, sed quia non numquam eius modi tempora incidunt ut labore
-                    et dolore magnam aliquam quaerat voluptatem. Ut enim ad minima veniam.
-                  </p>
+                  <div data-vision-content>
+                    <p>
+                      Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi
+                      architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione
+                      voluptatem sequi nesciunt.
+                    </p>
+                  </div>
                 </div>
 
-                <div class="service webuild">
-                  <img alt="img" class="img-responsive" src="{% static 'img/img-service-3.jpg' %}">
-                  <h4>
-                    WE BUILD YOUR DREAM
+                <div class="service goals">
+                  <img alt="Goals" class="img-responsive" data-goals-image src="{% static 'img/img-service-3.jpg' %}">
+                  <h4 data-goals-title>
+                    OUR GOALS
                   </h4>
 
-                  <p>
-                    Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi
-                    architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione
-                    voluptatem sequi nesciunt. Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit, sed quia non numquam eius modi tempora incidunt ut labore
-                    et dolore magnam aliquam quaerat voluptatem. Ut enim ad minima veniam.
-                  </p>
+                  <div data-goals-content>
+                    <p>
+                      Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi
+                      architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione
+                      voluptatem sequi nesciunt.
+                    </p>
+                  </div>
                 </div>
               </div>
             </div>
@@ -444,5 +452,7 @@
     <!-- on3step JS -->
     <script src="{% static 'js/on3step.js' %}" type="text/javascript"></script>
     <script src="{% static 'js/plugin-set.js' %}" type="text/javascript"></script>
+    <!-- About Page Loader -->
+    <script src="{% static 'js/about-loader.js' %}" type="text/javascript"></script>
   </body>
 </html>
