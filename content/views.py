@@ -761,13 +761,20 @@ class CareerViewSet(viewsets.ModelViewSet):
     @action(detail=False, methods=['get'], url_path='active', permission_classes=[AllowAny])
     @extend_schema(
         summary="Get active career opportunities",
-        description="Retrieve all active job openings. Public endpoint.",
+        description="Retrieve all active job openings with pagination. Public endpoint.",
         tags=['Careers'],
         responses={200: CareerSerializer(many=True)}
     )
     def active(self, request):
-        """Get all active career opportunities"""
-        careers = Career.objects.filter(status='active')
+        """Get all active career opportunities with pagination"""
+        careers = Career.objects.filter(status='active').order_by('-is_featured', 'order', '-created_at')
+        
+        # Apply pagination
+        page = self.paginate_queryset(careers)
+        if page is not None:
+            serializer = CareerSerializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+        
         serializer = CareerSerializer(careers, many=True)
         return Response(serializer.data)
 
@@ -846,13 +853,20 @@ class NoticeViewSet(viewsets.ModelViewSet):
     @action(detail=False, methods=['get'], url_path='published', permission_classes=[AllowAny])
     @extend_schema(
         summary="Get published notices",
-        description="Retrieve all published notices. Public endpoint.",
+        description="Retrieve all published notices with pagination. Public endpoint.",
         tags=['Notices'],
         responses={200: NoticeSerializer(many=True)}
     )
     def published(self, request):
-        """Get all published notices"""
-        notices = Notice.objects.filter(status='published')
+        """Get all published notices with pagination"""
+        notices = Notice.objects.filter(status='published').order_by('-is_sticky', '-is_featured', '-notice_date', '-created_at')
+        
+        # Apply pagination
+        page = self.paginate_queryset(notices)
+        if page is not None:
+            serializer = NoticeSerializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+        
         serializer = NoticeSerializer(notices, many=True)
         return Response(serializer.data)
 
