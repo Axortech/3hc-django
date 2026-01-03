@@ -24,6 +24,37 @@
     <link href="{% static 'css/on3step-style.css' %}" rel="stylesheet" />
     <link href="{% static 'css/queries-on3step.css' %}" media="all" rel="stylesheet" type="text/css" />
     <style>
+      /* Page header styling to match other pages */
+      .page-header-section {
+        background: url('{% static "img/portfolio-top.jpg" %}') no-repeat center;
+        background-size: cover;
+        padding: 60px 0;
+        margin-bottom: 40px;
+      }
+
+      .page-header-section .bg-alpha-80 {
+        background: rgba(0, 0, 0, 0.5);
+        padding: 60px 0;
+      }
+
+      .breadcrumb-box {
+        text-align: center;
+        color: white;
+      }
+
+      .breadcrumb-box h1 {
+        font-size: 36px;
+        font-weight: bold;
+        margin-bottom: 15px;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+      }
+
+      .breadcrumb-box p {
+        font-size: 16px;
+        margin-bottom: 0;
+      }
+
       .career-detail-header {
         background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
         color: white;
@@ -318,6 +349,22 @@
     <!-- content wraper -->
     <div class="content-wrapper">
       {% include "components/header.html" %}
+
+      <!-- Page Header -->
+      <section class="page-header-section" style="background: url('{% static 'img/portfolio-top.jpg' %}') no-repeat center; background-size: cover;">
+        <div class="bg-alpha-80">
+          <div class="container">
+            <div class="row">
+              <div class="col-md-12">
+                <div class="breadcrumb-box">
+                  <h1>CAREER OPPORTUNITY</h1>
+                  <p>Join our professional team</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
 
       <!-- Loading State -->
       <div id="loadingState" class="loading">
