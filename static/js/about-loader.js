@@ -60,6 +60,44 @@
   };
 
   /**
+   * Fetch team members from API
+   */
+  const fetchTeamMembers = async () => {
+    try {
+      const apiBaseUrl = getApiBaseUrl();
+      const response = await fetch(`${apiBaseUrl}/api/team-members/`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        credentials: 'include'
+      });
+
+      if (!response.ok) {
+        console.warn('[AboutLoader] Failed to fetch team members:', response.status);
+        return [];
+      }
+
+      const data = await response.json();
+      // Handle paginated response structure
+      let teamMembers = [];
+      if (data.results && Array.isArray(data.results)) {
+        teamMembers = data.results;
+      } else if (Array.isArray(data)) {
+        teamMembers = data;
+      } else if (data && Array.isArray(data)) {
+        teamMembers = data;
+      }
+
+      console.log('[AboutLoader] Fetched team members:', teamMembers);
+      return teamMembers;
+    } catch (error) {
+      console.error('[AboutLoader] Error fetching team members:', error);
+      return [];
+    }
+  };
+
+  /**
    * Update about content on the page
    */
   const updateAboutContent = (aboutData) => {
@@ -248,6 +286,73 @@
   };
 
   /**
+   * Update team members section on the page
+   */
+  const updateTeamMembers = (teamMembers) => {
+    const container = document.getElementById('team-members-container');
+    const loading = document.getElementById('team-loading');
+
+    if (!container) {
+      console.warn('[AboutLoader] Team members container not found');
+      return;
+    }
+
+    // Remove loading indicator
+    if (loading) {
+      loading.remove();
+    }
+
+    if (!teamMembers || teamMembers.length === 0) {
+      container.innerHTML = `
+        <div class="col-12 text-center">
+          <p>No team members found.</p>
+        </div>
+      `;
+      console.warn('[AboutLoader] No team members to display');
+      return;
+    }
+
+    console.log('[AboutLoader] Updating team members with:', teamMembers);
+
+    // Generate HTML for team members
+    const teamHtml = teamMembers.map((member, index) => {
+      const animationDelay = 200 + (index * 200); // Stagger animations
+
+      // Build social media links
+      let socialLinks = '';
+      if (member.linkedin_url) {
+        socialLinks += `<a href="${member.linkedin_url}" target="_blank" title="LinkedIn Profile"><span class="ti-linkedin"></span></a> `;
+      }
+      if (member.facebook_url) {
+        socialLinks += `<a href="${member.facebook_url}" target="_blank" title="Facebook Profile"><span class="ti-facebook"></span></a> `;
+      }
+      if (member.instagram_url) {
+        socialLinks += `<a href="${member.instagram_url}" target="_blank" title="Instagram Profile"><span class="ti-instagram"></span></a> `;
+      }
+      // Default social links if none provided
+      if (!socialLinks.trim()) {
+        socialLinks = `<a href="#" title="Social Media"><span class="ti-facebook"></span></a> <a href="#" title="Social Media"><span class="ti-twitter"></span></a> <a href="#" title="Social Media"><span class="ti-linkedin"></span></a>`;
+      }
+
+      return `
+        <div class="col-md-3 col-sm-6">
+          <div class="team-wrapper">
+            <img alt="${member.name}" class="img-responsive" src="${member.photo}" onerror="this.src='/static/img/avatar.jpg'">
+            <div class="team-des">
+              <h3>${member.name}</h3>
+              <span>${member.position}</span>
+              ${socialLinks}
+            </div>
+          </div>
+        </div>
+      `;
+    }).join('');
+
+    container.innerHTML = teamHtml;
+    console.log('[AboutLoader] Team members section updated');
+  };
+
+  /**
    * Initialize about content loader
    */
   const init = async () => {
@@ -266,9 +371,17 @@
     };
 
     await waitForDOM();
-    console.log('[AboutLoader] DOM ready, fetching about content...');
-    const aboutData = await fetchAboutContent();
+    console.log('[AboutLoader] DOM ready, fetching about content and team members...');
+
+    // Fetch about content and team members in parallel
+    const [aboutData, teamMembers] = await Promise.all([
+      fetchAboutContent(),
+      fetchTeamMembers()
+    ]);
+
+    // Update both sections
     updateAboutContent(aboutData);
+    updateTeamMembers(teamMembers);
   };
 
   // Auto-initialize

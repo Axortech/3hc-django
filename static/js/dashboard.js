@@ -13,14 +13,9 @@ const DashboardApp = (() => {
   // CONFIGURATION & CONSTANTS
   // ============================================
   const config = {
-    apiBaseUrl: (() => {
-      const host = window.location.hostname;
-      const isLocalhost = host === 'localhost' || host === '127.0.0.1';
-      if (isLocalhost) {
-        return 'http://localhost:8000';
-      }
-      return window.location.origin;
-    })(),
+    // Always talk to the same origin that served the dashboard so that
+    // session + CSRF cookies are sent correctly (no localhost/127.0.0.1 mismatch)
+    apiBaseUrl: window.location.origin,
     apiTimeout: 30000,
     apiRetryAttempts: 2,
     apiRetryDelay: 1000,
@@ -586,13 +581,16 @@ const DashboardApp = (() => {
           };
 
           if (!isFormData) {
+            // JSON requests: merge any custom headers (e.g. extra auth)
             Object.assign(defaultHeaders, headers);
           } else {
+            // FormData requests: still send auth header and allow extra headers
             defaultHeaders['Authorization'] = Auth.getAuthHeader();
+            Object.assign(defaultHeaders, headers);
           }
 
-          // Add CSRF token for non-GET requests
-          if (method !== 'GET' && !isFormData) {
+          // Add CSRF token for all non-GET requests (JSON + FormData)
+          if (method !== 'GET') {
             const csrfToken = getCsrfToken();
             if (csrfToken) {
               defaultHeaders['X-CSRFToken'] = csrfToken;

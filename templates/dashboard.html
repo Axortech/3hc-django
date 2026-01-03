@@ -3312,8 +3312,19 @@
           </div>
 
           <div class="form-group">
-            <label for="memberPhoto">Photo URL *</label>
-            <input type="url" id="memberPhoto" name="photo" placeholder="https://example.com/photo.jpg" required />
+            <label for="memberFacebook">Facebook URL</label>
+            <input type="url" id="memberFacebook" name="facebook_url" placeholder="https://facebook.com/username" />
+          </div>
+
+          <div class="form-group">
+            <label for="memberInstagram">Instagram URL</label>
+            <input type="url" id="memberInstagram" name="instagram_url" placeholder="https://instagram.com/username" />
+          </div>
+
+          <div class="form-group">
+            <label for="memberPhoto">Photo *</label>
+            <input type="file" id="memberPhoto" name="photo" accept="image/*" required />
+            <small class="form-help">Upload a photo for the team member (JPG, PNG, etc.)</small>
           </div>
 
           <div class="form-group">
@@ -6017,6 +6028,7 @@
       document.getElementById('submitBtnText').textContent = 'Add Member';
       document.getElementById('editMemberId').value = '';
       document.getElementById('teamMemberForm').reset();
+      document.getElementById('memberPhoto').required = true; // Make photo required for new members
       document.getElementById('teamMemberModal').classList.add('active');
       hideMessages();
     }
@@ -6037,7 +6049,11 @@
       document.getElementById('memberPosition').value = member.position;
       document.getElementById('memberBio').value = member.bio;
       document.getElementById('memberLinkedin').value = member.linkedin_url || '';
-      document.getElementById('memberPhoto').value = member.photo;
+      document.getElementById('memberFacebook').value = member.facebook_url || '';
+      document.getElementById('memberInstagram').value = member.instagram_url || '';
+      // For file input, we can't set a value for security reasons
+      // The photo field will show current photo but allow new upload
+      document.getElementById('memberPhoto').required = false; // Make photo optional for edits
       document.getElementById('memberActive').value = member.is_active ? 'true' : 'false';
 
       document.getElementById('teamMemberModal').classList.add('active');
@@ -6106,24 +6122,12 @@
             </span>
           </td>
           <td>
-            <div class="dropdown-menu">
-              <button type="button" class="dropdown-toggle" onclick="toggleDropdown(event, ${member.id})" title="Toggle actions menu">
-                <i class="fa fa-ellipsis-v"></i>
-              </button>
-              <div class="dropdown-content" id="dropdown-${member.id}">
-                <button type="button" onclick="openEditTeamModal(${member.id})" title="Edit member">
-                  <i class="fa fa-edit"></i> Edit
-                </button>
-                ${member.linkedin_url ? `
-                <button type="button" onclick="window.open('${member.linkedin_url}', '_blank')" title="View LinkedIn profile">
-                  <i class="fa fa-linkedin"></i> LinkedIn
-                </button>
-                ` : ''}
-                <button type="button" class="delete-option" onclick="deleteTeamMemberConfirm(${member.id})" title="Delete member">
-                  <i class="fa fa-trash"></i> Delete
-                </button>
-              </div>
-            </div>
+            <button onclick="openEditTeamModal(${member.id})" class="btn btn-sm btn-primary" title="Edit">
+              <i class="fa fa-edit"></i>
+            </button>
+            <button onclick="deleteTeamMemberConfirm(${member.id})" class="btn btn-sm btn-danger" title="Delete">
+              <i class="fa fa-trash"></i>
+            </button>
           </td>
         </tr>
       `).join('');
@@ -6163,23 +6167,41 @@
       e.preventDefault();
       hideMessages();
 
-      const formData = {
-        name: document.getElementById('memberName').value,
-        position: document.getElementById('memberPosition').value,
-        bio: document.getElementById('memberBio').value,
-        linkedin_url: document.getElementById('memberLinkedin').value || null,
-        photo: document.getElementById('memberPhoto').value,
-        is_active: document.getElementById('memberActive').value === 'true'
-      };
+      const formDataObj = new FormData();
+      formDataObj.append('name', document.getElementById('memberName').value);
+      formDataObj.append('position', document.getElementById('memberPosition').value);
+      formDataObj.append('bio', document.getElementById('memberBio').value);
+      formDataObj.append('linkedin_url', document.getElementById('memberLinkedin').value || '');
+      formDataObj.append('facebook_url', document.getElementById('memberFacebook').value || '');
+      formDataObj.append('instagram_url', document.getElementById('memberInstagram').value || '');
+      formDataObj.append('is_active', document.getElementById('memberActive').value);
+
+      // Handle photo upload
+      const photoFile = document.getElementById('memberPhoto').files[0];
+      if (photoFile) {
+        formDataObj.append('photo', photoFile);
+      }
 
       try {
-        let result;
         const memberId = document.getElementById('editMemberId').value;
-        const headers = { 'X-CSRFToken': getCsrfToken() };
+        let result;
+
         if (isEditMode && memberId) {
-          result = await DashboardApp.API.put(`/api/team-members/${memberId}/`, formData, headers);
+          // For updates, use PATCH with FormData
+          result = await DashboardApp.API.call(`/api/team-members/${memberId}/`, {
+            method: 'PATCH',
+            body: formDataObj,
+            isFormData: true,
+            headers: { 'X-CSRFToken': getCsrfToken() }
+          });
         } else {
-          result = await DashboardApp.API.post(`/api/team-members/`, formData, headers);
+          // For new team members, use POST with FormData
+          result = await DashboardApp.API.call(`/api/team-members/`, {
+            method: 'POST',
+            body: formDataObj,
+            isFormData: true,
+            headers: { 'X-CSRFToken': getCsrfToken() }
+          });
         }
 
         showSuccess(`✓ Team member ${isEditMode ? 'updated' : 'added'} successfully!`);
