@@ -1,0 +1,841 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="zxx">
+  <head>
+    <meta charset="utf-8" />
+    <title id="pageTitle">BUILDSTATE - Career</title>
+    <meta content="" name="description" />
+    <meta content="" name="author" />
+    <meta content="" name="keywords" />
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1" name="viewport" />
+    <!-- favicon -->
+    <link href="{% static 'img/favicon.png' %}" rel="icon" sizes="32x32" type="image/png" />
+    <!-- Bootstrap CSS -->
+    <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet" />
+    <!-- font themify CSS -->
+    <link rel="stylesheet" href="{% static 'css/themify-icons.css' %}" />
+    <!-- font awesome CSS -->
+    <link href="{% static 'font-awesome/css/font-awesome.css' %}" rel="stylesheet" />
+    <!-- on3step CSS -->
+    <link href="{% static 'css/animated-on3step.css' %}" rel="stylesheet" />
+    <link href="{% static 'css/owl.carousel.css' %}" rel="stylesheet" />
+    <link href="{% static 'css/owl.theme.css' %}" rel="stylesheet" />
+    <link href="{% static 'css/owl.transitions.css' %}" rel="stylesheet" />
+    <link href="{% static 'css/on3step-style.css' %}" rel="stylesheet" />
+    <link href="{% static 'css/queries-on3step.css' %}" media="all" rel="stylesheet" type="text/css" />
+    <style>
+      /* Page header styling to match other pages */
+      .page-header-section {
+        background: url('{% static "img/portfolio-top.jpg" %}') no-repeat center;
+        background-size: cover;
+        padding: 60px 0;
+        margin-bottom: 40px;
+      }
+
+      .page-header-section .bg-alpha-80 {
+        background: rgba(0, 0, 0, 0.5);
+        padding: 60px 0;
+      }
+
+      .breadcrumb-box {
+        text-align: center;
+        color: white;
+      }
+
+      .breadcrumb-box h1 {
+        font-size: 36px;
+        font-weight: bold;
+        margin-bottom: 15px;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+      }
+
+      .breadcrumb-box p {
+        font-size: 16px;
+        margin-bottom: 0;
+      }
+
+      .career-detail-header {
+        background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+        color: white;
+        padding: 60px 0;
+        margin-bottom: 40px;
+      }
+
+      .career-detail-header h1 {
+        font-size: 32px;
+        font-weight: bold;
+        margin-bottom: 15px;
+        line-height: 1.4;
+      }
+
+      .career-meta {
+        display: flex;
+        gap: 20px;
+        flex-wrap: wrap;
+        margin-bottom: 20px;
+        font-size: 14px;
+      }
+
+      .career-meta-item {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .badge {
+        padding: 6px 12px;
+        border-radius: 4px;
+        font-weight: bold;
+        font-size: 12px;
+        display: inline-block;
+      }
+
+      .badge-full-time {
+        background-color: #28a745;
+        color: white;
+      }
+
+      .badge-part-time {
+        background-color: #17a2b8;
+        color: white;
+      }
+
+      .badge-contract {
+        background-color: #fd7e14;
+        color: white;
+      }
+
+      .badge-internship {
+        background-color: #6c757d;
+        color: white;
+      }
+
+      .badge-featured {
+        background-color: #28a745;
+        color: white;
+      }
+
+      .career-content {
+        background: white;
+        padding: 40px;
+        border-radius: 8px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        margin-bottom: 40px;
+        line-height: 1.8;
+        color: #333;
+      }
+
+      .career-content h2 {
+        font-size: 22px;
+        font-weight: bold;
+        margin-top: 30px;
+        margin-bottom: 15px;
+        color: #28a745;
+      }
+
+      .career-content h3 {
+        font-size: 18px;
+        font-weight: bold;
+        margin-top: 20px;
+        margin-bottom: 12px;
+      }
+
+      .career-content p {
+        margin-bottom: 15px;
+      }
+
+      .career-content ul, .career-content ol {
+        margin-left: 20px;
+        margin-bottom: 15px;
+      }
+
+      .career-content li {
+        margin-bottom: 8px;
+      }
+
+      .back-to-careers {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 10px 20px;
+        background: #f0f0f0;
+        color: #333;
+        text-decoration: none;
+        border-radius: 4px;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        margin-bottom: 30px;
+      }
+
+      .back-to-careers:hover {
+        background: #28a745;
+        color: white;
+      }
+
+      .career-sidebar {
+        background: white;
+        padding: 30px;
+        border-radius: 8px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        position: sticky;
+        top: 20px;
+      }
+
+      .career-sidebar h4 {
+        font-size: 16px;
+        font-weight: bold;
+        margin-bottom: 20px;
+        color: #333;
+        border-bottom: 2px solid #28a745;
+        padding-bottom: 10px;
+      }
+
+      .sidebar-info {
+        margin-bottom: 25px;
+      }
+
+      .sidebar-info label {
+        display: block;
+        font-weight: bold;
+        color: #666;
+        font-size: 12px;
+        text-transform: uppercase;
+        margin-bottom: 5px;
+      }
+
+      .sidebar-info-value {
+        color: #333;
+        font-size: 14px;
+      }
+
+      .sidebar-actions {
+        margin-top: 30px;
+        padding-top: 30px;
+        border-top: 1px solid #e0e0e0;
+      }
+
+      .sidebar-actions a, .sidebar-actions button {
+        display: block;
+        padding: 12px 15px;
+        margin-bottom: 10px;
+        background: #28a745;
+        color: white;
+        text-decoration: none;
+        border-radius: 4px;
+        text-align: center;
+        font-weight: bold;
+        transition: all 0.3s ease;
+        border: none;
+        cursor: pointer;
+        font-size: 14px;
+      }
+
+      .sidebar-actions a:hover, .sidebar-actions button:hover {
+        background: #20c997;
+        transform: translateY(-2px);
+      }
+
+      .salary-highlight {
+        background: #f0f8f0;
+        padding: 15px;
+        border-left: 4px solid #28a745;
+        border-radius: 4px;
+        margin: 20px 0;
+      }
+
+      .salary-highlight strong {
+        color: #28a745;
+        font-size: 16px;
+      }
+
+      @media (max-width: 768px) {
+        .career-detail-header {
+          padding: 40px 0;
+        }
+
+        .career-detail-header h1 {
+          font-size: 24px;
+        }
+
+        .career-content {
+          padding: 20px;
+        }
+
+        .career-sidebar {
+          position: static;
+          margin-top: 30px;
+        }
+      }
+
+      .loading {
+        text-align: center;
+        padding: 60px 20px;
+      }
+
+      .loading-spinner {
+        display: inline-block;
+        width: 40px;
+        height: 40px;
+        border: 4px solid #f3f3f3;
+        border-top: 4px solid #28a745;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+      }
+
+      @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+      }
+
+      .error-message {
+        padding: 40px;
+        text-align: center;
+        background: #f8f9fa;
+        border-radius: 8px;
+        color: #dc3545;
+      }
+
+      .apply-btn-primary {
+        display: block;
+        width: 100%;
+        padding: 12px 15px;
+        background: #28a745;
+        color: white;
+        text-decoration: none;
+        border-radius: 4px;
+        text-align: center;
+        font-weight: bold;
+        transition: all 0.3s ease;
+        border: none;
+        cursor: pointer;
+        font-size: 14px;
+        margin-bottom: 10px;
+      }
+
+      .apply-btn-primary:hover {
+        background: #20c997;
+        transform: translateY(-2px);
+        text-decoration: none;
+        color: white;
+      }
+
+      .deadline-warning {
+        background: #fff3cd;
+        padding: 12px;
+        border-radius: 4px;
+        color: #856404;
+        font-size: 13px;
+        margin-bottom: 15px;
+        border-left: 4px solid #ffc107;
+      }
+
+      .view-count {
+        color: #999;
+        font-size: 13px;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- preloader -->
+    <div class="bg-preloader"></div>
+    <div class="preloader">
+      <div class="mainpreloader">
+        <span></span>
+      </div>
+    </div>
+    <!-- preloader end -->
+
+    <!-- content wraper -->
+    <div class="content-wrapper">
+      {% include "components/header.html" %}
+
+      <!-- Page Header -->
+      <section class="page-header-section" style="background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%); min-height: 250px; display: flex; align-items: center;">
+        <div class="container" style="width: 100%;">
+          <div class="row">
+            <div class="col-md-12">
+              <div class="breadcrumb-box">
+                <h1>CAREER OPPORTUNITY</h1>
+                <p>Join our professional team</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Loading State -->
+      <div id="loadingState" class="loading">
+        <div class="loading-spinner"></div>
+        <p style="margin-top: 20px; color: #666;">Loading career opportunity...</p>
+      </div>
+
+      <!-- Error State -->
+      <div id="errorState" style="display: none;">
+        <div class="container" style="padding: 40px 0;">
+          <div class="error-message">
+            <h3>Oops! Career Not Found</h3>
+            <p id="errorMessage">An error occurred while loading the career opportunity.</p>
+            <a href="/careers/" class="back-to-careers" style="display: inline-block; margin-top: 20px;">
+              <span class="ti-arrow-left"></span> Back to Careers
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Career Detail -->
+      <div id="careerDetail" style="display: none;">
+        <!-- Career Header -->
+        <div class="career-detail-header">
+          <div class="container">
+            <div class="row">
+              <div class="col-md-12">
+                <a href="/careers/" class="back-to-careers">
+                  <span class="ti-arrow-left"></span> Back to Careers
+                </a>
+                <h1 id="careerTitle">Loading...</h1>
+                <div class="career-meta">
+                  <div class="career-meta-item">
+                    <span class="ti-location-pin"></span>
+                    <span id="careerLocation">Loading...</span>
+                  </div>
+                  <div class="career-meta-item">
+                    <span class="ti-bag"></span>
+                    <span id="careerDepartment" style="display: none;"></span>
+                  </div>
+                  <div class="career-meta-item" id="jobTypeContainer">
+                    <span class="badge" id="jobTypeBadge"></span>
+                  </div>
+                  <div class="career-meta-item" id="featuredContainer" style="display: none;">
+                    <span class="badge badge-featured">FEATURED</span>
+                  </div>
+                </div>
+                <div class="career-meta">
+                  <small id="viewCount" class="view-count"></small>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="container" style="padding: 40px 0;">
+          <div class="row">
+            <!-- Content Column -->
+            <div class="col-md-8">
+              <!-- Short Description -->
+              <div id="shortDescriptionContainer" style="display: none; margin-bottom: 30px;">
+                <p id="shortDescription" style="font-size: 16px; color: #666; line-height: 1.8; font-style: italic; border-left: 4px solid #28a745; padding-left: 20px;"></p>
+              </div>
+
+              <!-- Salary Range -->
+              <div id="salaryContainer" style="display: none;">
+                <div class="salary-highlight">
+                  <strong>Salary Range: </strong><span id="salaryRange"></span>
+                </div>
+              </div>
+
+              <!-- Experience Required -->
+              <div id="experienceContainer" style="display: none; margin-bottom: 30px;">
+                <h3>Experience Required</h3>
+                <p id="experienceRequired" style="color: #666; background: #f8f9fa; padding: 12px; border-radius: 4px;"></p>
+              </div>
+
+              <!-- Responsibilities -->
+              <div id="responsibilitiesContainer" style="display: none;">
+                <h2>Responsibilities</h2>
+                <div id="responsibilitiesContent" class="career-content" style="background: transparent; padding: 0; box-shadow: none;"></div>
+              </div>
+
+              <!-- Requirements -->
+              <div id="requirementsContainer" style="display: none;">
+                <h2>Requirements</h2>
+                <div id="requirementsContent" class="career-content" style="background: transparent; padding: 0; box-shadow: none;"></div>
+              </div>
+
+              <!-- Qualifications -->
+              <div id="qualificationsContainer" style="display: none;">
+                <h2>Qualifications</h2>
+                <div id="qualificationsContent" class="career-content" style="background: transparent; padding: 0; box-shadow: none;"></div>
+              </div>
+
+              <!-- Benefits -->
+              <div id="benefitsContainer" style="display: none;">
+                <h2>Benefits</h2>
+                <div id="benefitsContent" class="career-content" style="background: transparent; padding: 0; box-shadow: none;"></div>
+              </div>
+            </div>
+
+            <!-- Sidebar -->
+            <div class="col-md-4">
+              <div class="career-sidebar">
+                <h4>Job Details</h4>
+
+                <!-- Job Type -->
+                <div class="sidebar-info">
+                  <label>Job Type</label>
+                  <div class="sidebar-info-value">
+                    <span class="badge" id="sidebarJobTypeBadge"></span>
+                  </div>
+                </div>
+
+                <!-- Location -->
+                <div class="sidebar-info">
+                  <label>Location</label>
+                  <div class="sidebar-info-value" id="sidebarLocation"></div>
+                </div>
+
+                <!-- Department -->
+                <div class="sidebar-info" id="sidebarDepartmentInfo" style="display: none;">
+                  <label>Department</label>
+                  <div class="sidebar-info-value" id="sidebarDepartment"></div>
+                </div>
+
+                <!-- Experience -->
+                <div class="sidebar-info" id="sidebarExperienceInfo" style="display: none;">
+                  <label>Experience Required</label>
+                  <div class="sidebar-info-value" id="sidebarExperience"></div>
+                </div>
+
+                <!-- Salary -->
+                <div class="sidebar-info" id="sidebarSalaryInfo" style="display: none;">
+                  <label>Salary Range</label>
+                  <div class="sidebar-info-value" id="sidebarSalary"></div>
+                </div>
+
+                <!-- Application Deadline -->
+                <div class="sidebar-info" id="sidebarDeadlineInfo" style="display: none;">
+                  <label>Application Deadline</label>
+                  <div id="deadlineWarningContainer"></div>
+                  <div class="sidebar-info-value" id="sidebarDeadline"></div>
+                </div>
+
+                <!-- View Count -->
+                <div class="sidebar-info">
+                  <label>Views</label>
+                  <div class="sidebar-info-value" id="sidebarViewCount"></div>
+                </div>
+
+                <!-- Status -->
+                <div class="sidebar-info">
+                  <label>Status</label>
+                  <div class="sidebar-info-value">
+                    <span class="badge badge-success" id="statusBadge"></span>
+                  </div>
+                </div>
+
+                <!-- Posted Date -->
+                <div class="sidebar-info">
+                  <label>Posted On</label>
+                  <div class="sidebar-info-value" id="postedDate"></div>
+                </div>
+
+                <!-- Actions -->
+                <div class="sidebar-actions">
+                  <div id="applicationActions">
+                    <!-- Application button will be added here -->
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {% include "components/footer.html" %}
+    </div>
+    <!-- content wraper end -->
+
+    <!-- plugin JS -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.4.1/jquery.easing.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/waypoints/4.0.1/jquery.waypoints.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-appear/0.3.3/jquery.appear.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/magnific-popup.js/1.1.0/jquery.magnific-popup.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.isotope/3.0.6/isotope.pkgd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/masonry/4.2.2/masonry.pkgd.min.js"></script>
+    <script src="{% static 'js/on3step.js' %}"></script>
+
+    <script>
+      // Get career slug from URL
+      function getCareerSlug() {
+        const pathParts = window.location.pathname.split('/');
+        return pathParts[pathParts.length - 2] || pathParts[pathParts.length - 1];
+      }
+
+      // Format date
+      function formatDate(dateString) {
+        const date = new Date(dateString);
+        return date.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+      }
+
+      // Format time
+      function formatTime(dateString) {
+        const date = new Date(dateString);
+        return date.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' });
+      }
+
+      // Get job type badge class and label
+      function getJobTypeBadgeClass(jobType) {
+        const classMap = {
+          'full_time': 'badge-full-time',
+          'part_time': 'badge-part-time',
+          'contract': 'badge-contract',
+          'internship': 'badge-internship'
+        };
+        return classMap[jobType] || 'badge-full-time';
+      }
+
+      // Format text with line breaks as HTML
+      function formatTextContent(text) {
+        if (!text) return '';
+        
+        // Split by lines
+        const lines = text.split('\n');
+        let html = '';
+        
+        lines.forEach(line => {
+          line = line.trim();
+          if (line) {
+            // If line starts with -, treat as list item
+            if (line.startsWith('-')) {
+              html += `<li>${line.substring(1).trim()}</li>`;
+            } else if (line.startsWith('*')) {
+              html += `<li>${line.substring(1).trim()}</li>`;
+            } else {
+              html += `<p>${line}</p>`;
+            }
+          }
+        });
+
+        // Wrap list items in ul
+        html = html.replace(/(<li>.*?<\/li>)/gs, '<ul>$1</ul>');
+        // Clean up multiple ul tags
+        html = html.replace(/<\/ul>\s*<ul>/g, '');
+
+        return html;
+      }
+
+      // Fetch and display career
+      async function loadCareer() {
+        const slug = getCareerSlug();
+        if (!slug) {
+          showError('No career specified');
+          return;
+        }
+
+        try {
+          // Fetch career
+          const response = await fetch(`/api/careers/${slug}/`, {
+            method: 'GET',
+            headers: {
+              'Content-Type': 'application/json',
+              'Accept': 'application/json'
+            }
+          });
+
+          if (!response.ok) {
+            if (response.status === 404) {
+              throw new Error('Career opportunity not found');
+            }
+            throw new Error(`HTTP error! status: ${response.status}`);
+          }
+
+          const career = await response.json();
+          displayCareer(career);
+          
+          // Increment view count
+          incrementViewCount(slug);
+
+        } catch (error) {
+          console.error('Error loading career:', error);
+          showError(error.message);
+        }
+      }
+
+      // Display career data
+      function displayCareer(career) {
+        // Update page title
+        document.title = `${career.title} - BUILDSTATE Careers`;
+        document.getElementById('pageTitle').textContent = `${career.title} - BUILDSTATE Careers`;
+
+        // Header
+        document.getElementById('careerTitle').textContent = career.title;
+        document.getElementById('careerLocation').textContent = career.location || 'Not specified';
+
+        // Job Type Badge
+        const jobTypeClass = getJobTypeBadgeClass(career.job_type);
+        const jobTypeLabel = (career.job_type || 'full_time').replace('_', ' ').toUpperCase();
+        document.getElementById('jobTypeBadge').className = `badge ${jobTypeClass}`;
+        document.getElementById('jobTypeBadge').textContent = jobTypeLabel;
+
+        // Sidebar Job Type
+        document.getElementById('sidebarJobTypeBadge').className = `badge ${jobTypeClass}`;
+        document.getElementById('sidebarJobTypeBadge').textContent = jobTypeLabel;
+
+        // Location
+        document.getElementById('sidebarLocation').textContent = career.location || 'Not specified';
+
+        // Department
+        if (career.department) {
+          document.getElementById('careerDepartment').textContent = career.department;
+          document.getElementById('careerDepartment').style.display = 'inline';
+          document.getElementById('sidebarDepartment').textContent = career.department;
+          document.getElementById('sidebarDepartmentInfo').style.display = 'block';
+        }
+
+        // Featured badge
+        if (career.is_featured) {
+          document.getElementById('featuredContainer').style.display = 'flex';
+        }
+
+        // View count
+        document.getElementById('viewCount').textContent = `${career.view_count || 0} views`;
+        document.getElementById('sidebarViewCount').textContent = career.view_count || 0;
+
+        // Short Description
+        if (career.short_description) {
+          document.getElementById('shortDescription').textContent = career.short_description;
+          document.getElementById('shortDescriptionContainer').style.display = 'block';
+        }
+
+        // Salary Range
+        if (career.salary_range) {
+          document.getElementById('salaryRange').textContent = career.salary_range;
+          document.getElementById('salaryContainer').style.display = 'block';
+          document.getElementById('sidebarSalary').textContent = career.salary_range;
+          document.getElementById('sidebarSalaryInfo').style.display = 'block';
+        }
+
+        // Experience Required
+        if (career.experience_required) {
+          document.getElementById('experienceRequired').textContent = career.experience_required;
+          document.getElementById('experienceContainer').style.display = 'block';
+          document.getElementById('sidebarExperience').textContent = career.experience_required;
+          document.getElementById('sidebarExperienceInfo').style.display = 'block';
+        }
+
+        // Responsibilities
+        if (career.responsibilities) {
+          document.getElementById('responsibilitiesContent').innerHTML = formatTextContent(career.responsibilities);
+          document.getElementById('responsibilitiesContainer').style.display = 'block';
+        }
+
+        // Requirements
+        if (career.requirements) {
+          document.getElementById('requirementsContent').innerHTML = formatTextContent(career.requirements);
+          document.getElementById('requirementsContainer').style.display = 'block';
+        }
+
+        // Qualifications
+        if (career.qualifications) {
+          document.getElementById('qualificationsContent').innerHTML = formatTextContent(career.qualifications);
+          document.getElementById('qualificationsContainer').style.display = 'block';
+        }
+
+        // Benefits
+        if (career.benefits) {
+          document.getElementById('benefitsContent').innerHTML = formatTextContent(career.benefits);
+          document.getElementById('benefitsContainer').style.display = 'block';
+        }
+
+        // Status badge
+        const statusBadge = document.getElementById('statusBadge');
+        statusBadge.textContent = career.status.charAt(0).toUpperCase() + career.status.slice(1);
+
+        // Posted date
+        document.getElementById('postedDate').textContent = formatTime(career.published_at || career.created_at);
+
+        // Application Deadline
+        if (career.application_deadline) {
+          const deadlineDate = new Date(career.application_deadline);
+          const today = new Date();
+          today.setHours(0, 0, 0, 0);
+          deadlineDate.setHours(0, 0, 0, 0);
+          
+          const isExpiring = (deadlineDate - today) <= (7 * 24 * 60 * 60 * 1000) && (deadlineDate - today) > 0;
+          const isExpired = deadlineDate < today;
+
+          document.getElementById('sidebarDeadline').textContent = formatDate(career.application_deadline);
+          document.getElementById('sidebarDeadlineInfo').style.display = 'block';
+
+          if (isExpired) {
+            document.getElementById('deadlineWarningContainer').innerHTML = '<div class="deadline-warning"><strong>Application Closed:</strong> This position is no longer accepting applications.</div>';
+          } else if (isExpiring) {
+            document.getElementById('deadlineWarningContainer').innerHTML = '<div class="deadline-warning"><strong>Deadline Approaching:</strong> Apply soon!</div>';
+          }
+        }
+
+        // Application Actions
+        const actionsHtml = [];
+        if (career.application_url) {
+          actionsHtml.push(`<a href="${career.application_url}" target="_blank" class="apply-btn-primary">
+            <span class="ti-export"></span> Apply Now
+          </a>`);
+        } else if (career.application_email) {
+          actionsHtml.push(`<a href="mailto:${career.application_email}?subject=Job Application - ${career.title}" class="apply-btn-primary">
+            <span class="ti-email"></span> Apply via Email
+          </a>`);
+        }
+
+        if (actionsHtml.length > 0) {
+          document.getElementById('applicationActions').innerHTML = actionsHtml.join('');
+        }
+
+        // Show career detail and hide loading
+        document.getElementById('loadingState').style.display = 'none';
+        document.getElementById('errorState').style.display = 'none';
+        document.getElementById('careerDetail').style.display = 'block';
+
+        // Scroll to top
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+
+      // Show error message
+      function showError(message) {
+        document.getElementById('loadingState').style.display = 'none';
+        document.getElementById('careerDetail').style.display = 'none';
+        document.getElementById('errorState').style.display = 'block';
+        document.getElementById('errorMessage').textContent = message || 'An error occurred while loading the career opportunity.';
+      }
+
+      // Increment view count
+      async function incrementViewCount(slug) {
+        try {
+          await fetch(`/api/careers/${slug}/increment-view/`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'X-CSRFToken': getCookie('csrftoken')
+            }
+          });
+        } catch (error) {
+          console.log('Could not increment view count:', error);
+        }
+      }
+
+      // Get CSRF token from cookies
+      function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+          const cookies = document.cookie.split(';');
+          for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+              cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+              break;
+            }
+          }
+        }
+        return cookieValue;
+      }
+
+      // Load career when page loads
+      document.addEventListener('DOMContentLoaded', function() {
+        loadCareer();
+      });
+    </script>
+  </body>
+</html>

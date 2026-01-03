@@ -136,17 +136,49 @@
     <!-- content wraper -->
     <div class="content-wrapper">
       {% include "components/header.html" %}
+      <!-- subheader -->
+      <section id="subheader">
+        <div class="container">
+          <div class="row">
+            <div class="col-md-12">
+              <h1>
+                CAREERS
+              </h1>
+            </div>
+            <!-- devider -->
 
-      <!-- Careers Page Header -->
-      <section aria-label="Careers" class="blog-1 page-top" style="background: url('{% static 'img/portfolio-top.jpg' %}') no-repeat center; background-size: cover;">
-        <div class="bg-alpha-80">
-          <div class="container">
-            <div class="row">
-              <div class="col-md-12">
-                <div class="breadcrumb-box">
-                  <h1>JOIN OUR TEAM</h1>
-                  <p>Build your career with us - explore exciting opportunities</p>
+            <div class="col-md-12">
+              <div class="devider-page">
+                <div class="devider-img-right">
                 </div>
+              </div>
+            </div>
+
+            <div class="col-md-12">
+              <ul class="subdetail">
+                <li>
+                  <a href="index.html">Home</a>
+                </li>
+
+                <li class="sep">/
+                </li>
+
+                <li>CAREERS
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </section>
+      <!-- subheader end -->
+      <!-- Careers Page Header -->
+      <section aria-label="Careers" class="blog-1 page-top" style=" min-height: 250px; display: flex; align-items: center;">
+        <div class="container" style="width: 100%;">
+          <div class="row">
+            <div class="col-md-12">
+              <div class="breadcrumb-box">
+                <h1>JOIN OUR TEAM</h1>
+                <p>Build your career with us - explore exciting opportunities</p>
               </div>
             </div>
           </div>
@@ -160,9 +192,30 @@
             <div class="col-md-12">
               <!-- Careers Container -->
               <div id="careersContainer">
-                <div class="text-center">
+                <div class="text-center" style="padding: 40px;">
                   <p>Loading career opportunities...</p>
                 </div>
+              </div>
+
+              <!-- Pagination Controls -->
+              <div id="paginationControls" style="display: none; margin-top: 40px; text-align: center;">
+                <nav aria-label="Careers pagination">
+                  <ul class="pagination" style="justify-content: center;">
+                    <li class="page-item" id="prevBtn" style="display: none;">
+                      <a class="page-link" href="#" style="color: #ff6600; cursor: pointer;" onclick="previousPage(event)">← Previous</a>
+                    </li>
+                    
+                    <li class="page-item" style="margin: 0 10px;">
+                      <span class="page-link" style="background: transparent; border: none;">
+                        Page <span id="currentPage">1</span> of <span id="totalPages">1</span>
+                      </span>
+                    </li>
+                    
+                    <li class="page-item" id="nextBtn" style="display: none;">
+                      <a class="page-link" href="#" style="color: #ff6600; cursor: pointer;" onclick="nextPage(event)">Next →</a>
+                    </li>
+                  </ul>
+                </nav>
               </div>
             </div>
           </div>
@@ -174,25 +227,29 @@
     <!-- content wraper end -->
 
     <!-- plugin JS -->
-    <script src="{% static 'js/jquery.js' %}"></script>
-    <script src="{% static 'js/bootstrap.js' %}"></script>
-    <script src="{% static 'js/jquery.easing.js' %}"></script>
-    <script src="{% static 'js/jquery.waypoints.min.js' %}"></script>
-    <script src="{% static 'js/jquery.appear.js' %}"></script>
-    <script src="{% static 'js/owl.carousel.min.js' %}"></script>
-    <script src="{% static 'js/jquery.magnific-popup.min.js' %}"></script>
-    <script src="{% static 'js/jquery.isotope.min.js' %}"></script>
-    <script src="{% static 'js/jquery.masonry.min.js' %}"></script>
-    <script src="{% static 'js/parallax.js' %}"></script>
-    <script src="{% static 'js/on3step-functions.js' %}"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.4.1/jquery.easing.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/waypoints/4.0.1/jquery.waypoints.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-appear/0.3.3/jquery.appear.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/magnific-popup.js/1.1.0/jquery.magnific-popup.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.isotope/3.0.6/isotope.pkgd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/masonry/4.2.2/masonry.pkgd.min.js"></script>
+    <script src="{% static 'js/on3step.js' %}"></script>
 
     <script>
-      // Fetch careers from API
-      async function fetchCareers() {
+      let currentPageNum = 1;
+      let nextPageUrl = null;
+      let previousPageUrl = null;
+      let totalCount = 0;
+      let pageSize = 10;
+
+      // Fetch careers from API with pagination
+      async function fetchCareers(url = '/api/careers/active/') {
         const container = document.getElementById('careersContainer');
         try {
-          // Try the public endpoint first
-          const response = await fetch('/api/careers/active/', {
+          const response = await fetch(url, {
             method: 'GET',
             headers: {
               'Content-Type': 'application/json',
@@ -204,9 +261,46 @@
             throw new Error(`HTTP error! status: ${response.status}`);
           }
 
-          // Check if response is JSON array or object with results
           const data = await response.json();
-          const careers = Array.isArray(data) ? data : (data.results || []);
+          
+          // Handle both paginated and non-paginated responses
+          let careers = [];
+          if (Array.isArray(data)) {
+            // Non-paginated response
+            careers = data;
+            totalCount = data.length;
+            nextPageUrl = null;
+            previousPageUrl = null;
+          } else if (data.results) {
+            // Paginated response
+            careers = data.results;
+            nextPageUrl = data.next;
+            previousPageUrl = data.previous;
+            totalCount = data.count || 0;
+            pageSize = data.results.length;
+            
+            // Calculate current page and total pages
+            if (url.includes('page=')) {
+              const pageMatch = url.match(/page=(\d+)/);
+              currentPageNum = pageMatch ? parseInt(pageMatch[1]) : 1;
+            } else {
+              currentPageNum = 1;
+            }
+            
+            const totalPages = Math.ceil(totalCount / pageSize);
+            document.getElementById('currentPage').textContent = currentPageNum;
+            document.getElementById('totalPages').textContent = totalPages;
+            
+            // Show/hide pagination controls
+            const paginationControls = document.getElementById('paginationControls');
+            if (totalPages > 1) {
+              paginationControls.style.display = 'block';
+              document.getElementById('prevBtn').style.display = previousPageUrl ? 'block' : 'none';
+              document.getElementById('nextBtn').style.display = nextPageUrl ? 'block' : 'none';
+            } else {
+              paginationControls.style.display = 'none';
+            }
+          }
 
           if (careers.length === 0) {
             container.innerHTML = '<p class="text-center" style="padding: 40px; color: #999;">No active job openings at the moment. Please check back later.</p>';
@@ -219,7 +313,9 @@
             const jobTypeLabel = (career.job_type || '').replace('_', ' ').toUpperCase();
 
             html += `
-              <div class="job-card">
+              <div class="job-card" style="cursor: pointer;" onclick="viewCareerDetail('${career.slug}', event)"
+                   onmouseover="this.style.boxShadow='0 4px 15px rgba(40, 167, 69, 0.15)'; this.style.transform='translateY(-2px)'"
+                   onmouseout="this.style.boxShadow='0 2px 8px rgba(0, 0, 0, 0.08)'; this.style.transform='translateY(0)'">
                 <div class="job-header">
                   <h3 class="job-title">${career.title || 'Untitled Position'}</h3>
                   <div class="job-badges">
@@ -278,10 +374,36 @@
         }
       }
 
+      // Navigate to next page
+      function nextPage(event) {
+        event.preventDefault();
+        if (nextPageUrl) {
+          fetchCareers(nextPageUrl);
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+      }
+
+      // Navigate to previous page
+      function previousPage(event) {
+        event.preventDefault();
+        if (previousPageUrl) {
+          fetchCareers(previousPageUrl);
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+      }
+
       // Load careers when page loads
       document.addEventListener('DOMContentLoaded', function() {
         fetchCareers();
       });
+
+      // View individual career detail
+      function viewCareerDetail(slug, event) {
+        if (event && event.target.closest('a, button')) {
+          return; // Don't navigate if clicking on a link or button
+        }
+        window.location.href = `/careers/${slug}/`;
+      }
     </script>
   </body>
 </html>

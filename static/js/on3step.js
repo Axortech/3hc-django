@@ -38,7 +38,7 @@ $(window).on("load", function() {
     bgpreloader.slideUp(500);
 
     // animated transition & scroll onStep
-    onStep();
+    // onStep() - function not defined, skipping
 
     // responsive part
     if ($(window).width() < 1025) {
