@@ -283,13 +283,52 @@ class BannerViewSet(viewsets.ModelViewSet):
         return Response(serializer.data)
 
 @extend_schema_view(
-    list=extend_schema(summary="Get about page contents", description="Multiple 'about' entries supported, but you can use one."),
-    retrieve=extend_schema(summary="Get a single about entry"),
+    list=extend_schema(
+        summary="Get about page contents",
+        description="Retrieve all about page entries. Public GET endpoint.",
+        tags=['About']
+    ),
+    retrieve=extend_schema(
+        summary="Get a single about entry",
+        description="Retrieve a single about page entry by ID. Public GET endpoint.",
+        tags=['About']
+    ),
+    create=extend_schema(
+        summary="Create about page content",
+        description="Create a new about page entry. Admin only.",
+        tags=['About'],
+        request=AboutSerializer,
+        responses={201: AboutSerializer}
+    ),
+    update=extend_schema(
+        summary="Update about page content",
+        description="Update an about page entry completely. Admin only.",
+        tags=['About'],
+        request=AboutSerializer,
+        responses={200: AboutSerializer}
+    ),
+    partial_update=extend_schema(
+        summary="Partially update about page content",
+        description="Partially update an about page entry. Admin only.",
+        tags=['About'],
+        request=AboutSerializer,
+        responses={200: AboutSerializer}
+    ),
+    destroy=extend_schema(
+        summary="Delete about page content",
+        description="Delete an about page entry. Admin only.",
+        tags=['About']
+    ),
 )
 class AboutViewSet(viewsets.ModelViewSet):
     queryset = About.objects.all()
     serializer_class = AboutSerializer
-    permission_classes = [IsAdmin]
+    
+    def get_permissions(self):
+        """Allow public GET requests, require auth for write operations"""
+        if self.action in ('list', 'retrieve'):
+            return [AllowAny()]
+        return [IsAdmin()]
 
 @extend_schema_view(
     list=extend_schema(
