@@ -61,9 +61,30 @@
             <div class="col-md-12">
               <!-- Notices Container -->
               <div id="noticesContainer" class="notices-list">
-                <div class="text-center">
+                <div class="text-center" style="padding: 40px;">
                   <p>Loading notices...</p>
                 </div>
+              </div>
+              
+              <!-- Pagination Controls -->
+              <div id="paginationControls" style="display: none; margin-top: 40px; text-align: center;">
+                <nav aria-label="Notices pagination">
+                  <ul class="pagination" style="justify-content: center;">
+                    <li class="page-item" id="prevBtn" style="display: none;">
+                      <a class="page-link" href="#" style="color: #ff6600; cursor: pointer;" onclick="previousPage(event)">← Previous</a>
+                    </li>
+                    
+                    <li class="page-item" style="margin: 0 10px;">
+                      <span class="page-link" style="background: transparent; border: none;">
+                        Page <span id="currentPage">1</span> of <span id="totalPages">1</span>
+                      </span>
+                    </li>
+                    
+                    <li class="page-item" id="nextBtn" style="display: none;">
+                      <a class="page-link" href="#" style="color: #ff6600; cursor: pointer;" onclick="nextPage(event)">Next →</a>
+                    </li>
+                  </ul>
+                </nav>
               </div>
             </div>
           </div>
@@ -115,12 +136,17 @@
     <script src="{% static 'js/on3step-functions.js' %}"></script>
 
     <script>
-      // Fetch notices from API
-      async function fetchNotices() {
+      let currentPageNum = 1;
+      let nextPageUrl = null;
+      let previousPageUrl = null;
+      let totalCount = 0;
+      let pageSize = 10;
+
+      // Fetch notices from API with pagination
+      async function fetchNotices(url = '/api/notices/published/') {
         const container = document.getElementById('noticesContainer');
         try {
-          // Try the public endpoint first
-          const response = await fetch('/api/notices/published/', {
+          const response = await fetch(url, {
             method: 'GET',
             headers: {
               'Content-Type': 'application/json',
@@ -132,9 +158,46 @@
             throw new Error(`HTTP error! status: ${response.status}`);
           }
 
-          // Check if response is JSON array or object with results
           const data = await response.json();
-          const notices = Array.isArray(data) ? data : (data.results || []);
+          
+          // Handle both paginated and non-paginated responses
+          let notices = [];
+          if (Array.isArray(data)) {
+            // Non-paginated response
+            notices = data;
+            totalCount = data.length;
+            nextPageUrl = null;
+            previousPageUrl = null;
+          } else if (data.results) {
+            // Paginated response
+            notices = data.results;
+            nextPageUrl = data.next;
+            previousPageUrl = data.previous;
+            totalCount = data.count || 0;
+            pageSize = data.results.length;
+            
+            // Calculate current page and total pages
+            if (url.includes('page=')) {
+              const pageMatch = url.match(/page=(\d+)/);
+              currentPageNum = pageMatch ? parseInt(pageMatch[1]) : 1;
+            } else {
+              currentPageNum = 1;
+            }
+            
+            const totalPages = Math.ceil(totalCount / pageSize);
+            document.getElementById('currentPage').textContent = currentPageNum;
+            document.getElementById('totalPages').textContent = totalPages;
+            
+            // Show/hide pagination controls
+            const paginationControls = document.getElementById('paginationControls');
+            if (totalPages > 1) {
+              paginationControls.style.display = 'block';
+              document.getElementById('prevBtn').style.display = previousPageUrl ? 'block' : 'none';
+              document.getElementById('nextBtn').style.display = nextPageUrl ? 'block' : 'none';
+            } else {
+              paginationControls.style.display = 'none';
+            }
+          }
 
           if (notices.length === 0) {
             container.innerHTML = '<p class="text-center" style="padding: 40px; color: #999;">No notices available at the moment.</p>';
@@ -145,22 +208,38 @@
           notices.forEach(notice => {
             const noticeDate = new Date(notice.notice_date);
             const dateStr = noticeDate.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
-            const priorityClass = notice.priority === 'urgent' ? 'badge-danger' : notice.priority === 'high' ? 'badge-warning' : 'badge-info';
+            const priorityClass = notice.priority === 'urgent' ? 'badge-danger' : notice.priority === 'high' ? 'badge-warning' : notice.priority === 'low' ? 'badge-info' : 'badge-secondary';
+            const stickyBadge = notice.is_sticky ? '<span class="badge" style="background-color: #ff6600; padding: 6px 12px; border-radius: 4px; color: white; font-weight: bold; margin-left: 8px;">PINNED</span>' : '';
 
             html += `
               <div class="col-md-12" style="margin-bottom: 30px;">
-                <div class="news-item" style="padding: 20px; background: white; border-left: 4px solid #ff6600; border-radius: 4px; box-shadow: 0 2px 8px rgba(0,0,0,0.08);">
-                  <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 15px; flex-wrap: wrap;">
-                    <div>
-                      <h4 style="margin: 0 0 10px 0; color: #333;">${notice.title || 'Untitled'}</h4>
-                      <small style="color: #999;">${dateStr}</small>
+                <div class="news-item" style="padding: 20px; background: white; border-left: 4px solid ${notice.is_sticky ? '#ff6600' : '#007bff'}; border-radius: 4px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); transition: all 0.3s ease; cursor: pointer;" 
+                     onclick="viewNoticeDetail('${notice.slug}', event)"
+                     onmouseover="this.style.boxShadow='0 4px 16px rgba(0,0,0,0.12)'; this.style.transform='translateY(-2px)'"
+                     onmouseout="this.style.boxShadow='0 2px 8px rgba(0,0,0,0.08)'; this.style.transform='translateY(0)'">
+                  
+                  <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 15px; flex-wrap: wrap; gap: 10px;">
+                    <div style="flex: 1;">
+                      <h4 style="margin: 0 0 10px 0; color: #333; cursor: pointer;">${notice.title || 'Untitled'}</h4>
+                      <small style="color: #999; display: flex; align-items: center; gap: 10px;">
+                        <span>${dateStr}</span>
+                        ${notice.view_count ? `<span style="color: #ccc;">|</span><span>${notice.view_count} views</span>` : ''}
+                      </small>
                     </div>
-                    ${notice.priority ? `<span class="badge ${priorityClass}" style="padding: 6px 12px; border-radius: 4px; color: white; font-weight: bold;">${notice.priority.toUpperCase()}</span>` : ''}
+                    <div style="display: flex; gap: 8px; flex-wrap: wrap; justify-content: flex-end;">
+                      ${notice.priority ? `<span class="badge ${priorityClass}" style="padding: 6px 12px; border-radius: 4px; color: white; font-weight: bold; font-size: 11px;">${notice.priority.toUpperCase()}</span>` : ''}
+                      ${stickyBadge}
+                    </div>
                   </div>
                   
-                  <p style="color: #666; margin-bottom: 15px;">${notice.excerpt || notice.content ? notice.content.substring(0, 200) : 'No content'}</p>
+                  <p style="color: #666; margin-bottom: 15px; line-height: 1.6;">${notice.excerpt || (notice.content ? notice.content.substring(0, 200) + '...' : 'No content')}</p>
                   
-                  ${notice.attachment ? `<a href="${notice.attachment}" style="display: inline-block; margin-top: 10px; padding: 8px 16px; background: #ff6600; color: white; text-decoration: none; border-radius: 4px; font-size: 12px;">Download Attachment</a>` : ''}
+                  <div style="display: flex; gap: 10px; align-items: center;">
+                    ${notice.attachment ? `<a href="${notice.attachment}" style="display: inline-flex; align-items: center; gap: 5px; padding: 8px 14px; background: #f0f0f0; color: #333; text-decoration: none; border-radius: 4px; font-size: 12px; transition: all 0.3s ease;" onmouseover="this.style.background='#ff6600'; this.style.color='white';" onmouseout="this.style.background='#f0f0f0'; this.style.color='#333';" onclick="event.stopPropagation();">
+                      <span class="ti-download"></span> Download
+                    </a>` : ''}
+                    <span style="color: #ccc; font-size: 12px;">→ Click to view full notice</span>
+                  </div>
                 </div>
               </div>
             `;
@@ -177,6 +256,32 @@
             </div>
           `;
         }
+      }
+
+      // Navigate to next page
+      function nextPage(event) {
+        event.preventDefault();
+        if (nextPageUrl) {
+          fetchNotices(nextPageUrl);
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+      }
+
+      // Navigate to previous page
+      function previousPage(event) {
+        event.preventDefault();
+        if (previousPageUrl) {
+          fetchNotices(previousPageUrl);
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+      }
+
+      // View individual notice detail
+      function viewNoticeDetail(slug, event) {
+        if (event && event.target.closest('a')) {
+          return; // Don't navigate if clicking on a link
+        }
+        window.location.href = `/notices/${slug}/`;
       }
 
       // Load notices when page loads

@@ -1,0 +1,631 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="zxx">
+  <head>
+    <meta charset="utf-8" />
+    <title id="pageTitle">BUILDSTATE - Notice</title>
+    <meta content="" name="description" />
+    <meta content="" name="author" />
+    <meta content="" name="keywords" />
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1" name="viewport" />
+    <!-- favicon -->
+    <link href="{% static 'img/favicon.png' %}" rel="icon" sizes="32x32" type="image/png" />
+    <!-- Bootstrap CSS -->
+    <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet" />
+    <!-- font themify CSS -->
+    <link rel="stylesheet" href="{% static 'css/themify-icons.css' %}" />
+    <!-- font awesome CSS -->
+    <link href="{% static 'font-awesome/css/font-awesome.css' %}" rel="stylesheet" />
+    <!-- on3step CSS -->
+    <link href="{% static 'css/animated-on3step.css' %}" rel="stylesheet" />
+    <link href="{% static 'css/owl.carousel.css' %}" rel="stylesheet" />
+    <link href="{% static 'css/owl.theme.css' %}" rel="stylesheet" />
+    <link href="{% static 'css/owl.transitions.css' %}" rel="stylesheet" />
+    <link href="{% static 'css/on3step-style.css' %}" rel="stylesheet" />
+    <link href="{% static 'css/queries-on3step.css' %}" media="all" rel="stylesheet" type="text/css" />
+    <style>
+      .notice-detail-header {
+        background: linear-gradient(135deg, #ff6600 0%, #ff8833 100%);
+        color: white;
+        padding: 60px 0;
+        margin-bottom: 40px;
+      }
+
+      .notice-detail-header h1 {
+        font-size: 32px;
+        font-weight: bold;
+        margin-bottom: 15px;
+        line-height: 1.4;
+      }
+
+      .notice-meta {
+        display: flex;
+        gap: 20px;
+        flex-wrap: wrap;
+        margin-bottom: 20px;
+        font-size: 14px;
+      }
+
+      .notice-meta-item {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .badge {
+        padding: 6px 12px;
+        border-radius: 4px;
+        font-weight: bold;
+        font-size: 12px;
+        display: inline-block;
+      }
+
+      .badge-urgent {
+        background-color: #dc3545;
+        color: white;
+      }
+
+      .badge-high {
+        background-color: #fd7e14;
+        color: white;
+      }
+
+      .badge-normal {
+        background-color: #17a2b8;
+        color: white;
+      }
+
+      .badge-low {
+        background-color: #6c757d;
+        color: white;
+      }
+
+      .badge-pinned {
+        background-color: #ff6600;
+        color: white;
+      }
+
+      .notice-content {
+        background: white;
+        padding: 40px;
+        border-radius: 8px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        margin-bottom: 40px;
+        line-height: 1.8;
+        color: #333;
+      }
+
+      .notice-content h2 {
+        font-size: 22px;
+        font-weight: bold;
+        margin-top: 30px;
+        margin-bottom: 15px;
+        color: #ff6600;
+      }
+
+      .notice-content h3 {
+        font-size: 18px;
+        font-weight: bold;
+        margin-top: 20px;
+        margin-bottom: 12px;
+      }
+
+      .notice-content p {
+        margin-bottom: 15px;
+      }
+
+      .notice-content ul, .notice-content ol {
+        margin-left: 20px;
+        margin-bottom: 15px;
+      }
+
+      .notice-content li {
+        margin-bottom: 8px;
+      }
+
+      .featured-image {
+        max-width: 100%;
+        height: auto;
+        border-radius: 8px;
+        margin-bottom: 30px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      }
+
+      .notice-attachment {
+        background: #f8f9fa;
+        padding: 20px;
+        border-radius: 8px;
+        margin-bottom: 30px;
+        border-left: 4px solid #ff6600;
+      }
+
+      .notice-attachment a {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        padding: 10px 20px;
+        background: #ff6600;
+        color: white;
+        text-decoration: none;
+        border-radius: 4px;
+        font-weight: bold;
+        transition: all 0.3s ease;
+      }
+
+      .notice-attachment a:hover {
+        background: #fd6500;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(255, 102, 0, 0.3);
+      }
+
+      .back-to-notices {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 10px 20px;
+        background: #f0f0f0;
+        color: #333;
+        text-decoration: none;
+        border-radius: 4px;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        margin-bottom: 30px;
+      }
+
+      .back-to-notices:hover {
+        background: #ff6600;
+        color: white;
+      }
+
+      .notice-sidebar {
+        background: white;
+        padding: 30px;
+        border-radius: 8px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        position: sticky;
+        top: 20px;
+      }
+
+      .notice-sidebar h4 {
+        font-size: 16px;
+        font-weight: bold;
+        margin-bottom: 20px;
+        color: #333;
+        border-bottom: 2px solid #ff6600;
+        padding-bottom: 10px;
+      }
+
+      .sidebar-info {
+        margin-bottom: 25px;
+      }
+
+      .sidebar-info label {
+        display: block;
+        font-weight: bold;
+        color: #666;
+        font-size: 12px;
+        text-transform: uppercase;
+        margin-bottom: 5px;
+      }
+
+      .sidebar-info-value {
+        color: #333;
+        font-size: 14px;
+      }
+
+      .sidebar-actions {
+        margin-top: 30px;
+        padding-top: 30px;
+        border-top: 1px solid #e0e0e0;
+      }
+
+      .sidebar-actions a {
+        display: block;
+        padding: 10px 15px;
+        margin-bottom: 10px;
+        background: #ff6600;
+        color: white;
+        text-decoration: none;
+        border-radius: 4px;
+        text-align: center;
+        font-weight: bold;
+        transition: all 0.3s ease;
+      }
+
+      .sidebar-actions a:hover {
+        background: #fd6500;
+        transform: translateY(-2px);
+      }
+
+      @media (max-width: 768px) {
+        .notice-detail-header {
+          padding: 40px 0;
+        }
+
+        .notice-detail-header h1 {
+          font-size: 24px;
+        }
+
+        .notice-content {
+          padding: 20px;
+        }
+
+        .notice-sidebar {
+          position: static;
+          margin-top: 30px;
+        }
+      }
+
+      .loading {
+        text-align: center;
+        padding: 60px 20px;
+      }
+
+      .loading-spinner {
+        display: inline-block;
+        width: 40px;
+        height: 40px;
+        border: 4px solid #f3f3f3;
+        border-top: 4px solid #ff6600;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+      }
+
+      @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+      }
+
+      .error-message {
+        padding: 40px;
+        text-align: center;
+        background: #f8f9fa;
+        border-radius: 8px;
+        color: #dc3545;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- preloader -->
+    <div class="bg-preloader"></div>
+    <div class="preloader">
+      <div class="mainpreloader">
+        <span></span>
+      </div>
+    </div>
+    <!-- preloader end -->
+
+    <!-- content wraper -->
+    <div class="content-wrapper">
+      {% include "components/header.html" %}
+
+      <!-- Loading State -->
+      <div id="loadingState" class="loading">
+        <div class="loading-spinner"></div>
+        <p style="margin-top: 20px; color: #666;">Loading notice...</p>
+      </div>
+
+      <!-- Error State -->
+      <div id="errorState" style="display: none;">
+        <div class="container" style="padding: 40px 0;">
+          <div class="error-message">
+            <h3 style="margin-bottom: 20px;">Notice Not Found</h3>
+            <p id="errorMessage" style="margin: 0 0 20px 0;">The notice you're looking for doesn't exist.</p>
+            <a href="/notices/" class="back-to-notices">← Back to All Notices</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Notice Detail -->
+      <div id="noticeDetail" style="display: none;">
+        <!-- Notice Header -->
+        <div class="notice-detail-header">
+          <div class="container">
+            <a href="/notices/" class="back-to-notices" style="color: white; background: rgba(255,255,255,0.2); margin-bottom: 20px;">← Back to All Notices</a>
+            <h1 id="noticeTitle"></h1>
+            
+            <div class="notice-meta">
+              <div class="notice-meta-item">
+                <span class="ti-calendar"></span>
+                <span id="noticeDate"></span>
+              </div>
+              <div class="notice-meta-item" id="priorityBadgeContainer"></div>
+              <div class="notice-meta-item" id="stickyBadgeContainer" style="display: none;">
+                <span class="badge badge-pinned">PINNED</span>
+              </div>
+              <div class="notice-meta-item">
+                <span class="ti-eye"></span>
+                <span id="viewCount">0</span> views
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="container" style="padding: 40px 0;">
+          <div class="row">
+            <div class="col-md-8">
+              <!-- Featured Image -->
+              <img id="noticeImage" src="" alt="" class="featured-image" style="display: none; margin-bottom: 30px;">
+
+              <!-- Notice Excerpt -->
+              <div id="noticeExcerpt" style="background: #f0f0f0; padding: 20px; border-radius: 8px; margin-bottom: 30px; font-style: italic; color: #666; display: none;"></div>
+
+              <!-- Notice Content -->
+              <div class="notice-content" id="noticeContent"></div>
+
+              <!-- Attachment -->
+              <div id="attachmentSection" style="display: none;">
+                <div class="notice-attachment">
+                  <h4 style="margin-top: 0;">📎 Attachment</h4>
+                  <a id="attachmentLink" href="" target="_blank" rel="noopener noreferrer">
+                    <span class="ti-download"></span>
+                    <span id="attachmentName">Download File</span>
+                  </a>
+                </div>
+              </div>
+
+              <!-- Navigation -->
+              <div style="margin-top: 50px; padding-top: 30px; border-top: 2px solid #e0e0e0; display: flex; justify-content: space-between; gap: 20px;">
+                <a id="previousNoticeBtn" href="#" style="flex: 1; padding: 15px; background: #f0f0f0; color: #333; text-decoration: none; border-radius: 4px; text-align: center; font-weight: bold; transition: all 0.3s ease;" onmouseover="this.style.background='#ff6600'; this.style.color='white';" onmouseout="this.style.background='#f0f0f0'; this.style.color='#333';" style="display: none;">← Previous Notice</a>
+                
+                <a href="/notices/" style="flex: 1; padding: 15px; background: #f0f0f0; color: #333; text-decoration: none; border-radius: 4px; text-align: center; font-weight: bold; transition: all 0.3s ease;" onmouseover="this.style.background='#ff6600'; this.style.color='white';" onmouseout="this.style.background='#f0f0f0'; this.style.color='#333';">Back to All Notices</a>
+                
+                <a id="nextNoticeBtn" href="#" style="flex: 1; padding: 15px; background: #f0f0f0; color: #333; text-decoration: none; border-radius: 4px; text-align: center; font-weight: bold; transition: all 0.3s ease;" onmouseover="this.style.background='#ff6600'; this.style.color='white';" onmouseout="this.style.background='#f0f0f0'; this.style.color='#333';" style="display: none;">Next Notice →</a>
+              </div>
+            </div>
+
+            <!-- Sidebar -->
+            <div class="col-md-4">
+              <div class="notice-sidebar">
+                <h4>Notice Information</h4>
+
+                <div class="sidebar-info">
+                  <label>Status</label>
+                  <div class="sidebar-info-value">
+                    <span id="statusBadge" class="badge" style="display: inline-block;"></span>
+                  </div>
+                </div>
+
+                <div class="sidebar-info">
+                  <label>Priority</label>
+                  <div class="sidebar-info-value">
+                    <span id="priorityValue" class="badge" style="display: inline-block;"></span>
+                  </div>
+                </div>
+
+                <div class="sidebar-info">
+                  <label>Published Date</label>
+                  <div class="sidebar-info-value" id="publishedDate"></div>
+                </div>
+
+                <div class="sidebar-info" id="expirySection" style="display: none;">
+                  <label>Expiry Date</label>
+                  <div class="sidebar-info-value" id="expiryDate"></div>
+                </div>
+
+                <div class="sidebar-info">
+                  <label>Created</label>
+                  <div class="sidebar-info-value" id="createdDate"></div>
+                </div>
+
+                <div class="sidebar-info">
+                  <label>Last Updated</label>
+                  <div class="sidebar-info-value" id="updatedDate"></div>
+                </div>
+
+                <div class="sidebar-info">
+                  <label>Views</label>
+                  <div class="sidebar-info-value" id="sidebarViewCount">0</div>
+                </div>
+
+                <div class="sidebar-actions">
+                  <a href="/notices/" class="btn-form">← Back to Notices</a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {% include "components/footer.html" %}
+    </div>
+    <!-- content wraper end -->
+
+    <!-- plugin JS -->
+    <script src="{% static 'js/jquery.js' %}"></script>
+    <script src="{% static 'js/bootstrap.js' %}"></script>
+    <script src="{% static 'js/jquery.easing.js' %}"></script>
+    <script src="{% static 'js/jquery.waypoints.min.js' %}"></script>
+    <script src="{% static 'js/jquery.appear.js' %}"></script>
+    <script src="{% static 'js/owl.carousel.min.js' %}"></script>
+    <script src="{% static 'js/jquery.magnific-popup.min.js' %}"></script>
+    <script src="{% static 'js/jquery.isotope.min.js' %}"></script>
+    <script src="{% static 'js/jquery.masonry.min.js' %}"></script>
+    <script src="{% static 'js/parallax.js' %}"></script>
+    <script src="{% static 'js/on3step-functions.js' %}"></script>
+
+    <script>
+      // Get notice slug from URL
+      function getNoticeSlug() {
+        const pathParts = window.location.pathname.split('/');
+        return pathParts[pathParts.length - 2] || pathParts[pathParts.length - 1];
+      }
+
+      // Format date
+      function formatDate(dateString) {
+        const date = new Date(dateString);
+        return date.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+      }
+
+      // Format time
+      function formatTime(dateString) {
+        const date = new Date(dateString);
+        return date.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' });
+      }
+
+      // Get priority badge class and label
+      function getPriorityBadgeClass(priority) {
+        const classMap = {
+          'urgent': 'badge-urgent',
+          'high': 'badge-high',
+          'normal': 'badge-normal',
+          'low': 'badge-low'
+        };
+        return classMap[priority] || 'badge-normal';
+      }
+
+      // Get status badge class
+      function getStatusBadgeClass(status) {
+        const classMap = {
+          'published': 'badge-info',
+          'draft': 'badge-secondary',
+          'archived': 'badge-secondary'
+        };
+        return classMap[status] || 'badge-secondary';
+      }
+
+      // Fetch and display notice
+      async function loadNotice() {
+        const slug = getNoticeSlug();
+        if (!slug) {
+          showError('No notice specified');
+          return;
+        }
+
+        try {
+          // Fetch notice
+          const response = await fetch(`/api/notices/${slug}/`, {
+            method: 'GET',
+            headers: {
+              'Content-Type': 'application/json',
+              'Accept': 'application/json'
+            }
+          });
+
+          if (!response.ok) {
+            if (response.status === 404) {
+              showError('Notice not found');
+            } else {
+              showError(`Error loading notice: ${response.status}`);
+            }
+            return;
+          }
+
+          const notice = await response.json();
+          displayNotice(notice);
+          
+          // Increment view count
+          incrementViewCount(slug);
+
+        } catch (error) {
+          console.error('Error loading notice:', error);
+          showError(error.message);
+        }
+      }
+
+      // Display notice data
+      function displayNotice(notice) {
+        // Update page title
+        document.title = `${notice.title} - BUILDSTATE`;
+        document.getElementById('pageTitle').textContent = `${notice.title} - BUILDSTATE`;
+
+        // Header
+        document.getElementById('noticeTitle').textContent = notice.title;
+        document.getElementById('noticeDate').textContent = formatDate(notice.notice_date);
+
+        // Priority badge
+        const priorityBadgeContainer = document.getElementById('priorityBadgeContainer');
+        priorityBadgeContainer.innerHTML = `<span class="badge ${getPriorityBadgeClass(notice.priority)}">${notice.priority.toUpperCase()}</span>`;
+
+        // Sticky badge
+        if (notice.is_sticky) {
+          document.getElementById('stickyBadgeContainer').style.display = 'block';
+        }
+
+        // View count
+        document.getElementById('viewCount').textContent = notice.view_count;
+        document.getElementById('sidebarViewCount').textContent = notice.view_count;
+
+        // Featured image
+        if (notice.featured_image) {
+          document.getElementById('noticeImage').src = notice.featured_image;
+          document.getElementById('noticeImage').style.display = 'block';
+        }
+
+        // Excerpt
+        if (notice.excerpt) {
+          document.getElementById('noticeExcerpt').textContent = notice.excerpt;
+          document.getElementById('noticeExcerpt').style.display = 'block';
+        }
+
+        // Content
+        document.getElementById('noticeContent').innerHTML = notice.content || 'No content available';
+
+        // Attachment
+        if (notice.attachment) {
+          document.getElementById('attachmentLink').href = notice.attachment;
+          const fileName = notice.attachment.split('/').pop();
+          document.getElementById('attachmentName').textContent = `Download (${fileName})`;
+          document.getElementById('attachmentSection').style.display = 'block';
+        }
+
+        // Status badge
+        const statusBadge = document.getElementById('statusBadge');
+        statusBadge.className = `badge ${getStatusBadgeClass(notice.status)}`;
+        statusBadge.textContent = notice.status.charAt(0).toUpperCase() + notice.status.slice(1);
+
+        // Priority badge in sidebar
+        const priorityValue = document.getElementById('priorityValue');
+        priorityValue.className = `badge ${getPriorityBadgeClass(notice.priority)}`;
+        priorityValue.textContent = notice.priority.charAt(0).toUpperCase() + notice.priority.slice(1);
+
+        // Dates
+        document.getElementById('publishedDate').textContent = notice.published_at ? formatTime(notice.published_at) : 'Not published';
+        document.getElementById('createdDate').textContent = formatTime(notice.created_at);
+        document.getElementById('updatedDate').textContent = formatTime(notice.updated_at);
+
+        if (notice.expiry_date) {
+          document.getElementById('expiryDate').textContent = formatDate(notice.expiry_date);
+          document.getElementById('expirySection').style.display = 'block';
+        }
+
+        // Show notice detail and hide loading
+        document.getElementById('loadingState').style.display = 'none';
+        document.getElementById('errorState').style.display = 'none';
+        document.getElementById('noticeDetail').style.display = 'block';
+
+        // Scroll to top
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+
+      // Show error message
+      function showError(message) {
+        document.getElementById('loadingState').style.display = 'none';
+        document.getElementById('noticeDetail').style.display = 'none';
+        document.getElementById('errorState').style.display = 'block';
+        document.getElementById('errorMessage').textContent = message || 'An error occurred while loading the notice.';
+      }
+
+      // Increment view count
+      async function incrementViewCount(slug) {
+        try {
+          await fetch(`/api/notices/${slug}/increment-view/`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'Accept': 'application/json'
+            }
+          });
+        } catch (error) {
+          console.error('Error incrementing view count:', error);
+        }
+      }
+
+      // Load notice when page loads
+      document.addEventListener('DOMContentLoaded', function() {
+        loadNotice();
+      });
+    </script>
+  </body>
+</html>
