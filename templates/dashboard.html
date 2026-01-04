@@ -2019,7 +2019,7 @@
                       <i class="fa fa-image" style="font-size: 30px; color: #ccc;"></i>
                     </div>
                     <div style="flex: 1;">
-                      <input type="file" id="configLogoView" accept="image/*" class="form-control" />
+                      <input type="file" id="configLogoView" accept="image/*" class="form-control" onchange="previewConfigLogo(this)" />
                       <small style="color: #999; display: block; margin-top: 5px;">PNG, JPG, SVG (Max 2MB)</small>
                     </div>
                   </div>
@@ -5897,27 +5897,27 @@
       };
 
       // Basic Information
-      setValue('configCompanyName', config.company_name);
-      setValue('configEmailMain', config.email);
-      setValue('configPhoneMain', config.phone);
-      setValue('configWebsiteMain', config.website);
-      setValue('configAddressMain', config.address);
-      setValue('configAboutMain', config.about_excerpt);
+      setValue('configCompanyNameView', config.company_name);
+      setValue('configEmailView', config.email);
+      setValue('configPhoneView', config.phone);
+      setValue('configWebsiteView', config.website);
+      setValue('configAddressView', config.address);
+      setValue('configAboutExcerptView', config.about_excerpt);
 
       // Social Links
-      setValue('configFacebook', config.facebook_url);
-      setValue('configInstagram', config.instagram_url);
-      setValue('configYoutube', config.youtube_url);
-      setValue('configLinkedin', config.linkedin_url);
-      setValue('configTwitter', config.x_url);
-      setValue('configCustomLinkUrl', config.custom_link_url);
-      setValue('configCustomLinkText', config.custom_link_text);
+      setValue('configFacebookView', config.facebook_url);
+      setValue('configInstagramView', config.instagram_url);
+      setValue('configYoutubeView', config.youtube_url);
+      setValue('configLinkedinView', config.linkedin_url);
+      setValue('configTwitterView', config.x_url);
+      setValue('configCustomLinkUrlView', config.custom_link_url);
+      setValue('configCustomLinkTextView', config.custom_link_text);
 
       // Analytics & Tracking
-      setValue('configEnableAnalytics', config.enable_analytics);
-      setValue('configEnableTracking', config.enable_tracking);
-      setValue('configGoogleAnalyticsId', config.google_analytics_id);
-      setValue('configGoogleTagManagerId', config.google_tag_manager_id);
+      setValue('configEnableAnalyticsView', config.enable_analytics);
+      setValue('configEnableTrackingView', config.enable_tracking);
+      setValue('configGoogleAnalyticsIdView', config.google_analytics_id);
+      setValue('configGoogleTagManagerIdView', config.google_tag_manager_id);
       setValue('configFacebookPixelId', config.facebook_pixel_id);
       setValue('configHotjarId', config.hotjar_id);
       setValue('configClarityId', config.clarity_id);
@@ -5929,13 +5929,24 @@
       if (config.logo) {
         displayLogoPreview(config.logo);
       }
-      setValue('configLogoAlt', config.logo_alt_text || 'Site Logo');
+      setValue('configLogoAltView', config.logo_alt_text || 'Site Logo');
     }
 
     function displayLogoPreview(logoUrl) {
-      const preview = document.getElementById('logoPreview');
-      if (logoUrl) {
+      const preview = document.getElementById('logoPreviewView');
+      if (preview && logoUrl) {
         preview.innerHTML = `<img src="${logoUrl}" style="max-width: 100%; max-height: 100%; object-fit: contain;" />`;
+      }
+    }
+
+    function previewConfigLogo(input) {
+      const preview = document.getElementById('logoPreviewView');
+      if (input.files && input.files[0] && preview) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          preview.innerHTML = `<img src="${e.target.result}" style="max-width: 100%; max-height: 100%; object-fit: contain;" />`;
+        };
+        reader.readAsDataURL(input.files[0]);
       }
     }
 
@@ -5955,27 +5966,27 @@
         };
 
         // Basic Information
-        formData.append('company_name', getValue('configCompanyName'));
-        formData.append('email', getValue('configEmailMain'));
-        formData.append('phone', getValue('configPhoneMain'));
-        formData.append('website', getValue('configWebsiteMain') || '');
-        formData.append('address', getValue('configAddressMain'));
-        formData.append('about_excerpt', getValue('configAboutMain') || '');
+        formData.append('company_name', getValue('configCompanyNameView'));
+        formData.append('email', getValue('configEmailView'));
+        formData.append('phone', getValue('configPhoneView'));
+        formData.append('website', getValue('configWebsiteView') || '');
+        formData.append('address', getValue('configAddressView'));
+        formData.append('about_excerpt', getValue('configAboutExcerptView') || '');
 
         // Social Links
-        formData.append('facebook_url', getValue('configFacebook') || '');
-        formData.append('instagram_url', getValue('configInstagram') || '');
-        formData.append('youtube_url', getValue('configYoutube') || '');
-        formData.append('linkedin_url', getValue('configLinkedin') || '');
-        formData.append('x_url', getValue('configTwitter') || '');
-        formData.append('custom_link_url', getValue('configCustomLinkUrl') || '');
-        formData.append('custom_link_text', getValue('configCustomLinkText') || '');
+        formData.append('facebook_url', getValue('configFacebookView') || '');
+        formData.append('instagram_url', getValue('configInstagramView') || '');
+        formData.append('youtube_url', getValue('configYoutubeView') || '');
+        formData.append('linkedin_url', getValue('configLinkedinView') || '');
+        formData.append('x_url', getValue('configTwitterView') || '');
+        formData.append('custom_link_url', getValue('configCustomLinkUrlView') || '');
+        formData.append('custom_link_text', getValue('configCustomLinkTextView') || '');
 
         // Analytics & Tracking
-        formData.append('enable_analytics', getChecked('configEnableAnalytics'));
-        formData.append('enable_tracking', getChecked('configEnableTracking'));
-        formData.append('google_analytics_id', getValue('configGoogleAnalyticsId') || '');
-        formData.append('google_tag_manager_id', getValue('configGoogleTagManagerId') || '');
+        formData.append('enable_analytics', getChecked('configEnableAnalyticsView'));
+        formData.append('enable_tracking', getChecked('configEnableTrackingView'));
+        formData.append('google_analytics_id', getValue('configGoogleAnalyticsIdView') || '');
+        formData.append('google_tag_manager_id', getValue('configGoogleTagManagerIdView') || '');
         formData.append('facebook_pixel_id', getValue('configFacebookPixelId') || '');
         formData.append('hotjar_id', getValue('configHotjarId') || '');
         formData.append('clarity_id', getValue('configClarityId') || '');
@@ -5984,11 +5995,11 @@
         formData.append('custom_tracking_code', getValue('configCustomTrackingCode') || '');
 
         // Logo
-        const logoFileInput = document.getElementById('configLogo');
+        const logoFileInput = document.getElementById('configLogoView');
         if (logoFileInput && logoFileInput.files[0]) {
           formData.append('logo', logoFileInput.files[0]);
         }
-        formData.append('logo_alt_text', getValue('configLogoAlt') || 'Site Logo');
+        formData.append('logo_alt_text', getValue('configLogoAltView') || 'Site Logo');
 
         // Send request
         const headers = { 'X-CSRFToken': getCsrfToken() };
