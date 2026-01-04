@@ -140,6 +140,55 @@
         max-width: 600px;
         margin: 0 auto;
       }
+
+      /* Category Filter Buttons */
+      #service-category-filters {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+        justify-content: center;
+        align-items: center;
+        margin-bottom: 40px;
+      }
+
+      #service-category-filters.active {
+        display: flex !important;
+      }
+
+      .filter-btn {
+        padding: 10px 24px;
+        background: white;
+        border: 2px solid #ddd;
+        border-radius: 25px;
+        font-size: 14px;
+        font-weight: 600;
+        color: #333;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+      }
+
+      .filter-btn:hover {
+        background: #ff6600;
+        border-color: #ff6600;
+        color: white;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(255, 102, 0, 0.3);
+      }
+
+      .filter-btn.active {
+        background: #ff6600;
+        border-color: #ff6600;
+        color: white;
+      }
+
+      @media (max-width: 768px) {
+        .filter-btn {
+          padding: 8px 18px;
+          font-size: 12px;
+        }
+      }
     </style>
   </head>
   <body>
@@ -180,7 +229,7 @@
             <div class="col-md-12">
               <ul class="subdetail">
                 <li>
-                  <a href="index.html">Home</a>
+                  <a href="/">Home</a>
                 </li>
 
                 <li class="sep">/
@@ -198,106 +247,18 @@
       <!-- services landing -->
       <section class="whitepage">
         <div class="container">
-          <!-- Services Grid - Mapping with Dummy Data -->
-          <div class="row services-grid">
-            {% comment %}
-            Django Template Loop for Services
-            In production, replace with: {% for service in services %}
-            For now using fixed service data in template
-            {% endcomment %}
+          <!-- Category Filters (optional, will be populated by JS if categories exist) -->
+          <div id="service-category-filters" style="text-align: center; margin-bottom: 40px; display: none;">
+            <!-- Dynamic filters will be loaded here by services-loader.js -->
+          </div>
 
-            <!-- Service 1: Consulting Building -->
-            <div class="col-md-4 col-sm-6 onStep" data-animation="fadeInUp" data-time="300">
-              <div class="service-tile">
-                <div class="service-tile-image">
-                  <img alt="Consulting Building Service" src="{% static 'img/serv.jpg' %}">
-                </div>
-                <div class="service-tile-content">
-                  <div class="service-tile-icon">
-                    <i class="fa fa-building"></i>
-                  </div>
-                  <h3>Consulting Building</h3>
-                  <p>Professional consulting services for building projects. We provide expert guidance and planning to ensure your construction project is successful from start to finish.</p>
-                  <a class="service-tile-link" href="service.html" title="View Consulting Building Service">
-                    Learn More <i class="fa fa-arrow-right"></i>
-                  </a>
-                </div>
-              </div>
-            </div>
-
-            <!-- Service 2: Architecture -->
-            <div class="col-md-4 col-sm-6 onStep" data-animation="fadeInUp" data-time="400">
-              <div class="service-tile">
-                <div class="service-tile-image">
-                  <img alt="Architecture Service" src="{% static 'img/serv.jpg' %}">
-                </div>
-                <div class="service-tile-content">
-                  <div class="service-tile-icon">
-                    <i class="fa fa-pencil"></i>
-                  </div>
-                  <h3>Architecture Building</h3>
-                  <p>Innovative architectural design solutions tailored to your vision. Our architects create stunning and functional spaces that stand the test of time.</p>
-                  <a class="service-tile-link" href="service-1.html" title="View Architecture Service">
-                    Learn More <i class="fa fa-arrow-right"></i>
-                  </a>
-                </div>
-              </div>
-            </div>
-
-            <!-- Service 3: Design & Build -->
-            <div class="col-md-4 col-sm-6 onStep" data-animation="fadeInUp" data-time="500">
-              <div class="service-tile">
-                <div class="service-tile-image">
-                  <img alt="Design & Build Service" src="{% static 'img/serv.jpg' %}">
-                </div>
-                <div class="service-tile-content">
-                  <div class="service-tile-icon">
-                    <i class="fa fa-paint-brush"></i>
-                  </div>
-                  <h3>Design & Build</h3>
-                  <p>Integrated design and construction services that streamline your project. We manage both design and execution for seamless project delivery.</p>
-                  <a class="service-tile-link" href="service-2.html" title="View Design & Build Service">
-                    Learn More <i class="fa fa-arrow-right"></i>
-                  </a>
-                </div>
-              </div>
-            </div>
-
-            <!-- Service 4: Renovation -->
-            <div class="col-md-4 col-sm-6 onStep" data-animation="fadeInUp" data-time="600">
-              <div class="service-tile">
-                <div class="service-tile-image">
-                  <img alt="Renovation Service" src="{% static 'img/serv.jpg' %}">
-                </div>
-                <div class="service-tile-content">
-                  <div class="service-tile-icon">
-                    <i class="fa fa-wrench"></i>
-                  </div>
-                  <h3>Renovation Building</h3>
-                  <p>Expert renovation and restoration services to breathe new life into existing structures. Transform your space with our skilled renovation team.</p>
-                  <a class="service-tile-link" href="service-3.html" title="View Renovation Service">
-                    Learn More <i class="fa fa-arrow-right"></i>
-                  </a>
-                </div>
-              </div>
-            </div>
-
-            <!-- Service 5: Construction -->
-            <div class="col-md-4 col-sm-6 onStep" data-animation="fadeInUp" data-time="700">
-              <div class="service-tile">
-                <div class="service-tile-image">
-                  <img alt="Construction Service" src="{% static 'img/serv.jpg' %}">
-                </div>
-                <div class="service-tile-content">
-                  <div class="service-tile-icon">
-                    <i class="fa fa-hard-hat"></i>
-                  </div>
-                  <h3>Construction Building</h3>
-                  <p>Full-service construction management and execution. We deliver quality construction projects on time and within budget using best practices.</p>
-                  <a class="service-tile-link" href="service-4.html" title="View Construction Service">
-                    Learn More <i class="fa fa-arrow-right"></i>
-                  </a>
-                </div>
+          <!-- Services Grid - Dynamic Content -->
+          <div class="row services-grid" id="services-grid">
+            <!-- Loading state -->
+            <div class="col-md-12">
+              <div style="text-align: center; padding: 60px 20px;">
+                <i class="fa fa-spinner fa-spin" style="font-size: 48px; color: #ff6600;"></i>
+                <p style="margin-top: 20px; color: #666;">Loading services...</p>
               </div>
             </div>
           </div>
@@ -322,7 +283,7 @@
             <div class="col-md-5">
               <div class="right">
                 <div class="btn-content onStep" data-animation="fadeInRight" data-time="600">
-                  <a class="link-class" href="contact.html">Get in Touch</a>
+                  <a class="link-class" href="/contact-1.html">Get in Touch</a>
                 </div>
               </div>
             </div>
@@ -369,5 +330,18 @@
     <!-- on3step JS -->
     <script src="{% static 'js/on3step.js' %}" type="text/javascript"></script>
     <script src="{% static 'js/plugin-set.js' %}" type="text/javascript"></script>
+    <!-- Services loader -->
+    <script src="{% static 'js/services-loader.js' %}" type="text/javascript"></script>
+    <script>
+      // Show category filters only if categories are loaded
+      document.addEventListener('DOMContentLoaded', () => {
+        setTimeout(() => {
+          const filtersContainer = document.getElementById('service-category-filters');
+          if (filtersContainer && filtersContainer.children.length > 0) {
+            filtersContainer.classList.add('active');
+          }
+        }, 500);
+      });
+    </script>
   </body>
 </html>

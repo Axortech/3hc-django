@@ -683,8 +683,9 @@ const DashboardApp = (() => {
     
     /**
      * Upload FormData (files + fields)
+     * By default uses POST, but can be overridden with a different HTTP method (e.g. PUT/PATCH)
      */
-    const postFormData = (endpoint, formData, headers = {}) => {
+    const postFormData = (endpoint, formData, headers = {}, method = 'POST') => {
       const csrfToken = getCsrfToken();
       const allHeaders = {
         ...Auth.authHeaders(),
@@ -695,7 +696,7 @@ const DashboardApp = (() => {
       }
       
       return call(endpoint, {
-        method: 'POST',
+        method,
         body: formData,
         headers: allHeaders,
         isFormData: true

@@ -66,7 +66,18 @@ urlpatterns = [
     path("logout/", CustomLogoutView.as_view(), name="logout"),
     # Frontend static pages served as templates (keep API under /api/)
     path("", TemplateView.as_view(template_name="index.html"), name="home"),
+    # Dashboard (authenticated only) - support both with and without trailing slash
     path("dashboard/", DashboardView.as_view(), name="dashboard"),
+    path("dashboard", DashboardView.as_view(), name="dashboard_no_slash"),
+    
+    # Projects pages
+    path("projects/", TemplateView.as_view(template_name="result.html"), name="projects_list"),
+    path("projects/<slug:slug>/", TemplateView.as_view(template_name="project-detail.html"), name="project_detail"),
+    
+    # Services pages
+    path("services/", TemplateView.as_view(template_name="service-landing.html"), name="services_list"),
+    path("services/<slug:slug>/", TemplateView.as_view(template_name="service-detail.html"), name="service_detail"),
+    
     path("api/", include((router.urls, "api"))),
     path("api/csrf/", CsrfView.as_view(), name="csrf-token"),
     path("api/register/", UserRegistrationView.as_view(), name="user-register"),

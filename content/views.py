@@ -192,8 +192,10 @@ class BlogPostViewSet(viewsets.ModelViewSet):
     serializer_class = BlogPostSerializer
     
     def get_permissions(self):
-        """Allow public GET requests, require auth for write operations"""
-        if self.action in ('list', 'retrieve'):
+        """Allow public read-only endpoints, require auth for write operations."""
+        # Public read-only actions (including custom ones)
+        public_actions = ('list', 'retrieve', 'published', 'by_slug')
+        if self.action in public_actions:
             return [AllowAny()]
         return [IsAdmin()]
     filter_backends = [filters.SearchFilter, filters.OrderingFilter]
@@ -548,7 +550,7 @@ class ServiceViewSet(viewsets.ModelViewSet):
     
     def get_permissions(self):
         """Allow public GET requests, require auth for write operations"""
-        if self.action in ('list', 'retrieve'):
+        if self.action in ('list', 'retrieve', 'by_slug'):
             return [AllowAny()]
         return [IsAdmin()]
     filter_backends = [filters.SearchFilter, filters.OrderingFilter]
@@ -570,6 +572,25 @@ class ServiceViewSet(viewsets.ModelViewSet):
             qs = qs.filter(is_featured=True)
         
         return qs
+
+    @action(detail=False, methods=['get'], url_path='slug/(?P<slug>[-\\w]+)', permission_classes=[AllowAny])
+    @extend_schema(
+        summary="Get service by slug",
+        description="Retrieve a single service by its slug. Public endpoint. Increments view count.",
+        tags=['Services'],
+        responses={200: ServiceSerializer, 404: OpenApiResponse(description='Not found')}
+    )
+    def by_slug(self, request, slug=None):
+        """Get service by slug"""
+        try:
+            service = Service.objects.get(slug=slug)
+            # Increment view count
+            service.view_count += 1
+            service.save(update_fields=['view_count'])
+            serializer = ServiceSerializer(service)
+            return Response(serializer.data)
+        except Service.DoesNotExist:
+            return Response({'error': 'Service not found'}, status=status.HTTP_404_NOT_FOUND)
 
 
 @extend_schema_view(

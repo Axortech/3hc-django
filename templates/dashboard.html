@@ -4805,7 +4805,7 @@
       tbody.innerHTML = projects.map(p => `
         <tr>
           <td><strong>${p.title}</strong></td>
-          <td>${p.category_name || 'N/A'}</td>
+          <td>${(p.category && p.category.name) ? DashboardApp.sanitize(p.category.name) : 'N/A'}</td>
           <td><span class="status-badge status-${p.status}">${p.status}</span></td>
           <td>${p.is_featured ? 'Yes' : 'No'}</td>
           <td>
@@ -4844,7 +4844,8 @@
         isEditingProject = true;
         document.getElementById('projectId').value = project.id;
         document.getElementById('projectTitle').value = project.title;
-        document.getElementById('projectCategory').value = project.category || '';
+        // API returns nested category object; use its id for the select
+        document.getElementById('projectCategory').value = (project.category && project.category.id) ? project.category.id : '';
         document.getElementById('projectStatus').value = project.status;
         document.getElementById('projectFeatured').value = project.is_featured ? 'true' : 'false';
         document.getElementById('projectShortDesc').value = project.short_description || '';
@@ -4893,15 +4894,16 @@
       hideProjectMessages();
       const projectId = document.getElementById('projectId').value;
       const longDesc = DashboardApp.Editor.getContent('projectDescEditor');
-      const method = isEditingProject ? 'PUT' : 'POST';
       const endpoint = isEditingProject ? `/api/projects/${projectId}/` : `/api/projects/`;
+      const method = isEditingProject ? 'PUT' : 'POST';
       
       // Create FormData to handle file upload
       const formData = new FormData();
       formData.append('title', document.getElementById('projectTitle').value);
       formData.append('short_description', document.getElementById('projectShortDesc').value);
       formData.append('long_description', longDesc);
-      formData.append('category', document.getElementById('projectCategory').value || null);
+      // API expects category_id as write-only field
+      formData.append('category_id', document.getElementById('projectCategory').value || null);
       formData.append('status', document.getElementById('projectStatus').value);
       formData.append('is_featured', document.getElementById('projectFeatured').value === 'true');
       formData.append('start_date', document.getElementById('projectStartDate').value || null);
@@ -4913,11 +4915,11 @@
       }
       
       try {
-        if (method === 'POST') {
-          await DashboardApp.API.postFormData(endpoint, formData);
-        } else {
-          await DashboardApp.API.postFormData(endpoint, formData);
-        }
+        await DashboardApp.API.call(endpoint, {
+          method,
+          body: formData,
+          isFormData: true
+        });
         DashboardApp.Toast.show(`Project ${isEditingProject ? 'updated' : 'saved'} successfully!`, 'success');
         window.projectImageFile = null;
         setTimeout(() => { closeProjectModal(); loadProjects(); }, 1500);
@@ -5119,7 +5121,7 @@
       tbody.innerHTML = services.map(s => `
         <tr>
           <td><strong>${s.title}</strong></td>
-          <td>${s.category_name || 'N/A'}</td>
+          <td>${(s.category && s.category.name) ? DashboardApp.sanitize(s.category.name) : 'N/A'}</td>
           <td><span class="status-badge status-${s.status}">${s.status}</span></td>
           <td>${s.is_featured ? 'Yes' : 'No'}</td>
           <td>
@@ -5153,7 +5155,8 @@
         isEditingService = true;
         document.getElementById('serviceId').value = service.id;
         document.getElementById('serviceTitle').value = service.title;
-        document.getElementById('serviceCategory').value = service.category || '';
+        // API returns nested category object; use its id for the select
+        document.getElementById('serviceCategory').value = (service.category && service.category.id) ? service.category.id : '';
         document.getElementById('serviceStatus').value = service.status;
         document.getElementById('serviceFeatured').value = service.is_featured ? 'true' : 'false';
         document.getElementById('serviceExcerpt').value = service.excerpt || '';
@@ -5200,15 +5203,16 @@
       hideServiceMessages();
       const serviceId = document.getElementById('serviceId').value;
       const content = DashboardApp.Editor.getContent('serviceContentEditor');
-      const method = isEditingService ? 'PUT' : 'POST';
       const endpoint = isEditingService ? `/api/services/${serviceId}/` : `/api/services/`;
+      const method = isEditingService ? 'PUT' : 'POST';
       
       // Create FormData to handle file upload
       const formData = new FormData();
       formData.append('title', document.getElementById('serviceTitle').value);
       formData.append('excerpt', document.getElementById('serviceExcerpt').value);
       formData.append('content', content);
-      formData.append('category', document.getElementById('serviceCategory').value || null);
+      // API expects category_id as write-only field
+      formData.append('category_id', document.getElementById('serviceCategory').value || null);
       formData.append('status', document.getElementById('serviceStatus').value);
       formData.append('is_featured', document.getElementById('serviceFeatured').value === 'true');
       
@@ -5218,11 +5222,11 @@
       }
       
       try {
-        if (method === 'POST') {
-          await DashboardApp.API.postFormData(endpoint, formData);
-        } else {
-          await DashboardApp.API.postFormData(endpoint, formData);
-        }
+        await DashboardApp.API.call(endpoint, {
+          method,
+          body: formData,
+          isFormData: true
+        });
         DashboardApp.Toast.show(`Service ${isEditingService ? 'updated' : 'saved'} successfully!`, 'success');
         window.serviceImageFile = null;
         setTimeout(() => { closeServiceModal(); loadServices(); }, 1500);
@@ -5988,7 +5992,7 @@
 
         // Send request
         const headers = { 'X-CSRFToken': getCsrfToken() };
-        const updatedConfig = await DashboardApp.API.postFormData(`/api/site-config/`, formData, headers);
+        const updatedConfig = await DashboardApp.API.postFormData(`/api/site-config/`, formData, headers, 'POST');
         DashboardApp.Toast.show('Configuration saved successfully!', 'success');
         populateConfigurationForm(updatedConfig);
       } catch (e) {
