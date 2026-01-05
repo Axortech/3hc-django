@@ -1,0 +1,14 @@
+[project]
+name = "buildstate-cms"
+
+[build]
+builder = "DOCKERFILE"
+dockerfilePath = "Dockerfile"
+
+[deploy]
+numReplicas = 1
+restartPolicyType = "ON_FAILURE"
+
+[env]
+PYTHONUNBUFFERED = "1"
+DJANGO_SETTINGS_MODULE = "cmspro.settings"
