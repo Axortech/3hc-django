@@ -110,26 +110,6 @@ class SiteConfigAdmin(admin.ModelAdmin):
             "fields": ("facebook_url", "instagram_url", "youtube_url", "x_url", "linkedin_url"),
             "classes": ("collapse",)
         }),
-        ("Custom Link", {
-            "fields": ("custom_link_url", "custom_link_text"),
-            "classes": ("collapse",)
-        }),
-        ("Analytics & Tracking", {
-            "fields": (
-                "enable_analytics",
-                "google_analytics_id",
-                "google_tag_manager_id",
-                "facebook_pixel_id",
-                "hotjar_id",
-                "clarity_id",
-                "enable_tracking",
-                "custom_tracking_code",
-                "recaptcha_site_key",
-                "recaptcha_secret_key"
-            ),
-            "classes": ("collapse",),
-            "description": "Configure analytics, tracking, and security settings"
-        }),
         ("Timestamps", {
             "fields": ("created_at", "updated_at"),
             "classes": ("collapse",)
@@ -138,21 +118,23 @@ class SiteConfigAdmin(admin.ModelAdmin):
 
 @admin.register(Banner)
 class BannerAdmin(admin.ModelAdmin):
-    list_display = ("id", "title", "subtitle", "is_active", "order", "video_autoplay", "video_loop", "updated_at")
-    list_editable = ("is_active", "order")
+    list_display = ("id", "title", "subtitle", "media_type", "updated_at")
     search_fields = ("title", "subtitle")
     readonly_fields = ("created_at", "updated_at")
 
     fieldsets = (
         ("Banner Content", {
-            "fields": ("title", "subtitle")
+            "fields": ("title", "subtitle", "media_type")
         }),
         ("Video Settings", {
             "fields": ("video", "video_poster", "video_autoplay", "video_muted", "video_loop"),
-            "description": "Upload a video file for the banner background. Poster image is shown before video loads."
+            "description": "Upload a video file for the banner background. Poster image is shown before video loads.",
+            "classes": ("collapse",)
         }),
-        ("Display Settings", {
-            "fields": ("is_active", "order"),
+        ("Photo Settings", {
+            "fields": ("photo",),
+            "description": "Upload a photo/image for the banner.",
+            "classes": ("collapse",)
         }),
         ("Timestamps", {
             "fields": ("created_at", "updated_at"),

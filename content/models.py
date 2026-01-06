@@ -6,26 +6,34 @@ from django.core.exceptions import ObjectDoesNotExist
 
 
 class Banner(models.Model):
+    MEDIA_TYPE_CHOICES = [
+        ('video', 'Video'),
+        ('photo', 'Photo'),
+    ]
+    
     title = models.CharField(max_length=200, blank=True)
     subtitle = models.CharField(max_length=400, blank=True)
+    media_type = models.CharField(max_length=10, choices=MEDIA_TYPE_CHOICES, default='video')
+    
+    # Video fields
     video = models.FileField(upload_to="banners/videos/", null=True, blank=True)
     video_poster = models.ImageField(upload_to="banners/posters/", null=True, blank=True)
     video_autoplay = models.BooleanField(default=True)
     video_muted = models.BooleanField(default=True)
     video_loop = models.BooleanField(default=True)
-    is_active = models.BooleanField(default=True)
-    order = models.PositiveIntegerField(default=0)
+    
+    # Photo field
+    photo = models.ImageField(upload_to="banners/photos/", null=True, blank=True)
 
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
-        ordering = ["order", "-updated_at"]
         verbose_name = "Banner"
         verbose_name_plural = "Banners"
 
     def __str__(self):
-        return self.title or f"Banner #{self.pk}"
+        return self.title or f"Banner - {self.get_media_type_display()}"
 
 
 class About(models.Model):
@@ -448,23 +456,6 @@ class SiteConfig(models.Model):
     youtube_url = models.URLField(blank=True)
     x_url = models.URLField(blank=True)
     linkedin_url = models.URLField(blank=True)
-
-    custom_link_url = models.URLField(blank=True)
-    custom_link_text = models.CharField(max_length=255, blank=True)
-
-    # Analytics & Tracking
-    google_analytics_id = models.CharField(max_length=100, blank=True, help_text="Google Analytics ID (GA4)")
-    google_tag_manager_id = models.CharField(max_length=100, blank=True, help_text="Google Tag Manager ID (GTM)")
-    facebook_pixel_id = models.CharField(max_length=100, blank=True, help_text="Facebook Pixel ID")
-    hotjar_id = models.CharField(max_length=100, blank=True, help_text="Hotjar Site ID")
-    clarity_id = models.CharField(max_length=100, blank=True, help_text="Microsoft Clarity Project ID")
-    custom_tracking_code = models.TextField(blank=True, help_text="Custom tracking/analytics code snippet")
-    
-    # Performance & SEO
-    enable_analytics = models.BooleanField(default=True)
-    enable_tracking = models.BooleanField(default=True)
-    recaptcha_site_key = models.CharField(max_length=255, blank=True, help_text="Google reCAPTCHA v3 Site Key")
-    recaptcha_secret_key = models.CharField(max_length=255, blank=True, help_text="Google reCAPTCHA v3 Secret Key")
 
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)

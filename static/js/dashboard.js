@@ -27,8 +27,12 @@ const DashboardApp = (() => {
         [{ 'list': 'ordered'}, { 'list': 'bullet' }],
         [{ 'header': [1, 2, 3, false] }],
         ['link', 'image'],
+        ['formula'],
         ['clean']
-      ]
+      ],
+      modules: {
+        formula: true
+      }
     }
   };
 
@@ -713,53 +717,135 @@ const DashboardApp = (() => {
   const Editor = (() => {
     let quillInstances = new Map();
 
+    // Register Quill modules
+    const registerModules = () => {
+      console.log('[Editor] Registering Quill modules...');
+      
+      // Register formula (math) module if KaTeX is available
+      if (window.katex) {
+        try {
+          Quill.register('modules/formula', true);
+          console.log('[Editor] ✓ Registered formula module (KaTeX available)');
+        } catch (e) {
+          console.warn('[Editor] Failed to register formula:', e);
+        }
+      } else {
+        console.warn('[Editor] KaTeX library not found - math formulas may not work');
+      }
+      
+      console.log('[Editor] Module registration complete');
+    };
+
     const init = (containerId, content = '') => {
       // Prevent duplicate instances
       if (quillInstances.has(containerId)) {
+        console.warn(`[Editor] Reinitializing ${containerId}, destroying previous instance`);
         destroy(containerId);
       }
 
       const container = document.getElementById(containerId);
       if (!container) {
-        console.error(`Editor container not found: ${containerId}`);
+        console.error(`[Editor] Container not found: ${containerId}`);
         return null;
       }
 
       try {
+        // Register modules on first initialization
+        if (quillInstances.size === 0) {
+          console.log('[Editor] Registering Quill modules...');
+          registerModules();
+        }
+
+        console.log(`[Editor] Initializing Quill for ${containerId}...`);
         const quill = new Quill(`#${containerId}`, {
           theme: 'snow',
-          modules: config.editorModules,
+          modules: config.editorModules.modules,
           placeholder: 'Write your content here...'
         });
 
-        if (content) {
+        // Set initial content if provided
+        if (content && content.trim()) {
           quill.root.innerHTML = content;
+          console.debug(`[Editor] Set initial content for ${containerId} (${content.length} chars)`);
         }
+
+        // Verify initialization
+        const delta = quill.getContents();
+        console.log(`[Editor] ${containerId} initialized successfully. Delta ops: ${delta.ops.length}`);
 
         quillInstances.set(containerId, quill);
         return quill;
       } catch (error) {
-        console.error(`Failed to initialize editor: ${error.message}`);
+        console.error(`[Editor] Failed to initialize ${containerId}:`, error);
         return null;
       }
     };
 
     const getContent = (containerId) => {
       const quill = quillInstances.get(containerId);
-      return quill ? quill.root.innerHTML : '';
+      if (!quill) return '';
+      
+      // Get HTML content from the editor
+      // Quill properly renders tables, formulas, and all formatting to HTML
+      const html = quill.root.innerHTML;
+      
+      // Log for debugging
+      console.debug(`[Editor] getContent('${containerId}') - HTML length: ${html.length}, preview:`, html.substring(0, 100));
+      
+      return html;
+    };
+
+    const hasContent = (containerId) => {
+      const quill = quillInstances.get(containerId);
+      if (!quill) {
+        console.warn(`[Editor] hasContent('${containerId}') - No Quill instance found`);
+        return false;
+      }
+      
+      // Get the Delta format (Quill's internal representation)
+      const delta = quill.getContents();
+      
+      // Check if delta has meaningful content
+      // Delta is an array of operations; default empty state is [{ insert: '\n' }]
+      const hasOps = delta.ops && delta.ops.length > 0;
+      if (!hasOps) {
+        console.debug(`[Editor] hasContent('${containerId}') - No delta operations`);
+        return false;
+      }
+      
+      // Filter out default empty content (just a newline)
+      const meaningfulOps = delta.ops.filter(op => {
+        if (op.insert === '\n' && Object.keys(op).length === 1) return false; // Just newline
+        if (op.insert === '' && Object.keys(op).length === 1) return false; // Empty insert
+        return true;
+      });
+      
+      const hasContent = meaningfulOps.length > 0;
+      console.debug(`[Editor] hasContent('${containerId}') - Meaningful ops: ${meaningfulOps.length}, result: ${hasContent}`);
+      
+      return hasContent;
     };
 
     const setContent = (containerId, content) => {
       const quill = quillInstances.get(containerId);
-      if (quill) {
+      if (!quill) {
+        console.warn(`[Editor] setContent('${containerId}') - No Quill instance found`);
+        return;
+      }
+      
+      // Parse HTML content and set it in the editor
+      // Quill will automatically parse tables, formulas, and formatting
+      if (content && content.trim()) {
         quill.root.innerHTML = content;
+        console.debug(`[Editor] setContent('${containerId}') - Set ${content.length} chars of content`);
       }
     };
 
     const clear = (containerId) => {
       const quill = quillInstances.get(containerId);
       if (quill) {
-        quill.setContents([]);
+        quill.setContents([], 'api');
+        console.debug(`[Editor] clear('${containerId}') - Cleared editor`);
       }
     };
 
@@ -771,7 +857,26 @@ const DashboardApp = (() => {
       }
     };
 
-    return { init, getContent, setContent, clear, destroy };
+    const diagnostics = (containerId) => {
+      const quill = quillInstances.get(containerId);
+      const info = {
+        editor_id: containerId,
+        quill_instance_exists: !!quill,
+        content_html: quill ? quill.root.innerHTML : 'N/A',
+        content_length: quill ? quill.root.innerHTML.length : 0,
+        has_content: quill ? DashboardApp.Editor.hasContent(containerId) : false,
+      };
+      
+      if (quill) {
+        const delta = quill.getContents();
+        info.delta_ops = delta.ops || [];
+        info.delta_ops_count = delta.ops ? delta.ops.length : 0;
+      }
+      
+      return info;
+    };
+
+    return { init, getContent, hasContent, setContent, clear, destroy, diagnostics };
   })();
 
   // ============================================

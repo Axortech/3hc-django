@@ -267,21 +267,23 @@ class BannerViewSet(viewsets.ModelViewSet):
     queryset = Banner.objects.all()
     serializer_class = BannerSerializer
     permission_classes = [IsAdmin]  # Admin dashboard only
-    filter_backends = [filters.OrderingFilter]
-    ordering_fields = ["order", "updated_at"]
-    ordering = ["order"]
 
-    @action(detail=False, methods=['get'], url_path='active', permission_classes=[AllowAny])
+    def get_queryset(self):
+        # Only allow one banner (singleton)
+        return Banner.objects.all()[:1]
+
+    @action(detail=False, methods=['get'], url_path='singleton', permission_classes=[AllowAny])
     @extend_schema(
-        summary="Get active banners",
-        description="Returns only active banners ordered by 'order' field. Public endpoint.",
+        summary="Get the single banner",
+        description="Returns the only banner (singleton). Public endpoint.",
         tags=['Banners'],
-        responses={200: BannerSerializer(many=True)}
+        responses={200: BannerSerializer()}
     )
-    def active(self, request):
-        """Public endpoint to get active banners for the homepage"""
-        banners = Banner.objects.filter(is_active=True).order_by('order')
-        serializer = BannerSerializer(banners, many=True, context={'request': request})
+    def singleton(self, request):
+        banner = Banner.objects.first()
+        if not banner:
+            return Response({}, status=200)
+        serializer = BannerSerializer(banner, context={'request': request})
         return Response(serializer.data)
 
 @extend_schema_view(

@@ -13,11 +13,8 @@
 
       <div class="col-md-4">
         <div class="right">
-          <div class="social-icons-subnav">
-            <a href="#"><span class="ti-facebook"></span></a>
-            <a href="#"><span class="ti-dribbble"></span></a>
-            <a href="#"><span class="ti-twitter"></span></a>
-            <a href="#"><span class="ti-linkedin"></span></a>
+          <div class="social-icons-subnav" id="header-social-links">
+            <!-- Social links will be populated by site-config-loader.js -->
           </div>
         </div>
       </div>
@@ -70,5 +67,5 @@
 
 <!-- Site Configuration Loader Script -->
 {% if not request.resolver_match.url_name == 'dashboard' %}
-<script src="{% static 'js/site-config.js' %}" type="text/javascript" defer></script>
+<script src="{% static 'js/site-config-loader.js' %}" type="text/javascript" defer></script>
 {% endif %}

@@ -45,20 +45,21 @@ from .models import (
 class BannerSerializer(serializers.ModelSerializer):
     video = serializers.SerializerMethodField()
     video_poster = serializers.SerializerMethodField()
+    photo = serializers.SerializerMethodField()
 
     class Meta:
         model = Banner
         fields = [
-            "id", "title", "subtitle", "video", "video_poster", "video_autoplay",
-            "video_muted", "video_loop", "is_active", "order", "created_at", "updated_at"
+            "id", "title", "subtitle", "media_type",
+            "video", "video_poster", "video_autoplay", "video_muted", "video_loop",
+            "photo", "created_at", "updated_at"
         ]
         read_only_fields = ("id", "created_at", "updated_at")
 
     @extend_schema_field(OpenApiTypes.STR)
     def get_video(self, obj) -> str:
-        """Return full URL for video file"""
         request = self.context.get('request')
-        if obj.video and hasattr(obj.video, 'url'):
+        if obj.media_type == 'video' and obj.video and hasattr(obj.video, 'url'):
             try:
                 url = obj.video.url
                 return request.build_absolute_uri(url) if request else url
@@ -68,11 +69,21 @@ class BannerSerializer(serializers.ModelSerializer):
 
     @extend_schema_field(OpenApiTypes.STR)
     def get_video_poster(self, obj) -> str:
-        """Return full URL for video poster image"""
         request = self.context.get('request')
-        if obj.video_poster and hasattr(obj.video_poster, 'url'):
+        if obj.media_type == 'video' and obj.video_poster and hasattr(obj.video_poster, 'url'):
             try:
                 url = obj.video_poster.url
+                return request.build_absolute_uri(url) if request else url
+            except Exception:
+                return None
+        return None
+
+    @extend_schema_field(OpenApiTypes.STR)
+    def get_photo(self, obj) -> str:
+        request = self.context.get('request')
+        if obj.media_type == 'photo' and obj.photo and hasattr(obj.photo, 'url'):
+            try:
+                url = obj.photo.url
                 return request.build_absolute_uri(url) if request else url
             except Exception:
                 return None
@@ -315,6 +326,20 @@ class BlogPostSerializer(serializers.ModelSerializer):
             "created_at", "updated_at", "published_at"
         )
 
+    def validate_title(self, value):
+        """Validate title uniqueness, excluding current instance on updates"""
+        instance = self.instance
+        queryset = BlogPost.objects.filter(title=value)
+        
+        # If updating, exclude the current instance
+        if instance:
+            queryset = queryset.exclude(pk=instance.pk)
+        
+        if queryset.exists():
+            raise serializers.ValidationError("A blog post with this title already exists.")
+        
+        return value
+
 class SiteLogoSerializer(serializers.ModelSerializer):
     class Meta:
         model = SiteLogo
@@ -467,10 +492,7 @@ class SiteConfigSerializer(serializers.ModelSerializer):
         fields = [
             'id', 'company_name', 'about_excerpt', 'address', 'phone', 'email', 'website',
             'facebook_url', 'instagram_url', 'youtube_url', 'x_url', 'linkedin_url',
-            'custom_link_url', 'custom_link_text', 'logo', 'logo_alt_text', 'business_hours',
-            'google_analytics_id', 'google_tag_manager_id', 'facebook_pixel_id', 'hotjar_id',
-            'clarity_id', 'custom_tracking_code', 'enable_analytics', 'enable_tracking',
-            'recaptcha_site_key', 'recaptcha_secret_key',
+            'logo', 'logo_alt_text', 'business_hours',
             'created_at', 'updated_at'
         ]
         read_only_fields = ('id', 'created_at', 'updated_at')
