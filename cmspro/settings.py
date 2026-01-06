@@ -26,7 +26,13 @@ SECRET_KEY = "django-insecure-8xhrq)km%cdh1_*^pox+nno%$*x_(c6l4y3$jx$_*6!s0tt3_#
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['*']  # Development only - restrict in production
+ALLOWED_HOSTS = ["*"]  # Development only - restrict in production
+
+# CSRF trusted origins for production deployments (Railway, etc.)
+# Make sure to include your Railway domain here so POST requests work.
+CSRF_TRUSTED_ORIGINS = [
+    "https://3hc-django-production.up.railway.app",
+]
 
 
 # Application definition
