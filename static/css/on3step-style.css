@@ -2581,6 +2581,11 @@ textarea:focus:-ms-input-placeholder {
   margin-top:20px;
   margin-bottom: 10px;
 }
+.subfooter .logo img {
+  max-width: 200px;
+  height: auto;
+  object-fit: contain;
+}
 .subfooter h3 {
   margin-bottom: 15px;
   font-weight: 500;

@@ -239,6 +239,11 @@
             />
           </div>
 
+          <div class="form-group" style="display: flex; align-items: center; gap: 10px; margin-bottom: 20px;">
+            <input type="checkbox" id="rememberMe" name="remember_me" style="width: 18px; height: 18px; cursor: pointer;" />
+            <label for="rememberMe" style="margin: 0; font-weight: 600; color: #444; cursor: pointer;">Remember me</label>
+          </div>
+
           <button type="submit" class="btn-login" id="submitBtn" title="Submit login form">
             <span class="spinner" id="spinner"></span>
             <span id="btnText">Login</span>
@@ -264,9 +269,33 @@
       const submitBtn = document.getElementById('submitBtn');
       const spinner = document.getElementById('spinner');
       const btnText = document.getElementById('btnText');
+      const usernameInput = document.getElementById('id_username');
+      const rememberCheckbox = document.getElementById('rememberMe');
+
+      // Prefill username if stored
+      try {
+        const savedUsername = localStorage.getItem('remembered_username');
+        if (savedUsername) {
+          usernameInput.value = savedUsername;
+          rememberCheckbox.checked = true;
+        }
+      } catch (e) {
+        console.warn('Unable to read remembered username:', e);
+      }
 
       // Handle form submission - show loading state
       form.addEventListener('submit', function() {
+        // Save/clear remembered username
+        try {
+          if (rememberCheckbox.checked && usernameInput.value) {
+            localStorage.setItem('remembered_username', usernameInput.value);
+          } else {
+            localStorage.removeItem('remembered_username');
+          }
+        } catch (e) {
+          console.warn('Unable to persist remembered username:', e);
+        }
+
         submitBtn.disabled = true;
         spinner.classList.add('show');
         btnText.textContent = 'Logging in...';

@@ -75,6 +75,29 @@
       logoImg.style.objectFit = originalStyles.objectFit || 'contain';
     }
 
+    // Update logo in footer
+    const footerLogoImg = document.getElementById('footer-logo');
+    if (footerLogoImg && config.logo) {
+      // Store original computed styles before changing src
+      const footerOriginalStyles = {
+        width: footerLogoImg.style.width || window.getComputedStyle(footerLogoImg).width,
+        height: footerLogoImg.style.height || window.getComputedStyle(footerLogoImg).height,
+        maxWidth: footerLogoImg.style.maxWidth || window.getComputedStyle(footerLogoImg).maxWidth,
+        maxHeight: footerLogoImg.style.maxHeight || window.getComputedStyle(footerLogoImg).maxHeight,
+        objectFit: footerLogoImg.style.objectFit || window.getComputedStyle(footerLogoImg).objectFit
+      };
+      
+      footerLogoImg.src = config.logo;
+      footerLogoImg.alt = config.logo_alt_text || 'Site Logo';
+      
+      // Apply consistent sizing to match fallback logo
+      footerLogoImg.style.width = footerOriginalStyles.width || '100%';
+      footerLogoImg.style.height = footerOriginalStyles.height || 'auto';
+      footerLogoImg.style.maxWidth = footerOriginalStyles.maxWidth || '200px';
+      footerLogoImg.style.maxHeight = footerOriginalStyles.maxHeight || 'auto';
+      footerLogoImg.style.objectFit = footerOriginalStyles.objectFit || 'contain';
+    }
+
     // Update location/address
     const locationLink = document.getElementById('header-location');
     if (locationLink && config.address) {
@@ -124,40 +147,89 @@
       }
     }
 
-    // Update social media links
-    if (config.facebook_url) {
-      const facebookLink = document.querySelector('.social-icons-subnav a[href="#"]');
-      if (facebookLink && facebookLink.querySelector('.ti-facebook')) {
-        facebookLink.href = config.facebook_url;
-        facebookLink.target = '_blank';
-        facebookLink.rel = 'noopener noreferrer';
+    // Update social media links in header
+    const socialLinks = document.querySelectorAll('.social-icons-subnav a');
+    socialLinks.forEach(link => {
+      const facebookIcon = link.querySelector('.ti-facebook');
+      const linkedinIcon = link.querySelector('.ti-linkedin');
+      const twitterIcon = link.querySelector('.ti-twitter');
+      const instagramIcon = link.querySelector('.ti-dribbble');
+      
+      if (facebookIcon && config.facebook_url) {
+        link.href = config.facebook_url;
+        link.target = '_blank';
+        link.rel = 'noopener noreferrer';
+      } else if (linkedinIcon && config.linkedin_url) {
+        link.href = config.linkedin_url;
+        link.target = '_blank';
+        link.rel = 'noopener noreferrer';
+      } else if (twitterIcon && config.x_url) {
+        link.href = config.x_url;
+        link.target = '_blank';
+        link.rel = 'noopener noreferrer';
+      } else if (instagramIcon && config.instagram_url) {
+        link.href = config.instagram_url;
+        link.target = '_blank';
+        link.rel = 'noopener noreferrer';
       }
-    }
-    if (config.linkedin_url) {
-      const linkedinLinks = document.querySelectorAll('.social-icons-subnav a');
-      linkedinLinks.forEach(link => {
-        if (link.querySelector('.ti-linkedin')) {
-          link.href = config.linkedin_url;
-          link.target = '_blank';
-          link.rel = 'noopener noreferrer';
-        }
-      });
-    }
-    if (config.x_url || config.instagram_url) {
-      const twitterLinks = document.querySelectorAll('.social-icons-subnav a');
-      twitterLinks.forEach(link => {
-        const twitterIcon = link.querySelector('.ti-twitter');
-        const instagramIcon = link.querySelector('.ti-dribbble'); // Using dribbble icon for instagram
-        if (twitterIcon && config.x_url) {
-          link.href = config.x_url;
-          link.target = '_blank';
-          link.rel = 'noopener noreferrer';
-        } else if (instagramIcon && config.instagram_url) {
-          link.href = config.instagram_url;
-          link.target = '_blank';
-          link.rel = 'noopener noreferrer';
-        }
-      });
+    });
+
+    // Update social media links in footer
+    const footerSocialLinks = document.querySelectorAll('.subfooter .social-icons a, footer .social-icons a');
+    footerSocialLinks.forEach(link => {
+      const facebookIcon = link.querySelector('.ti-facebook');
+      const linkedinIcon = link.querySelector('.ti-linkedin');
+      const twitterIcon = link.querySelector('.ti-twitter');
+      const instagramIcon = link.querySelector('.ti-dribbble, .ti-instagram');
+      const youtubeIcon = link.querySelector('.ti-youtube');
+      
+      if (facebookIcon && config.facebook_url) {
+        link.href = config.facebook_url;
+        link.target = '_blank';
+        link.rel = 'noopener noreferrer';
+      } else if (linkedinIcon && config.linkedin_url) {
+        link.href = config.linkedin_url;
+        link.target = '_blank';
+        link.rel = 'noopener noreferrer';
+      } else if (twitterIcon && config.x_url) {
+        link.href = config.x_url;
+        link.target = '_blank';
+        link.rel = 'noopener noreferrer';
+      } else if (instagramIcon && config.instagram_url) {
+        link.href = config.instagram_url;
+        link.target = '_blank';
+        link.rel = 'noopener noreferrer';
+      } else if (youtubeIcon && config.youtube_url) {
+        link.href = config.youtube_url;
+        link.target = '_blank';
+        link.rel = 'noopener noreferrer';
+      }
+    });
+
+    // Update footer contact information
+    const footerAddress = document.querySelector('.subfooter address');
+    if (footerAddress) {
+      const addressSpans = footerAddress.querySelectorAll('span');
+      
+      // Update address (first span)
+      if (addressSpans[0] && config.address) {
+        addressSpans[0].textContent = config.address;
+      }
+      
+      // Update phone (second span)
+      if (addressSpans[1] && config.phone) {
+        addressSpans[1].innerHTML = `<strong>PHONE:</strong> ${config.phone}`;
+      }
+      
+      // Update email (third span)
+      if (addressSpans[2] && config.email) {
+        addressSpans[2].innerHTML = `<strong>EMAIL:</strong> <a href="mailto:${config.email}">${config.email}</a>`;
+      }
+      
+      // Update website (fourth span)
+      if (addressSpans[3] && config.website) {
+        addressSpans[3].innerHTML = `<strong>SITE:</strong> <a href="${config.website}" target="_blank" rel="noopener noreferrer">${config.website}</a>`;
+      }
     }
   };
 

@@ -21,18 +21,16 @@ const DashboardApp = (() => {
     apiRetryDelay: 1000,
     toastDuration: 4000,
     editorModules: {
-      toolbar: [
+      // Base toolbar with simple table insertion (no external plugins required)
+      toolbarBase: [
         [{ 'size': ['small', false, 'large', 'huge'] }],
         ['bold', 'italic', 'underline', 'strike'],
         [{ 'list': 'ordered'}, { 'list': 'bullet' }],
         [{ 'header': [1, 2, 3, false] }],
-        ['link', 'image'],
-        ['formula'],
+        ['link', 'image', 'formula'],
+        ['table'],
         ['clean']
-      ],
-      modules: {
-        formula: true
-      }
+      ]
     }
   };
 
@@ -711,37 +709,121 @@ const DashboardApp = (() => {
   })();
 
   // ============================================
-  // QUILL EDITOR MANAGEMENT
+    // ============================================
+  // PROSEMIRROR EDITOR MANAGEMENT
   // ============================================
 
   const Editor = (() => {
-    let quillInstances = new Map();
+    let views = new Map();
 
-    // Register Quill modules
-    const registerModules = () => {
-      console.log('[Editor] Registering Quill modules...');
-      
-      // Register formula (math) module if KaTeX is available
-      if (window.katex) {
-        try {
-          Quill.register('modules/formula', true);
-          console.log('[Editor] ✓ Registered formula module (KaTeX available)');
-        } catch (e) {
-          console.warn('[Editor] Failed to register formula:', e);
-        }
-      } else {
-        console.warn('[Editor] KaTeX library not found - math formulas may not work');
+    const pm = () => window.ProseMirrorLib || {};
+    const schema = () => pm().schema;
+
+    const buildPlugins = () => {
+      const lib = pm();
+      const plugins = [
+        lib.history && lib.history(),
+        lib.columnResizing && lib.columnResizing(),
+        lib.tableEditing && lib.tableEditing(),
+        lib.keymap && lib.keymap(lib.baseKeymap || {})
+      ].filter(Boolean);
+      return plugins;
+    };
+
+    const createTableNode = (rows = 3, cols = 3) => {
+      const s = schema();
+      if (!s || !s.nodes.table || !s.nodes.table_row || !s.nodes.table_cell) return null;
+      const {table, table_row, table_cell, paragraph} = s.nodes;
+      const cells = () => Array.from({length: cols}, () => table_cell.createAndFill(null, paragraph.createAndFill()));
+      const rowsArr = Array.from({length: rows}, () => table_row.create(null, cells()));
+      return table.create(null, rowsArr);
+    };
+
+    const buildState = (content = '') => {
+      const lib = pm();
+      const s = schema();
+      const parser = lib.DOMParser && lib.DOMParser.fromSchema ? lib.DOMParser.fromSchema(s) : null;
+      let doc = s.topNodeType.createAndFill();
+      if (parser && content && content.trim()) {
+        const tmp = document.createElement('div');
+        tmp.innerHTML = content;
+        doc = parser.parse(tmp);
       }
-      
-      console.log('[Editor] Module registration complete');
+      return lib.EditorState.create({
+        schema: s,
+        doc,
+        plugins: buildPlugins()
+      });
+    };
+
+    const ensureToolbar = (container, view) => {
+      if (!container || container.previousElementSibling?.classList.contains('pm-toolbar')) return;
+      const lib = pm();
+      const {toggleMark, wrapInList, setBlockType, wrapIn, undo, redo} = lib;
+      const toolbar = document.createElement('div');
+      toolbar.className = 'pm-toolbar';
+
+      const mkBtn = (label, title, handler) => {
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'pm-btn';
+        btn.textContent = label;
+        btn.title = title;
+        btn.onclick = (e) => {
+          e.preventDefault();
+          handler();
+        };
+        return btn;
+      };
+
+      const run = (cmd) => {
+        const {state, dispatch} = view;
+        if (!cmd) return;
+        const res = cmd(state, dispatch);
+        if (res === false) return;
+        view.focus();
+      };
+
+      const s = schema();
+      if (s?.marks?.strong && toggleMark) toolbar.appendChild(mkBtn('B', 'Bold', () => run(toggleMark(s.marks.strong))));
+      if (s?.marks?.em && toggleMark) toolbar.appendChild(mkBtn('I', 'Italic', () => run(toggleMark(s.marks.em))));
+      if (s?.marks?.code && toggleMark) toolbar.appendChild(mkBtn('</>', 'Code', () => run(toggleMark(s.marks.code))));
+      if (s?.nodes?.blockquote && wrapIn) toolbar.appendChild(mkBtn('Quote', 'Blockquote', () => run(wrapIn(s.nodes.blockquote))));
+      if (s?.nodes?.heading && setBlockType) {
+        toolbar.appendChild(mkBtn('H2', 'Heading 2', () => run(setBlockType(s.nodes.heading, {level: 2}))));
+        toolbar.appendChild(mkBtn('H3', 'Heading 3', () => run(setBlockType(s.nodes.heading, {level: 3}))));
+      }
+      if (s?.nodes?.bullet_list && wrapInList) toolbar.appendChild(mkBtn('* List', 'Bullet list', () => run(wrapInList(s.nodes.bullet_list))));
+      if (s?.nodes?.ordered_list && wrapInList) toolbar.appendChild(mkBtn('1. List', 'Ordered list', () => run(wrapInList(s.nodes.ordered_list))));
+      if (s?.nodes?.horizontal_rule) toolbar.appendChild(mkBtn('HR', 'Horizontal rule', () => {
+        const {state, dispatch} = view;
+        dispatch(state.tr.replaceSelectionWith(s.nodes.horizontal_rule.create()).scrollIntoView());
+        view.focus();
+      }));
+      toolbar.appendChild(mkBtn('Table', 'Insert 3x3 table', () => {
+        const tableNode = createTableNode();
+        if (!tableNode) return;
+        const {state, dispatch} = view;
+        dispatch(state.tr.replaceSelectionWith(tableNode).scrollIntoView());
+        view.focus();
+      }));
+      if (pm().addRowAfter) toolbar.appendChild(mkBtn('+Row', 'Add row after', () => run(pm().addRowAfter)));
+      if (pm().addColumnAfter) toolbar.appendChild(mkBtn('+Col', 'Add column after', () => run(pm().addColumnAfter)));
+      if (pm().deleteRow) toolbar.appendChild(mkBtn('-Row', 'Delete row', () => run(pm().deleteRow)));
+      if (pm().deleteColumn) toolbar.appendChild(mkBtn('-Col', 'Delete column', () => run(pm().deleteColumn)));
+      if (undo) toolbar.appendChild(mkBtn('Undo', 'Undo last change', () => run(undo)));
+      if (redo) toolbar.appendChild(mkBtn('Redo', 'Redo last change', () => run(redo)));
+
+      container.parentElement.insertBefore(toolbar, container);
     };
 
     const init = (containerId, content = '') => {
-      // Prevent duplicate instances
-      if (quillInstances.has(containerId)) {
-        console.warn(`[Editor] Reinitializing ${containerId}, destroying previous instance`);
-        destroy(containerId);
+      const lib = pm();
+      if (!lib || !schema()) {
+        console.error('[Editor] ProseMirror libraries not loaded');
+        return null;
       }
+      if (views.has(containerId)) return views.get(containerId);
 
       const container = document.getElementById(containerId);
       if (!container) {
@@ -749,138 +831,79 @@ const DashboardApp = (() => {
         return null;
       }
 
-      try {
-        // Register modules on first initialization
-        if (quillInstances.size === 0) {
-          console.log('[Editor] Registering Quill modules...');
-          registerModules();
-        }
+      container.innerHTML = '';
+      // Ensure the editor box grows or scrolls instead of overlapping following form fields
+      container.style.height = 'auto';
+      container.style.minHeight = container.style.minHeight || '320px';
+      container.style.maxHeight = container.style.maxHeight || '70vh';
+      container.style.overflow = container.style.overflow || 'auto';
+      container.style.backgroundColor = container.style.backgroundColor || '#fff';
+      container.style.border = container.style.border || '1px solid #e0e0e0';
+      container.style.borderRadius = container.style.borderRadius || '6px';
+      container.style.padding = container.style.padding || '12px';
+      container.style.boxSizing = container.style.boxSizing || 'border-box';
+      container.classList.add('pm-host');
 
-        console.log(`[Editor] Initializing Quill for ${containerId}...`);
-        const quill = new Quill(`#${containerId}`, {
-          theme: 'snow',
-          modules: config.editorModules.modules,
-          placeholder: 'Write your content here...'
-        });
+      const view = new lib.EditorView(container, {
+        state: buildState(content),
+        attributes: {class: 'pm-editor'}
+      });
 
-        // Set initial content if provided
-        if (content && content.trim()) {
-          quill.root.innerHTML = content;
-          console.debug(`[Editor] Set initial content for ${containerId} (${content.length} chars)`);
-        }
+      ensureToolbar(container, view);
 
-        // Verify initialization
-        const delta = quill.getContents();
-        console.log(`[Editor] ${containerId} initialized successfully. Delta ops: ${delta.ops.length}`);
-
-        quillInstances.set(containerId, quill);
-        return quill;
-      } catch (error) {
-        console.error(`[Editor] Failed to initialize ${containerId}:`, error);
-        return null;
-      }
+      views.set(containerId, view);
+      return view;
     };
 
     const getContent = (containerId) => {
-      const quill = quillInstances.get(containerId);
-      if (!quill) return '';
-      
-      // Get HTML content from the editor
-      // Quill properly renders tables, formulas, and all formatting to HTML
-      const html = quill.root.innerHTML;
-      
-      // Log for debugging
-      console.debug(`[Editor] getContent('${containerId}') - HTML length: ${html.length}, preview:`, html.substring(0, 100));
-      
-      return html;
+      const lib = pm();
+      const view = views.get(containerId);
+      if (!view) return '';
+      const serializer = lib.DOMSerializer.fromSchema(schema());
+      const frag = serializer.serializeFragment(view.state.doc.content);
+      const div = document.createElement('div');
+      div.appendChild(frag);
+      return div.innerHTML;
     };
 
     const hasContent = (containerId) => {
-      const quill = quillInstances.get(containerId);
-      if (!quill) {
-        console.warn(`[Editor] hasContent('${containerId}') - No Quill instance found`);
-        return false;
-      }
-      
-      // Get the Delta format (Quill's internal representation)
-      const delta = quill.getContents();
-      
-      // Check if delta has meaningful content
-      // Delta is an array of operations; default empty state is [{ insert: '\n' }]
-      const hasOps = delta.ops && delta.ops.length > 0;
-      if (!hasOps) {
-        console.debug(`[Editor] hasContent('${containerId}') - No delta operations`);
-        return false;
-      }
-      
-      // Filter out default empty content (just a newline)
-      const meaningfulOps = delta.ops.filter(op => {
-        if (op.insert === '\n' && Object.keys(op).length === 1) return false; // Just newline
-        if (op.insert === '' && Object.keys(op).length === 1) return false; // Empty insert
-        return true;
-      });
-      
-      const hasContent = meaningfulOps.length > 0;
-      console.debug(`[Editor] hasContent('${containerId}') - Meaningful ops: ${meaningfulOps.length}, result: ${hasContent}`);
-      
-      return hasContent;
+      const view = views.get(containerId);
+      if (!view) return false;
+      const txt = view.state.doc.textContent || '';
+      return txt.trim().length > 0 || view.state.doc.content.size > 2;
     };
 
     const setContent = (containerId, content) => {
-      const quill = quillInstances.get(containerId);
-      if (!quill) {
-        console.warn(`[Editor] setContent('${containerId}') - No Quill instance found`);
-        return;
-      }
-      
-      // Parse HTML content and set it in the editor
-      // Quill will automatically parse tables, formulas, and formatting
-      if (content && content.trim()) {
-        quill.root.innerHTML = content;
-        console.debug(`[Editor] setContent('${containerId}') - Set ${content.length} chars of content`);
-      }
+      const view = views.get(containerId);
+      if (!view) return;
+      const state = buildState(content || '');
+      view.updateState(state);
     };
 
-    const clear = (containerId) => {
-      const quill = quillInstances.get(containerId);
-      if (quill) {
-        quill.setContents([], 'api');
-        console.debug(`[Editor] clear('${containerId}') - Cleared editor`);
-      }
-    };
+    const clear = (containerId) => setContent(containerId, '');
 
     const destroy = (containerId) => {
-      const quill = quillInstances.get(containerId);
-      if (quill) {
-        quill.disable();
-        quillInstances.delete(containerId);
+      const view = views.get(containerId);
+      if (view) {
+        view.destroy();
+        views.delete(containerId);
       }
     };
 
     const diagnostics = (containerId) => {
-      const quill = quillInstances.get(containerId);
-      const info = {
+      const view = views.get(containerId);
+      const html = view ? getContent(containerId) : 'N/A';
+      return {
         editor_id: containerId,
-        quill_instance_exists: !!quill,
-        content_html: quill ? quill.root.innerHTML : 'N/A',
-        content_length: quill ? quill.root.innerHTML.length : 0,
-        has_content: quill ? DashboardApp.Editor.hasContent(containerId) : false,
+        view_exists: !!view,
+        content_length: html.length,
+        has_content: hasContent(containerId),
+        content_preview: html.substring(0, 120)
       };
-      
-      if (quill) {
-        const delta = quill.getContents();
-        info.delta_ops = delta.ops || [];
-        info.delta_ops_count = delta.ops ? delta.ops.length : 0;
-      }
-      
-      return info;
     };
 
     return { init, getContent, hasContent, setContent, clear, destroy, diagnostics };
-  })();
-
-  // ============================================
-  // INITIALIZATION & PUBLIC API
+  })();// INITIALIZATION & PUBLIC API
   // ============================================
 
   const init = async () => {
@@ -970,6 +993,42 @@ const DashboardApp = (() => {
           .modal-btn-danger { background-color: #f44336; }
           .modal-btn-success { background-color: #4CAF50; }
           .modal-btn-default { background-color: #999; }
+          /* Editor styling so pasted tables don't spill over other form fields */
+          .pm-host {
+            height: auto;
+            min-height: 320px;
+            max-height: 70vh;
+            overflow: auto;
+            border: 1px solid #e0e0e0;
+            border-radius: 6px;
+            padding: 12px;
+            background: #fff;
+            box-sizing: border-box;
+          }
+          .pm-host .pm-editor {
+            min-height: 260px;
+            max-height: 60vh;
+            overflow: auto;
+            display: block;
+            outline: none;
+          }
+          .pm-editor table {
+            width: 100%;
+            border-collapse: collapse;
+            table-layout: auto;
+          }
+          .pm-editor th,
+          .pm-editor td {
+            border: 1px solid #ddd;
+            padding: 8px 10px;
+          }
+          .pm-editor tr:nth-child(even) {
+            background: #f9f9f9;
+          }
+          .pm-editor img {
+            max-width: 100%;
+            height: auto;
+          }
         `;
         document.head.appendChild(style);
       }
@@ -1015,3 +1074,13 @@ const DashboardApp = (() => {
 document.addEventListener('DOMContentLoaded', () => {
   DashboardApp.init();
 });
+
+
+
+
+
+
+
+
+
+

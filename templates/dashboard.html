@@ -12,7 +12,7 @@
   <meta content="width=device-width, initial-scale=1, maximum-scale=1" name="viewport" />
   <meta name="csrf-token" content="{{ csrf_token }}" />
   <!-- Security: Content Security Policy -->
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdnjs.cloudflare.com https://cdn.quilljs.com https://code.jquery.com https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com https://cdn.quilljs.com https://cdn.jsdelivr.net https://fonts.googleapis.com; img-src 'self' data: https:; font-src 'self' https: https://fonts.gstatic.com; connect-src 'self' http://localhost:8000 http://127.0.0.1:8000 https:;">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdnjs.cloudflare.com https://code.jquery.com https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://fonts.googleapis.com; img-src 'self' data: https:; font-src 'self' https: https://fonts.gstatic.com; connect-src 'self' http://localhost:8000 http://127.0.0.1:8000 https:;">
   <!-- favicon -->
   <link href="{% static 'img/favicon.png' %}" rel="icon" sizes="32x32" type="image/png" />
   <!-- Bootstrap CSS -->
@@ -25,15 +25,54 @@
   <link href="{% static 'css/animated-on3step.css' %}" rel="stylesheet" />
   <link href="{% static 'css/on3step-style.css' %}" rel="stylesheet" />
   <link href="{% static 'css/queries-on3step.css' %}" media="all" rel="stylesheet" type="text/css" />
-  <!-- Quill Rich Text Editor -->
-  <link href="https://cdn.quilljs.com/1.3.7/quill.snow.css" rel="stylesheet">
-  <!-- Quill Table Support -->
-  <link href="https://cdn.jsdelivr.net/npm/quill-better-table@1.2.10/dist/quill-better-table.css" rel="stylesheet">
-  <!-- KaTeX for Math Support -->
-  <link href="https://cdn.jsdelivr.net/npm/katex@0.16.0/dist/katex.min.css" rel="stylesheet">
+  <!-- ProseMirror base styles -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prosemirror-view@1.41.4/style/prosemirror.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prosemirror-tables@1.8.5/style/tables.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prosemirror-menu@1.2.5/style/menu.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prosemirror-search@1.1.0/style/search.min.css">
 
 
   <style>
+    /* ProseMirror toolbar and editor styling */
+    .pm-toolbar {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      padding: 8px 10px;
+      border: 1px solid #e5e7eb;
+      border-bottom: 0;
+      background: #f8f9fb;
+    }
+    .pm-btn {
+      border: 1px solid #d0d4da;
+      background: #fff;
+      padding: 6px 10px;
+      border-radius: 4px;
+      font-weight: 600;
+      font-size: 13px;
+      cursor: pointer;
+    }
+    .pm-btn:hover { background: #f3f4f6; }
+    .pm-host {
+      border: 1px solid #e5e7eb;
+      min-height: 260px;
+    }
+    .pm-editor {
+      min-height: 220px;
+      padding: 12px 14px;
+      outline: none;
+    }
+    .pm-editor table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    .pm-editor th,
+    .pm-editor td {
+      border: 1px solid #ddd;
+      padding: 8px;
+    }
+    .pm-editor tr:nth-child(even) { background: #fafafa; }
+
     /* Dashboard Custom Styling */
     body {
       background: #fff;
@@ -1590,9 +1629,9 @@
             <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 20px;">
               <h1>ADMIN DASHBOARD</h1>
               <div class="dashboard-user-info" style="float: none; margin-top: 0;">
-                <button type="button" onclick="logout(); return false;" class="logout-link" style="float: none; margin-top: 5px; display: inline-block; color: black; background: none; border: none; cursor: pointer; font-size: 14px;" title="Logout from Dashboard">
+                <a href="/logout/" onclick="return logout(event);" class="logout-link" style="float: none; margin-top: 5px; display: inline-block; color: black; background: none; border: none; cursor: pointer; font-size: 14px; text-decoration: none;" title="Logout from Dashboard">
                   <i class="fa fa-sign-out"></i> Logout
-                </button>
+                </a>
               </div>
             </div>
           </div>
@@ -2003,7 +2042,7 @@
                 <i class="fa fa-edit"></i> Edit Banner
               </button>
             </div>
-            <p style="color: #999; margin-bottom: 25px;">This banner appears on your homepage. Only one banner is supported. Choose either a video or a photo.</p>
+            <p style="color: #999; margin-bottom: 25px;">This banner appears on your homepage. Only one banner is supported. Upload a video (with optional poster) to update it.</p>
             <div id="bannerPreview" style="margin-bottom: 30px;"></div>
           </div>
 
@@ -2411,11 +2450,8 @@
             </div>
           </div>
           <div class="form-group">
-            <label for="bannerMediaType">Media Type</label>
-            <select id="bannerMediaType" name="media_type" onchange="toggleBannerMediaFields()">
-              <option value="video">Video</option>
-              <option value="photo">Photo</option>
-            </select>
+            <label for="bannerDescription">Description</label>
+            <textarea id="bannerDescription" name="description" placeholder="Optional description for this banner" style="min-height: 80px;"></textarea>
           </div>
           <div id="bannerVideoFields">
             <div class="form-group">
@@ -2452,14 +2488,6 @@
               </div>
             </div>
           </div>
-          <div id="bannerPhotoFields" style="display:none;">
-            <div class="form-group">
-              <label for="bannerPhoto">Photo</label>
-              <input type="file" id="bannerPhoto" name="photo" accept="image/*" />
-              <small style="color: #999; display: block; margin-top: 5px;">JPG, PNG, WebP (Max 10MB)</small>
-            </div>
-          </div>
-
           <div class="form-actions">
             <button type="button" class="btn btn-secondary" onclick="closeBannerModal()" title="Cancel">
               <i class="fa fa-times"></i> Cancel
@@ -2840,7 +2868,7 @@
           <div class="form-group">
             <label for="articleContent">Content *</label>
             <div id="articleContentEditor" style="height: 300px;"></div>
-            <!-- Fallback hidden textarea used when Quill fails to initialize -->
+            <!-- Fallback hidden textarea used when editor fails to initialize -->
             <textarea id="articleContentFallback" name="content_fallback" style="display:none; width:100%;" aria-hidden="true"></textarea>
           </div>
           <div class="form-row">
@@ -3652,17 +3680,74 @@
 
   <!-- External Libraries -->
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-  <script src="https://cdn.quilljs.com/1.3.7/quill.min.js"></script>
-  <!-- Quill Table Support -->
-  <script src="https://cdn.jsdelivr.net/npm/quill-better-table@1.2.10/dist/quill-better-table.js"></script>
-  <!-- KaTeX for Math Support -->
-  <script src="https://cdn.jsdelivr.net/npm/katex@0.16.0/dist/katex.min.js"></script>
-  <!-- Quill KaTeX Module -->
-  <script src="https://cdn.jsdelivr.net/npm/quill-blot-formatter@4.3.0/dist/quill-blot-formatter.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js"></script>
 
+  <script type="importmap">
+    {
+      "imports": {
+        "orderedmap": "https://cdn.jsdelivr.net/npm/orderedmap@2.1.1/dist/index.min.js",
+        "rope-sequence": "https://cdn.jsdelivr.net/npm/rope-sequence@1.3.4/dist/index.min.js",
+        "w3c-keyname": "https://cdn.jsdelivr.net/npm/w3c-keyname@2.2.8/index.min.js",
+        "prosemirror-model": "https://cdn.jsdelivr.net/npm/prosemirror-model@1.25.4/dist/index.min.js",
+        "prosemirror-transform": "https://cdn.jsdelivr.net/npm/prosemirror-transform@1.7.0/dist/index.min.js",
+        "prosemirror-state": "https://cdn.jsdelivr.net/npm/prosemirror-state@1.4.4/dist/index.min.js",
+        "prosemirror-view": "https://cdn.jsdelivr.net/npm/prosemirror-view@1.41.4/dist/index.min.js",
+        "prosemirror-history": "https://cdn.jsdelivr.net/npm/prosemirror-history@1.5.0/dist/index.min.js",
+        "prosemirror-keymap": "https://cdn.jsdelivr.net/npm/prosemirror-keymap@1.2.3/dist/index.min.js",
+        "prosemirror-commands": "https://cdn.jsdelivr.net/npm/prosemirror-commands@1.7.1/dist/index.min.js",
+        "prosemirror-schema-list": "https://cdn.jsdelivr.net/npm/prosemirror-schema-list@1.5.1/dist/index.min.js",
+        "prosemirror-schema-basic": "https://cdn.jsdelivr.net/npm/prosemirror-schema-basic@1.2.4/dist/index.min.js",
+        "prosemirror-tables": "https://cdn.jsdelivr.net/npm/prosemirror-tables@1.8.5/dist/index.min.js"
+      }
+    }
+  </script>
+  <!-- ProseMirror ESM bundle exposes window.ProseMirrorLib -->
+  <script type="module">
+    import {Schema, DOMParser, DOMSerializer} from "prosemirror-model";
+    import {EditorState} from "prosemirror-state";
+    import {EditorView} from "prosemirror-view";
+    import {history, undo, redo} from "prosemirror-history";
+    import {keymap} from "prosemirror-keymap";
+    import {baseKeymap, toggleMark, setBlockType, wrapIn} from "prosemirror-commands";
+    import {wrapInList, addListNodes} from "prosemirror-schema-list";
+    import {schema as basicSchema} from "prosemirror-schema-basic";
+    import {tableNodes, columnResizing, tableEditing, addRowAfter, addColumnAfter, deleteRow, deleteColumn} from "prosemirror-tables";
+
+    const nodes = addListNodes(
+      basicSchema.spec.nodes.append(tableNodes({ tableGroup: 'block', cellContent: 'block+' })),
+      'paragraph block*',
+      'block'
+    );
+    const mySchema = new Schema({ nodes, marks: basicSchema.spec.marks });
+
+    window.ProseMirrorLib = {
+      Schema,
+      DOMParser,
+      DOMSerializer,
+      EditorState,
+      EditorView,
+      history,
+      undo,
+      redo,
+      keymap,
+      baseKeymap,
+      toggleMark,
+      setBlockType,
+      wrapIn,
+      wrapInList,
+      columnResizing,
+      tableEditing,
+      addRowAfter,
+      addColumnAfter,
+      deleteRow,
+      deleteColumn,
+      schema: mySchema,
+    };
+    console.log('[ProseMirror] Libraries loaded');
+  </script>
+
   <!-- Refactored Dashboard Module -->
-  <script src="{% static 'js/dashboard.js' %}"></script>
+  <script src="{% static 'js/dashboard.js' %}?v=20260106q"></script>
 
   <script>
     /**
@@ -3675,9 +3760,9 @@
     // Configure the dashboard after module loads
     document.addEventListener('DOMContentLoaded', async () => {
       try {
-        console.log('[Dashboard] DOM Content Loaded - initializing editors...');
+        console.log('[Dashboard] DOM Content Loaded - initializing editors with ProseMirror...');
         
-        // Initialize Quill editors using the refactored Editor module
+        // Initialize ProseMirror editors using the refactored Editor module
         // Only initialize editors for elements that exist
         const editors = {};
         const editorIds = ['contentEditor', 'editContentEditor', 'projectDescEditor', 'serviceContentEditor', 'articleContentEditor'];
@@ -4695,32 +4780,45 @@
     // ===== BANNERS API =====
     // Singleton banner logic
     async function loadBannerSingleton() {
+      const preview = document.getElementById('bannerPreview');
+      if (preview) {
+        preview.innerHTML = '<div class="no-data"><i class="fa fa-circle-o-notch fa-spin"></i><p>Loading banner...</p></div>';
+      }
       try {
         const banner = await DashboardApp.API.get('/api/banners/singleton/');
         displayBannerPreview(banner);
       } catch (e) {
+        const idField = document.getElementById('bannerId');
+        if (idField) idField.value = '';
         document.getElementById('bannerPreview').innerHTML = '<div class="no-data"><i class="fa fa-image"></i><p>No banner set.</p></div>';
       }
     }
 
+    // Legacy compatibility: other handlers expect loadBanners; keep it pointing to the singleton loader
+    async function loadBanners() {
+      return loadBannerSingleton();
+    }
+
     function displayBannerPreview(banner) {
       const preview = document.getElementById('bannerPreview');
-      if (!banner || (!banner.media_type)) {
+      if (!banner) {
         preview.innerHTML = '<div class="no-data"><i class="fa fa-image"></i><p>No banner set.</p></div>';
         return;
       }
+      const safeTitle = (window.DashboardApp && DashboardApp.sanitize) ? DashboardApp.sanitize(banner.title || '') : (banner.title || '');
+      const safeSubtitle = (window.DashboardApp && DashboardApp.sanitize) ? DashboardApp.sanitize(banner.subtitle || '') : (banner.subtitle || '');
       let mediaHtml = '';
-      if (banner.media_type === 'video' && banner.video) {
+      if (banner.video) {
         mediaHtml = `<video src="${banner.video}" ${banner.video_autoplay ? 'autoplay' : ''} ${banner.video_muted ? 'muted' : ''} ${banner.video_loop ? 'loop' : ''} poster="${banner.video_poster || ''}" style="max-width:100%;max-height:300px;display:block;margin:0 auto;" controls></video>`;
-      } else if (banner.media_type === 'photo' && banner.photo) {
-        mediaHtml = `<img src="${banner.photo}" alt="Banner Photo" style="max-width:100%;max-height:300px;display:block;margin:0 auto;" />`;
+      } else if (banner.video_poster) {
+        mediaHtml = `<img src="${banner.video_poster}" alt="Banner Poster" style="max-width:100%;max-height:300px;display:block;margin:0 auto;" />`;
       } else {
         mediaHtml = '<div class="no-data"><i class="fa fa-image"></i><p>No media uploaded.</p></div>';
       }
       preview.innerHTML = `
         <div style="text-align:center;">
-          <h3>${banner.title || ''}</h3>
-          <p>${banner.subtitle || ''}</p>
+          <h3>${safeTitle}</h3>
+          <p>${safeSubtitle}</p>
           ${mediaHtml}
         </div>
       `;
@@ -4732,14 +4830,12 @@
         document.getElementById('bannerId').value = banner.id || '';
         document.getElementById('bannerTitle').value = banner.title || '';
         document.getElementById('bannerSubtitle').value = banner.subtitle || '';
-        document.getElementById('bannerMediaType').value = banner.media_type || 'video';
+        document.getElementById('bannerDescription').value = banner.description || '';
         document.getElementById('bannerVideo').value = '';
         document.getElementById('bannerVideoPoster').value = '';
-        document.getElementById('bannerPhoto').value = '';
         document.getElementById('bannerVideoAutoplay').checked = banner.video_autoplay !== false;
         document.getElementById('bannerVideoMuted').checked = banner.video_muted !== false;
         document.getElementById('bannerVideoLoop').checked = banner.video_loop !== false;
-        toggleBannerMediaFields();
         document.getElementById('bannerModalTitle').textContent = 'Edit Banner';
         hideBannerMessages();
         document.getElementById('bannerModal').classList.add('active');
@@ -4748,82 +4844,18 @@
         document.getElementById('bannerId').value = '';
         document.getElementById('bannerTitle').value = '';
         document.getElementById('bannerSubtitle').value = '';
-        document.getElementById('bannerMediaType').value = 'video';
+        document.getElementById('bannerDescription').value = '';
         document.getElementById('bannerVideo').value = '';
         document.getElementById('bannerVideoPoster').value = '';
-        document.getElementById('bannerPhoto').value = '';
         document.getElementById('bannerVideoAutoplay').checked = true;
         document.getElementById('bannerVideoMuted').checked = true;
         document.getElementById('bannerVideoLoop').checked = true;
-        toggleBannerMediaFields();
         document.getElementById('bannerModalTitle').textContent = 'Add Banner';
         hideBannerMessages();
         document.getElementById('bannerModal').classList.add('active');
       });
     }
 
-    function toggleBannerMediaFields() {
-      const type = document.getElementById('bannerMediaType').value;
-      document.getElementById('bannerVideoFields').style.display = (type === 'video') ? '' : 'none';
-      document.getElementById('bannerPhotoFields').style.display = (type === 'photo') ? '' : 'none';
-    }
-
-    document.getElementById('bannerMediaType').addEventListener('change', toggleBannerMediaFields);
-
-    document.getElementById('bannerForm').addEventListener('submit', async (e) => {
-      e.preventDefault();
-      const bannerId = document.getElementById('bannerId').value;
-      const formData = new FormData();
-      formData.append('title', document.getElementById('bannerTitle').value);
-      formData.append('subtitle', document.getElementById('bannerSubtitle').value);
-      formData.append('media_type', document.getElementById('bannerMediaType').value);
-      if (document.getElementById('bannerMediaType').value === 'video') {
-        if (document.getElementById('bannerVideo').files[0]) formData.append('video', document.getElementById('bannerVideo').files[0]);
-        if (document.getElementById('bannerVideoPoster').files[0]) formData.append('video_poster', document.getElementById('bannerVideoPoster').files[0]);
-        formData.append('video_autoplay', document.getElementById('bannerVideoAutoplay').checked);
-        formData.append('video_muted', document.getElementById('bannerVideoMuted').checked);
-        formData.append('video_loop', document.getElementById('bannerVideoLoop').checked);
-      } else if (document.getElementById('bannerMediaType').value === 'photo') {
-        if (document.getElementById('bannerPhoto').files[0]) formData.append('photo', document.getElementById('bannerPhoto').files[0]);
-      }
-      try {
-        let response;
-        if (bannerId) {
-          response = await DashboardApp.API.patch(`/api/banners/${bannerId}/`, formData);
-        } else {
-          response = await DashboardApp.API.post('/api/banners/', formData);
-        }
-        showBannerSuccess('Banner saved successfully!');
-        setTimeout(() => {
-          closeBannerModal();
-          loadBannerSingleton();
-        }, 1200);
-      } catch (e) {
-        showBannerError(e.message || 'Failed to save banner');
-      }
-    });
-
-    function closeBannerModal() {
-      document.getElementById('bannerModal').classList.remove('active');
-    }
-
-    function showBannerSuccess(msg) {
-      document.getElementById('bannerSuccessText').textContent = msg;
-      document.getElementById('bannerSuccessMessage').classList.add('active');
-      document.getElementById('bannerErrorMessage').classList.remove('active');
-    }
-
-    function showBannerError(msg) {
-      document.getElementById('bannerErrorText').textContent = msg;
-      document.getElementById('bannerErrorMessage').classList.add('active');
-      document.getElementById('bannerSuccessMessage').classList.remove('active');
-    }
-
-    function hideBannerMessages() {
-      document.getElementById('bannerSuccessMessage').classList.remove('active');
-      document.getElementById('bannerErrorMessage').classList.remove('active');
-    }
-
     function closeBannerModal() {
       document.getElementById('bannerModal').classList.remove('active');
     }
@@ -4847,39 +4879,73 @@
 
     document.getElementById('bannerForm').addEventListener('submit', async (e) => {
       e.preventDefault();
+      // Ignore stray submits when the modal isn't open (prevents accidental banner API calls)
+      if (!document.getElementById('bannerModal').classList.contains('active')) {
+        return;
+      }
       
-      const bannerId = document.getElementById('bannerId').value;
+      let bannerId = document.getElementById('bannerId').value;
       const formData = new FormData();
       
       const title = document.getElementById('bannerTitle').value;
       const subtitle = document.getElementById('bannerSubtitle').value;
-      const order = document.getElementById('bannerOrder').value;
-      const isActive = document.getElementById('bannerIsActive').checked;
-      const videoAutoplay = document.getElementById('bannerVideoAutoplay').checked;
-      const videoMuted = document.getElementById('bannerVideoMuted').checked;
-      const videoLoop = document.getElementById('bannerVideoLoop').checked;
+      const description = document.getElementById('bannerDescription').value;
+      const videoAutoplayInput = document.getElementById('bannerVideoAutoplay');
+      const videoMutedInput = document.getElementById('bannerVideoMuted');
+      const videoLoopInput = document.getElementById('bannerVideoLoop');
+
+      const videoAutoplay = videoAutoplayInput ? videoAutoplayInput.checked : true;
+      const videoMuted = videoMutedInput ? videoMutedInput.checked : true;
+      const videoLoop = videoLoopInput ? videoLoopInput.checked : true;
       
       const videoFile = document.getElementById('bannerVideo').files[0];
       const posterFile = document.getElementById('bannerVideoPoster').files[0];
       
       formData.append('title', title);
       formData.append('subtitle', subtitle);
-      formData.append('order', order);
-      formData.append('is_active', isActive);
+      formData.append('description', description);
       formData.append('video_autoplay', videoAutoplay);
       formData.append('video_muted', videoMuted);
       formData.append('video_loop', videoLoop);
       
-      if (videoFile) formData.append('video', videoFile);
-      if (posterFile) formData.append('video_poster', posterFile);
+        if (videoFile) formData.append('video', videoFile);
+        if (posterFile) formData.append('video_poster', posterFile);
       
       try {
         let response;
+        // Always refresh the latest banner ID from server to avoid patching stale/non-existent records
+        try {
+          const existing = await DashboardApp.API.get('/api/banners/singleton/');
+          if (existing && existing.id) {
+            bannerId = existing.id;
+            document.getElementById('bannerId').value = bannerId;
+          } else {
+            bannerId = '';
+            document.getElementById('bannerId').value = '';
+          }
+        } catch (err) {
+          bannerId = '';
+          document.getElementById('bannerId').value = '';
+        }
+
+        const saveFormData = (endpoint, method) => DashboardApp.API.postFormData(endpoint, formData, {}, method);
+
         if (bannerId) {
-          response = await DashboardApp.API.patch(`/api/banners/${bannerId}/`, formData);
-          showBannerSuccess('Banner updated successfully!');
+          try {
+            response = await saveFormData(`/api/banners/${bannerId}/`, 'PATCH');
+            showBannerSuccess('Banner updated successfully!');
+          } catch (err) {
+            // If the stored ID is stale or missing server-side, fallback to creating a new banner
+            if (err && err.status === 404) {
+              document.getElementById('bannerId').value = '';
+              response = await saveFormData('/api/banners/', 'POST');
+              showBannerSuccess('Banner created successfully!');
+            } else {
+              throw err;
+            }
+          }
         } else {
-          response = await DashboardApp.API.post('/api/banners/', formData);
+          response = await saveFormData('/api/banners/', 'POST');
           showBannerSuccess('Banner created successfully!');
         }
         
@@ -5839,13 +5905,13 @@
           document.getElementById('articleFeaturedImage').value = '';
           document.getElementById('articleThumbnail').value = '';
 
-          // Prefer Quill if available; otherwise populate fallback textarea
+          // Prefer ProseMirror if available; otherwise populate fallback textarea
           try {
             const diagSet = DashboardApp.Editor.diagnostics('articleContentEditor');
             if (diagSet && diagSet.quill_instance_exists) {
               DashboardApp.Editor.setContent('articleContentEditor', article.content || '');
             } else {
-              console.warn('[Modal] Quill not available for articleContentEditor — using fallback textarea');
+              console.warn('[Modal] Editor not available for articleContentEditor — using fallback textarea');
               const fb = document.getElementById('articleContentFallback');
               if (fb) fb.value = article.content || '';
             }
@@ -6243,6 +6309,14 @@
           return el ? el.value : '';
         };
 
+        const normalizeUrl = (val) => {
+          if (!val) return '';
+          const trimmed = val.trim();
+          if (!trimmed) return '';
+          if (/^https?:\/\//i.test(trimmed)) return trimmed;
+          return `https://${trimmed}`;
+        };
+
         const getChecked = (id) => {
           const el = document.getElementById(id);
           return el ? el.checked : false;
@@ -6252,16 +6326,16 @@
         formData.append('company_name', getValue('configCompanyNameView'));
         formData.append('email', getValue('configEmailView'));
         formData.append('phone', getValue('configPhoneView'));
-        formData.append('website', getValue('configWebsiteView') || '');
+        formData.append('website', normalizeUrl(getValue('configWebsiteView')));
         formData.append('address', getValue('configAddressView'));
         formData.append('about_excerpt', getValue('configAboutExcerptView') || '');
 
         // Social Links
-        formData.append('facebook_url', getValue('configFacebookView') || '');
-        formData.append('instagram_url', getValue('configInstagramView') || '');
-        formData.append('youtube_url', getValue('configYoutubeView') || '');
-        formData.append('linkedin_url', getValue('configLinkedinView') || '');
-        formData.append('x_url', getValue('configTwitterView') || '');
+        formData.append('facebook_url', normalizeUrl(getValue('configFacebookView')));
+        formData.append('instagram_url', normalizeUrl(getValue('configInstagramView')));
+        formData.append('youtube_url', normalizeUrl(getValue('configYoutubeView')));
+        formData.append('linkedin_url', normalizeUrl(getValue('configLinkedinView')));
+        formData.append('x_url', normalizeUrl(getValue('configTwitterView')));
         // Logo
         const logoFileInput = document.getElementById('configLogoView');
         if (logoFileInput && logoFileInput.files[0]) {
@@ -7207,28 +7281,12 @@
       document.getElementById('aboutErrorMessage').style.display = 'none';
 
       try {
-        // Use FormData for file uploads
+        // Use DashboardApp API helper for consistent auth/CSRF handling
         const endpoint = aboutId ? `/api/about/${aboutId}/` : '/api/about/';
-        const method = aboutId ? 'PUT' : 'POST';
-        
-        // Get CSRF token
-        const csrfToken = getCsrfToken();
-        
-        const apiBaseUrl = (DashboardApp && DashboardApp.config && DashboardApp.config.apiBaseUrl) || '';
-        const response = await fetch(apiBaseUrl + endpoint, {
-          method: method,
-          headers: {
-            'X-CSRFToken': csrfToken
-          },
-          body: formData,
-          credentials: 'include'
-        });
-        
-        if (!response.ok) {
-          const errorData = await response.json().catch(() => ({ detail: 'Error saving about content' }));
-          throw new Error(errorData.detail || 'Error saving about content');
-        }
-        
+        const method = aboutId ? 'PATCH' : 'POST';
+
+        await DashboardApp.API.postFormData(endpoint, formData, {}, method);
+
         document.getElementById('aboutSuccessText').textContent = aboutId ? 'About content updated successfully!' : 'About content created successfully!';
         document.getElementById('aboutSuccessMessage').style.display = 'block';
         
@@ -7241,9 +7299,10 @@
         }, 1000);
       } catch (error) {
         console.error('[About] Error saving about content:', error);
-        document.getElementById('aboutErrorText').textContent = error.response?.data?.detail || 'Error saving about content';
+        const detail = error?.data?.detail || error?.message || 'Error saving about content';
+        document.getElementById('aboutErrorText').textContent = detail;
         document.getElementById('aboutErrorMessage').style.display = 'block';
-        DashboardApp.Toast.show('Error saving about content', 'error');
+        DashboardApp.Toast.show(detail, 'error');
       }
     });
 
@@ -7479,20 +7538,29 @@
         const team = teamResp.results || teamResp;
 
         // Update overview cards
-        document.getElementById('analyticsArticles').textContent = articles.length;
-        document.getElementById('analyticsProjects').textContent = projects.length;
-        document.getElementById('analyticsServices').textContent = services.length;
-        document.getElementById('analyticsTeam').textContent = team.length;
+        const aEl = document.getElementById('analyticsArticles');
+        const pEl = document.getElementById('analyticsProjects');
+        const sEl = document.getElementById('analyticsServices');
+        const tEl = document.getElementById('analyticsTeam');
+        if (aEl) aEl.textContent = articles.length;
+        if (pEl) pEl.textContent = projects.length;
+        if (sEl) sEl.textContent = services.length;
+        if (tEl) tEl.textContent = team.length;
 
         // Update chart legend data
         const published = articles.filter(a => a.status === 'published').length;
         const draft = articles.filter(a => a.status === 'draft').length;
         
-        document.getElementById('publishedCount').textContent = published;
-        document.getElementById('draftCount').textContent = draft;
-        document.getElementById('chartArticles').textContent = articles.length;
-        document.getElementById('chartProjects').textContent = projects.length;
-        document.getElementById('chartServices').textContent = services.length;
+        const pubEl = document.getElementById('publishedCount');
+        const draftEl = document.getElementById('draftCount');
+        const cArt = document.getElementById('chartArticles');
+        const cProj = document.getElementById('chartProjects');
+        const cServ = document.getElementById('chartServices');
+        if (pubEl) pubEl.textContent = published;
+        if (draftEl) draftEl.textContent = draft;
+        if (cArt) cArt.textContent = articles.length;
+        if (cProj) cProj.textContent = projects.length;
+        if (cServ) cServ.textContent = services.length;
 
         // Create charts if Chart.js is available
         if (typeof Chart !== 'undefined') {
@@ -7501,13 +7569,17 @@
         }
 
         // Load recent activity
-        loadRecentActivity(articles, projects, services, team);
+        if (typeof loadRecentActivity === 'function') {
+          loadRecentActivity(articles, projects, services, team);
+        }
 
       } catch (error) {
         console.error('Error loading analytics:', error);
         DashboardApp.Toast.show('Error loading analytics data', 'error');
-        document.getElementById('recentActivityList').innerHTML = 
-          '<p style="color: #999; text-align: center; padding: 20px;">Error loading analytics data.</p>';
+        const recentList = document.getElementById('recentActivityList');
+        if (recentList) {
+          recentList.innerHTML = '<p style="color: #999; text-align: center; padding: 20px;">Error loading analytics data.</p>';
+        }
       }
     }
 
@@ -7575,10 +7647,15 @@
     }
 
     function loadRecentActivity(articles, projects, services, team) {
+      const listEl = document.getElementById('recentActivityList');
+      if (!listEl) {
+        console.warn('[Analytics] recentActivityList not found');
+        return;
+      }
       const activities = [];
 
       // Collect recent articles
-      articles.slice(0, 3).forEach(article => {
+      (articles || []).slice(0, 3).forEach(article => {
         activities.push({
           type: 'article',
           title: article.title || 'Untitled Article',

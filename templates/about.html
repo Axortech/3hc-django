@@ -1,404 +1,441 @@
 {% load static %}
 <!DOCTYPE html>
 <html lang="zxx">
-  <head>
-    <meta charset="utf-8">
-    <title>BUILDSTATE - Construction</title>
-    <meta content="" name="description">
-    <meta content="" name="author">
-    <meta content="" name="keywords">
-    <meta content="width=device-width, initial-scale=1, maximum-scale=1" name="viewport">
-    <!-- favicon -->
-    <link href="{% static 'img/favicon.png' %}" rel="icon" sizes="32x32" type="image/png">
-    <!-- Bootstrap CSS -->
-    <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet">
-    <!-- font themify CSS -->
-    <link rel="stylesheet" href="{% static 'css/themify-icons.css' %}">
-    <!-- font awesome CSS -->
-    <link href="{% static 'font-awesome/css/font-awesome.css' %}" rel="stylesheet">
-    <!-- revolution slider css -->
-    <link rel="stylesheet" type="text/css" href="{% static 'css/fullscreen.css' %}" media="screen" />
-	<link rel="stylesheet" type="text/css" href="{% static 'rs-plugin/css/settings.css' %}" media="screen" />
-    <link rel="stylesheet" href="{% static 'css/rev-settings.css' %}" type="text/css">
-    <!-- on3step CSS -->
-    <link href="{% static 'css/animated-on3step.css' %}" rel="stylesheet">
-    <link href="{% static 'css/owl.carousel.css' %}" rel="stylesheet">
-    <link href="{% static 'css/owl.theme.css' %}" rel="stylesheet">
-    <link href="{% static 'css/owl.transitions.css' %}" rel="stylesheet">
-    <link href="{% static 'css/on3step-style.css' %}" rel="stylesheet">
-    <link href="{% static 'css/queries-on3step.css' %}" media="all" rel="stylesheet" type="text/css">
+<head>
+  <meta charset="utf-8">
+  <title>3HC - High Himalaya Hydro Construction</title>
+  <meta content="" name="description">
+  <meta content="" name="author">
+  <meta content="" name="keywords">
+  <meta content="width=device-width, initial-scale=1, maximum-scale=1" name="viewport">
+  <!-- favicon -->
+  <link href="{% static 'img/favicon.png' %}" rel="icon" sizes="32x32" type="image/png">
+  <!-- Bootstrap CSS -->
+  <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet">
+  <!-- font themify CSS -->
+  <link rel="stylesheet" href="{% static 'css/themify-icons.css' %}">
+  <!-- font awesome CSS -->
+  <link href="{% static 'font-awesome/css/font-awesome.css' %}" rel="stylesheet">
+  <!-- revolution slider css -->
+  <link rel="stylesheet" type="text/css" href="{% static 'css/fullscreen.css' %}" media="screen" />
+  <link rel="stylesheet" type="text/css" href="{% static 'rs-plugin/css/settings.css' %}" media="screen" />
+  <link rel="stylesheet" href="{% static 'css/rev-settings.css' %}" type="text/css">
+  <!-- on3step CSS -->
+  <link href="{% static 'css/animated-on3step.css' %}" rel="stylesheet">
+  <link href="{% static 'css/owl.carousel.css' %}" rel="stylesheet">
+  <link href="{% static 'css/owl.theme.css' %}" rel="stylesheet">
+  <link href="{% static 'css/owl.transitions.css' %}" rel="stylesheet">
+  <link href="{% static 'css/on3step-style.css' %}" rel="stylesheet">
+  <link href="{% static 'css/queries-on3step.css' %}" media="all" rel="stylesheet" type="text/css">
+  <link href="{% static 'css/logo-fix.css' %}" rel="stylesheet">
+</head>
 
-    {# Make team member boxes uniform regardless of uploaded photo dimensions #}
-    <style>
-      /* Fix spacing between About section and Team section & avoid overlap */
-      #about {
-        padding-bottom: 60px;
-      }
-
-      #team {
-        padding-top: 40px;
-        clear: both;
-        position: relative;
-        z-index: 1;
-      }
-
-      /* Scope to about page team section to avoid affecting other pages */
-      #team .team-wrapper {
-        background: #ffffff;
-        border: 1px solid #e5e5e5;
-        border-radius: 4px;
-        overflow: hidden;
-        margin-bottom: 30px;
-        display: flex;
-        flex-direction: column;
-        height: 100%;
-      }
-
-      /* Force all team photos into the same box size with cropping, not stretching */
-      #team .team-wrapper img {
-        width: 100%;
-        height: 260px;          /* fixed visual height for uniform cards */
-        object-fit: cover;      /* crop to fill the box while keeping aspect ratio */
-        display: block;
-      }
-
-      /* Ensure description area is consistent and doesn’t squish the image */
-      #team .team-wrapper .team-des {
-        padding: 12px 15px 15px;
-        flex: 1 0 auto;
-      }
-
-      #team .team-wrapper .team-des h3 {
-        margin-top: 0;
-      }
-
-      @media (max-width: 767px) {
-        /* Slightly shorter images on small screens for better fit */
-        #team .team-wrapper img {
-          height: 220px;
-        }
-      }
-    </style>
-  </head>
-  <body>
-  
-    <!-- preloader -->
-    <div class="bg-preloader"></div>
-    <div class="preloader">
-      <div class="mainpreloader">
+<body>
+  <!-- preloader -->
+  <div class="bg-preloader"></div>
+  <div class="preloader">
+    <div class="mainpreloader">
       <span></span>
-      </div>
+    </div>
   </div>
-    <!-- preloader end -->
+  <!-- preloader end -->
+
+  <!-- content wraper -->
+  <div class="content-wrapper">
+    <div class="custom-menu-wrapper">
+      {% include "components/header.html" %}
+    </div>
     
-    <!-- content wraper -->
-    <div class="content-wrapper">
-    
-    <!-- subnav -->
-    {% include "components/header.html" %}
-      
-      <!-- subheader -->
-      <section id="subheader">
-        <div class="container">
-          <div class="row">
-            <div class="col-md-12">
-              <h1>
-                About Us
-              </h1>
+    <!-- subheader -->
+    <section id="subheader">
+      <div class="container">
+        <div class="row">
+          <div class="col-md-12">
+            <h1>About Us</h1>
+          </div>
+
+          <!-- devider -->
+          <div class="col-md-12">
+            <div class="devider-page">
+              <div class="devider-img-right"></div>
             </div>
-            
-            <!-- devider -->
-            <div class="col-md-12">
-              <div class="devider-page">
-                <div class="devider-img-right">
-                </div>
-              </div>
-            </div>
+          </div>
 
-            <div class="col-md-12">
-              <ul class="subdetail">
-                <li>
-                  <a href="index.html">Home</a>
-                </li>
+          <div class="col-md-12">
+            <ul class="subdetail">
+              <li><a href="{% url 'home' %}">Home</a></li>
+              <li class="sep">/</li>
+              <li><a class="subdetail" href="{% url 'flatpage_no_slash' page='about' %}">About Us</a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+    <!-- subheader end -->
 
-                <li class="sep">/
-                </li>
+    <!-- section about -->
+    <section aria-label="about" class="whitepage no-bottom" id="about">
+      <div class="container">
+        <div class="row">
+          <div class="onStep" data-animation="fadeInUp" data-time="300">
+            <article>
+              <h2 id="about-title">Loading...</h2>
+              <span class="devider-cont"></span>
+              <p id="about-content">Loading...</p>
+            </article>
+          </div>
+        </div>
 
-                <li>About
-                </li>
+        <div class="row justify-content-center">
+          <div class="onStep" data-animation="fadeInUp" data-time="600">
+            <div class="filter-wraper">
+              <ul class="animfadeInUpBig" data-time="1200" id="filters">
+                <li class="filt-serv selected" data-filter=".passion" id="mission-tab">Our Mission</li>
+                <li class="space">&middot;</li>
+                <li class="filt-serv" data-filter=".honcap" id="vision-tab">Our Vision</li>
+                <li class="space">&middot;</li>
+                <li class="filt-serv" data-filter=".webuild" id="goals-tab">Our Goals</li>
+                <li class="space">&middot;</li>
+                <li class="filt-serv" data-filter=".achievement" id="achievements-tab">Our Achievements</li>
               </ul>
             </div>
+            <div class="space-half"></div>
+          </div>
+
+          <div class="onStep" data-animation="fadeInUp" data-time="900" id="services">
+            <!-- Mission -->
+            <div class="service passion">
+              <img id="mission-image" alt="img" class="img-responsive" style="display:none;">
+              <h4 id="mission-title">Our Mission</h4>
+              <p id="mission-content">Loading...</p>
+            </div>
+
+            <!-- Vision -->
+            <div class="service honcap">
+              <img id="vision-image" alt="img" class="img-responsive" style="display:none;">
+              <h4 id="vision-title">Our Vision</h4>
+              <p id="vision-content">Loading...</p>
+            </div>
+
+            <!-- Goals -->
+            <div class="service webuild">
+              <img id="goals-image" alt="img" class="img-responsive" style="display:none;">
+              <h4 id="goals-title">Our Goals</h4>
+              <p id="goals-content">Loading...</p>
+            </div>
+
+            <!-- Achievements -->
+            <div class="service achievement">
+              <img id="achievements-image" alt="img" class="img-responsive" style="display:none;">
+              <h4 id="achievements-title">Our Achievements</h4>
+              <p id="achievements-content">Loading...</p>
+            </div>
           </div>
         </div>
-      </section>
-      <!-- subheader end -->
-      
-      <!-- section about -->
-      <section aria-label="about" class="whitepage no-bottom" id="about">
-        <div class="container">
-          <div class="row">
-          
-            <!-- Main About Section -->
-            <div class="col-md-12">
-              <div class="onStep" data-animation="fadeInUp" data-time="300">
-                <div class="text-center" style="margin-bottom: 50px;">
-                  <h2 data-about-title style="font-size: 36px; font-weight: 700; color: #172434; margin-bottom: 20px;">
-                    Who we are
-                  </h2>
-                  <span class="devider-cont" style="display: inline-block; width: 80px; height: 3px; background: #ff6600; margin-bottom: 25px;"></span>
-                </div>
-              </div>
-            </div>
+      </div>
+    </section>
+    <!-- section about end -->
 
-            <!-- About Content with Image -->
-            <div class="col-md-6 col-xs-12">
-              <div class="onStep" data-animation="fadeInLeft" data-time="400">
-                <div data-about-image-container style="position: relative; border-radius: 8px; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.1); margin-bottom: 30px;">
-                  <img data-about-image src="{% static 'img/about-placeholder.jpg' %}" alt="About Us" class="img-responsive" style="width: 100%; height: auto; display: block;">
-                </div>
-              </div>
-            </div>
-
-            <div class="col-md-6 col-xs-12">
-              <div class="onStep" data-animation="fadeInRight" data-time="400">
-                <div data-about-content style="font-size: 15px; line-height: 1.8; color: #666; padding: 0 15px;">
-                  <p>
-                    <em>Loading about content...</em>
-                  </p>
-                </div>
-              </div>
-            </div>
-
-            <div class="col-md-12">
-              <div class="space-half"></div>
-            </div>
-            
-            <!-- Mission, Vision, Goals Grid -->
-            <div class="col-md-12">
-              <div class="onStep" data-animation="fadeInUp" data-time="600">
-                <div class="row">
-                  
-                  <!-- Mission Card -->
-                  <div class="col-md-4 col-sm-6">
-                    <div class="about-card" data-mission-card style="background: #fff; border-radius: 8px; padding: 30px; margin-bottom: 30px; box-shadow: 0 5px 20px rgba(0,0,0,0.08); transition: all 0.3s ease; height: 100%;">
-                      <div style="text-align: center; margin-bottom: 20px;">
-                        <div style="width: 80px; height: 80px; background: linear-gradient(135deg, #ff6600 0%, #ff8533 100%); border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; margin-bottom: 20px; box-shadow: 0 5px 15px rgba(255, 102, 0, 0.3);">
-                          <i class="fa fa-bullseye" style="font-size: 32px; color: #fff;"></i>
-                        </div>
-                        <h3 data-mission-title style="font-size: 22px; font-weight: 700; color: #172434; margin: 0;">
-                          Our Mission
-                        </h3>
-                      </div>
-                      <div data-mission-content style="font-size: 14px; line-height: 1.7; color: #666; text-align: center;">
-                        <p>Loading mission...</p>
-                      </div>
-                    </div>
-                  </div>
-
-                  <!-- Vision Card -->
-                  <div class="col-md-4 col-sm-6">
-                    <div class="about-card" data-vision-card style="background: #fff; border-radius: 8px; padding: 30px; margin-bottom: 30px; box-shadow: 0 5px 20px rgba(0,0,0,0.08); transition: all 0.3s ease; height: 100%;">
-                      <div style="text-align: center; margin-bottom: 20px;">
-                        <div style="width: 80px; height: 80px; background: linear-gradient(135deg, #ff6600 0%, #ff8533 100%); border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; margin-bottom: 20px; box-shadow: 0 5px 15px rgba(255, 102, 0, 0.3);">
-                          <i class="fa fa-eye" style="font-size: 32px; color: #fff;"></i>
-                        </div>
-                        <h3 data-vision-title style="font-size: 22px; font-weight: 700; color: #172434; margin: 0;">
-                          Our Vision
-                        </h3>
-                      </div>
-                      <div data-vision-content style="font-size: 14px; line-height: 1.7; color: #666; text-align: center;">
-                        <p>Loading vision...</p>
-                      </div>
-                    </div>
-                  </div>
-
-                  <!-- Goals Card -->
-                  <div class="col-md-4 col-sm-6">
-                    <div class="about-card" data-goals-card style="background: #fff; border-radius: 8px; padding: 30px; margin-bottom: 30px; box-shadow: 0 5px 20px rgba(0,0,0,0.08); transition: all 0.3s ease; height: 100%;">
-                      <div style="text-align: center; margin-bottom: 20px;">
-                        <div style="width: 80px; height: 80px; background: linear-gradient(135deg, #ff6600 0%, #ff8533 100%); border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; margin-bottom: 20px; box-shadow: 0 5px 15px rgba(255, 102, 0, 0.3);">
-                          <i class="fa fa-flag-checkered" style="font-size: 32px; color: #fff;"></i>
-                        </div>
-                        <h3 data-goals-title style="font-size: 22px; font-weight: 700; color: #172434; margin: 0;">
-                          Our Goals
-                        </h3>
-                      </div>
-                      <div data-goals-content style="font-size: 14px; line-height: 1.7; color: #666; text-align: center;">
-                        <p>Loading goals...</p>
-                      </div>
-                    </div>
-                  </div>
-
-                </div>
-              </div>
-            </div>
-
-            <!-- Achievements Section -->
-            <div class="col-md-12" data-achievements-section style="display: none;">
-              <div class="onStep" data-animation="fadeInUp" data-time="800">
-                <div style="background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%); border-radius: 8px; padding: 50px 30px; margin-top: 20px; margin-bottom: 30px; border-left: 5px solid #ff6600;">
-                  <div class="text-center" style="margin-bottom: 30px;">
-                    <h3 data-achievements-title style="font-size: 28px; font-weight: 700; color: #172434; margin-bottom: 15px;">
-                      Our Achievements
-                    </h3>
-                    <span style="display: inline-block; width: 60px; height: 3px; background: #ff6600;"></span>
-                  </div>
-                  <div data-achievements-content style="font-size: 16px; line-height: 1.9; color: #495057; max-width: 900px; margin: 0 auto;">
-                    <p>Loading achievements...</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-            
+    <!-- section team -->
+    <section class="whitepage" id="team">
+      <div class="container">
+        <div class="row" id="team-members-container">
+          <div class="onStep" data-animation="fadeInUp" data-time="200" id="team-members-list">
+            <!-- Team members will be loaded here via API -->
           </div>
         </div>
-      </section>
-      <!-- section about end -->
-      
-      <!-- section team -->
-      <section class="whitepage" id="team">
+      </div>
+    </section>
 
-        <!-- team -->
-        <div class="container">
-          <div class="row">
-          <div class="onStep" data-animation="fadeInUp" data-time="200" id="team-members-container">
-            <!-- Team members will be loaded dynamically here -->
-            <div class="col-12 text-center" id="team-loading">
-              <i class="fa fa-spinner fa-spin"></i> Loading team members...
-            </div>
-          </div>
-          </div>
-        </div>
-        <!-- team end -->
-      </section>
-      
-      <!-- section team end -->
-      <section aria-label="brands" class="brand-page" id="brand">
-        <div class="container">
-          <div class="row">
-            <!-- brands-->
+    <!-- section team end -->
+    <section aria-label="brands" class="brand-page" id="brand">
+      <div class="container">
+        <div class="row">
           <div class="container">
             <div class="row">
-            
               <div class="owl-carousel" id="owl-brand">
-              
-                <div class="item">
-                  <img alt="background" src="{% static 'img/ourclients/1.png' %}">
-                </div>
-
-                <div class="item">
-                  <img alt="background" src="{% static 'img/ourclients/2.png' %}">
-                </div>
-
-                <div class="item">
-                  <img alt="background" src="{% static 'img/ourclients/3.png' %}">
-                </div>
-
-                <div class="item">
-                  <img alt="background" src="{% static 'img/ourclients/4.png' %}">
-                </div>
-
-                <div class="item">
-                  <img alt="background" src="{% static 'img/ourclients/5.png' %}">
-                </div>
-
-                <div class="item">
-                  <img alt="background" src="{% static 'img/ourclients/6.png' %}">
-                </div>
-                
-                 <div class="item">
-                  <img alt="background" src="{% static 'img/ourclients/1.png' %}">
-                </div>
-
-                <div class="item">
-                  <img alt="background" src="{% static 'img/ourclients/2.png' %}">
-                </div>
-
-                <div class="item">
-                  <img alt="background" src="{% static 'img/ourclients/3.png' %}">
-                </div>
-
-                <div class="item">
-                  <img alt="background" src="{% static 'img/ourclients/4.png' %}">
-                </div>
-
-                <div class="item">
-                  <img alt="background" src="{% static 'img/ourclients/5.png' %}">
-                </div>
-
-                <div class="item">
-                  <img alt="background" src="{% static 'img/ourclients/6.png' %}">
-                </div>
-
-              </div>
-              
-            </div>
-          </div>
-        <!-- brands end-->
-          </div>
-        </div>
-      </section>
-
-      <section class="yellowpage">
-        <div class="container">
-          <div class="row">
-            <div class="col-md-7">
-              <div class="onStep" data-animation="fadeInLeft" data-time="300">
-                <h2>
-                  Looking best partner for your next project?
-                </h2>
-              </div>
-            </div>
-
-            <div class="col-md-5">
-              <div class="right">
-                <div class="btn-content onStep" data-animation="fadeInRight" data-time="600">
-                  <a class="link-class" href="#">Let us know</a>
-                </div>
+                <div class="item"><img alt="background" src="{% static 'img/ourclients/1.png' %}"></div>
+                <div class="item"><img alt="background" src="{% static 'img/ourclients/2.png' %}"></div>
+                <div class="item"><img alt="background" src="{% static 'img/ourclients/3.png' %}"></div>
+                <div class="item"><img alt="background" src="{% static 'img/ourclients/4.png' %}"></div>
+                <div class="item"><img alt="background" src="{% static 'img/ourclients/5.png' %}"></div>
+                <div class="item"><img alt="background" src="{% static 'img/ourclients/6.png' %}"></div>
               </div>
             </div>
           </div>
         </div>
-      </section>
-      
-      {% include "components/footer.html" %}
-      
-      <!-- ScrolltoTop -->
-      <div id="totop">
-        <span class="ti-angle-up"></span>
       </div>
-      
-    </div>
-    <!-- content wraper end -->
+    </section>
+
+    <section class="yellowpage">
+      <div class="container">
+        <div class="row">
+          <div class="col-md-7">
+            <div class="onStep" data-animation="fadeInLeft" data-time="300">
+              <h2>Looking best partner for your next project?</h2>
+            </div>
+          </div>
+          <div class="col-md-5">
+            <div class="right">
+              <div class="btn-content onStep" data-animation="fadeInRight" data-time="600">
+                <a class="link-class" href="#">Let us know</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- subfooter -->
+    {% include "components/footer.html" %}
+    <!-- subfooter end -->
+  </div>
+  <!-- content wraper end -->
+
+  <!-- Subscribe start -->
+  <div class="white-popup-block mfp-hide animbounceInDown" data-time="0" id="subwrap">
+    <h5>PLEASE FILL YOUR EMAIL BELOW</h5>
+    <div class="space-half"></div>
+    <form action="{% url 'flatpage_no_slash' page='subscribe' %}" id="subscribe" method="post" name="subscribe">
+      {% csrf_token %}
+      <input class="subscribfield subscribeemail" id="subscribeemail" name="subscribeemail" type="text">
+      <button class="btn-form" id="submit-2" type="submit">Subscribe</button>
+    </form>
+    <div class="subscribesuccess">Thank you for fill your email</div>
+  </div>
+  <!-- Subscribe end -->
+
+  <!-- plugin JS -->
+  <script src="{% static 'plugin/pluginson3step.js' %}"></script>
+  <script type="text/javascript" src="{% static 'rs-plugin/js/jquery.themepunch.revolution.min.js' %}"></script>
+  <script src="{% static 'js/on3step.js' %}"></script>
+  <script src="{% static 'js/plugin-set.js' %}"></script>
+
+  <style>
+    /* Hide all service blocks by default */
+    #services .service {
+      display: none !important;
+      opacity: 0;
+      visibility: hidden;
+      position: absolute;
+      height: 0;
+      overflow: hidden;
+    }
     
-    <!-- Subscribe start -->
-    <div class="white-popup-block mfp-hide animbounceInDown" data-time="0" id="subwrap">
-      <h5>
-        PLEASE FILL YOUR EMAIL BELOW
-      </h5>
-
-      <div class="space-half">
-      </div>
-
-      <form action="subscribe.php" id="subscribe" method="post" name="subscribe">
-        <label for="subscribeemail" style="display: none;">Email Address</label>
-        <input class="subscribfield subscribeemail" id="subscribeemail" name="subscribeemail" type="text" placeholder="your email" title="Enter your email to subscribe"> <button class="btn-form" id="submit-2" type="submit">Subscribe</button>
-      </form>
-
-      <div class="subscribesuccess">
-        Thank you for fill your email
-      </div>
-    </div>
-    <!-- Subscribe end -->
+    /* Show only the active service block */
+    #services .service.active {
+      display: block !important;
+      opacity: 1;
+      visibility: visible;
+      position: relative;
+      height: auto;
+      overflow: visible;
+    }
     
-    <!-- plugin JS -->
-    <script src="{% static 'plugin/pluginson3step.js' %}" type="text/javascript"></script> 
-    <!-- slider revolution  -->
-    <script type="text/javascript" src="{% static 'rs-plugin/js/jquery.themepunch.revolution.min.js' %}"></script>
-    <!-- on3step JS -->
-    <script src="{% static 'js/on3step.js' %}" type="text/javascript"></script>
-    <script src="{% static 'js/plugin-set.js' %}" type="text/javascript"></script>
-    <!-- About Page Loader -->
-    <script src="{% static 'js/about-loader.js' %}" type="text/javascript"></script>
-  </body>
+    /* Add breathing room around services section */
+    #services {
+      margin-bottom: 100px;
+      padding-bottom: 40px;
+      position: relative;
+      min-height: 400px;
+    }
+    
+    /* Highlight the active tab */
+    #filters .filt-serv.selected {
+      color: #ff6600;
+      font-weight: bold;
+    }
+    
+    /* Keep team section pushed below with strong separation */
+    #team {
+      padding-top: 80px;
+      margin-top: 60px;
+      clear: both;
+      position: relative;
+    }
+    
+    /* Ensure achievement content doesn't leak */
+    #services .service.active {
+      clear: both;
+      overflow: hidden;
+    }
+    
+    .service ul {
+      margin-bottom: 20px;
+      clear: both;
+    }
+    
+    .service p {
+      margin-bottom: 15px;
+      clear: both;
+    }
+  </style>
+
+  <script>
+    // Fetch About data from API
+    async function loadAboutData() {
+      try {
+        const response = await fetch('/api/about/');
+        console.log('API Response Status:', response.status);
+        
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        
+        const data = await response.json();
+        console.log('API Data:', data);
+        
+        if (data.results && data.results.length > 0) {
+          const about = data.results[0];
+          console.log('About object:', about);
+          
+          // Update main title and content
+          document.getElementById('about-title').textContent = about.title || 'About 3HC';
+          document.getElementById('about-content').textContent = about.content || '';
+          
+          // Update tab titles
+          document.getElementById('mission-tab').textContent = about.mission_title || 'Our Mission';
+          document.getElementById('vision-tab').textContent = about.vision_title || 'Our Vision';
+          document.getElementById('goals-tab').textContent = about.goals_title || 'Our Goals';
+          document.getElementById('achievements-tab').textContent = about.achievements_title || 'Our Achievements';
+          
+          // Update service content and images
+          updateServiceBlock('mission', about.mission_title, about.mission_content, about.mission_image);
+          updateServiceBlock('vision', about.vision_title, about.vision_content, about.vision_image);
+          updateServiceBlock('goals', about.goals_title, about.goals_content, about.goals_image);
+          updateServiceBlock('achievements', about.achievements_title, about.achievements_content, about.achievements_image);
+        } else {
+          console.warn('No About data found. API returned empty results.');
+          // Show default content if API returns no data
+          document.getElementById('about-title').textContent = 'No data available';
+          document.getElementById('about-content').textContent = 'Please add content in the admin panel.';
+        }
+      } catch (error) {
+        console.error('Error loading About data:', error);
+        document.getElementById('about-title').textContent = 'Error loading content';
+        document.getElementById('about-content').textContent = 'There was an error loading the content. Please check the console for details.';
+      }
+    }
+    
+    function updateServiceBlock(type, title, content, imageUrl) {
+      const titleEl = document.getElementById(type + '-title');
+      const contentEl = document.getElementById(type + '-content');
+      const imageEl = document.getElementById(type + '-image');
+      
+      if (titleEl) titleEl.textContent = title || '';
+      if (contentEl) contentEl.innerHTML = (content || '').replace(/\n/g, '<br>');
+      
+      if (imageEl && imageUrl) {
+        imageEl.src = imageUrl;
+        imageEl.style.display = 'block';
+      }
+    }
+
+    // Fetch Team Members from API
+    async function loadTeamMembers() {
+      try {
+        const response = await fetch('/api/team-members/');
+        console.log('Team Members API Response Status:', response.status);
+        
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        
+        const data = await response.json();
+        console.log('Team Members API Data:', data);
+        
+        const container = document.getElementById('team-members-list');
+        const teamMembers = data.results || data;
+        
+        if (Array.isArray(teamMembers) && teamMembers.length > 0) {
+          container.innerHTML = '';
+          teamMembers.forEach((member, index) => {
+            const delay = 200 + (index * 100);
+            const memberCard = createTeamMemberCard(member, delay);
+            container.innerHTML += memberCard;
+          });
+          console.log(`Loaded ${teamMembers.length} team members`);
+        } else {
+          console.warn('No team members found.');
+          container.innerHTML = '<p>No team members available.</p>';
+        }
+      } catch (error) {
+        console.error('Error loading team members:', error);
+        const container = document.getElementById('team-members-list');
+        container.innerHTML = '<p>Error loading team members. Please check the console.</p>';
+      }
+    }
+    
+    function createTeamMemberCard(member, animationDelay) {
+      const defaultPhoto = '{% static "img/team-img1.jpg" %}';
+      const photoUrl = member.photo || defaultPhoto;
+      
+      let socialLinks = '';
+      if (member.facebook_url) {
+        socialLinks += `<a href="${member.facebook_url}" target="_blank"><span class="ti-facebook"></span></a>`;
+      }
+      if (member.instagram_url) {
+        socialLinks += `<a href="${member.instagram_url}" target="_blank"><span class="ti-twitter"></span></a>`;
+      }
+      if (member.linkedin_url) {
+        socialLinks += `<a href="${member.linkedin_url}" target="_blank"><span class="ti-linkedin"></span></a>`;
+      }
+      
+      // If no social links, add empty placeholder links
+      if (!socialLinks) {
+        socialLinks = `<a href="#"><span class="ti-facebook"></span></a>
+                       <a href="#"><span class="ti-twitter"></span></a>
+                       <a href="#"><span class="ti-linkedin"></span></a>`;
+      }
+      
+      return `
+        <div class="col-md-3 col-sm-6">
+          <div class="team-wrapper onStep" data-animation="fadeInUp" data-time="${animationDelay}">
+            <img alt="${member.name}" class="img-responsive" src="${photoUrl}">
+            <div class="team-des">
+              <h3>${member.name || 'Team Member'}</h3>
+              <span>${member.position || 'Position'}</span>
+              ${socialLinks}
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    // Initialize tabs
+    function initTabs() {
+      var tabs = document.querySelectorAll("#filters .filt-serv");
+      var blocks = document.querySelectorAll("#services .service");
+
+      function activate(filter) {
+        tabs.forEach(function (tab) {
+          tab.classList.toggle("selected", tab.dataset.filter === filter);
+        });
+        blocks.forEach(function (block) {
+          var match = block.classList.contains(filter.slice(1));
+          block.classList.toggle("active", match);
+        });
+      }
+
+      tabs.forEach(function (tab, idx) {
+        tab.addEventListener("click", function (e) {
+          e.preventDefault();
+          activate(tab.dataset.filter);
+        });
+      });
+
+      // Activate first tab by default
+      if (tabs.length > 0) {
+        activate(tabs[0].dataset.filter);
+      }
+    }
+
+    // Load data and initialize when DOM is ready
+    document.addEventListener('DOMContentLoaded', function() {
+      loadAboutData();
+      loadTeamMembers();
+      initTabs();
+    });
+  </script>
+</body>
 </html>

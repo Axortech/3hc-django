@@ -17,7 +17,7 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
         return user
 from drf_spectacular.utils import OpenApiExample, extend_schema_serializer, extend_schema_field, OpenApiTypes
 from .models import (
-    Banner, About, Project, Lead, ProjectCategory, TeamMember, SiteLogo,
+    Banner, About, Project, Lead, ProjectCategory, TeamMember,
     BlogPost, BlogCategory, SiteConfig, Service, ServiceCategory, Client, ProjectImage,
     Career, Notice, JobApplication
 )
@@ -31,63 +31,58 @@ from .models import (
                 "id": 1,
                 "title": "Welcome",
                 "subtitle": "We build stuff",
+                "description": "Optional banner description",
                 "video": "http://127.0.0.1:8000/media/banners/videos/banner-video.mp4",
                 "video_poster": "http://127.0.0.1:8000/media/banners/posters/poster.jpg",
                 "video_autoplay": True,
                 "video_muted": True,
-                "video_loop": True,
-                "is_active": True,
-                "order": 0
+                "video_loop": True
             },
         )
     ]
 )
 class BannerSerializer(serializers.ModelSerializer):
-    video = serializers.SerializerMethodField()
-    video_poster = serializers.SerializerMethodField()
-    photo = serializers.SerializerMethodField()
+    # Accept uploaded files while still returning absolute URLs in responses
+    video = serializers.FileField(required=False, allow_null=True)
+    video_poster = serializers.ImageField(required=False, allow_null=True)
 
     class Meta:
         model = Banner
         fields = [
-            "id", "title", "subtitle", "media_type",
+            "id", "title", "subtitle", "description",
             "video", "video_poster", "video_autoplay", "video_muted", "video_loop",
-            "photo", "created_at", "updated_at"
+            "created_at", "updated_at"
         ]
         read_only_fields = ("id", "created_at", "updated_at")
 
-    @extend_schema_field(OpenApiTypes.STR)
-    def get_video(self, obj) -> str:
+    def _build_url(self, file_field):
+        """Return absolute URL for a file field if available."""
         request = self.context.get('request')
-        if obj.media_type == 'video' and obj.video and hasattr(obj.video, 'url'):
+        if file_field and hasattr(file_field, 'url'):
             try:
-                url = obj.video.url
+                url = file_field.url
                 return request.build_absolute_uri(url) if request else url
             except Exception:
                 return None
         return None
 
-    @extend_schema_field(OpenApiTypes.STR)
-    def get_video_poster(self, obj) -> str:
-        request = self.context.get('request')
-        if obj.media_type == 'video' and obj.video_poster and hasattr(obj.video_poster, 'url'):
-            try:
-                url = obj.video_poster.url
-                return request.build_absolute_uri(url) if request else url
-            except Exception:
-                return None
-        return None
+    def to_representation(self, instance):
+        """Return absolute URLs; banner is video-focused."""
+        data = super().to_representation(instance)
+        data['video'] = self._build_url(instance.video)
+        data['video_poster'] = self._build_url(instance.video_poster)
+        return data
 
-    @extend_schema_field(OpenApiTypes.STR)
-    def get_photo(self, obj) -> str:
-        request = self.context.get('request')
-        if obj.media_type == 'photo' and obj.photo and hasattr(obj.photo, 'url'):
-            try:
-                url = obj.photo.url
-                return request.build_absolute_uri(url) if request else url
-            except Exception:
-                return None
-        return None
+    def validate(self, attrs):
+        """Ensure video file is present for banner."""
+        # Check if video is provided in this request or already exists
+        video = attrs.get('video') or (self.instance.video if self.instance else None)
+        
+        # Video is required for banners
+        if not video:
+            raise serializers.ValidationError({"video": "Video file is required for banners."})
+        
+        return attrs
 
 @extend_schema_serializer(
     examples=[
@@ -112,6 +107,12 @@ class BannerSerializer(serializers.ModelSerializer):
     ]
 )
 class AboutSerializer(serializers.ModelSerializer):
+    image = serializers.ImageField(required=False, allow_null=True)
+    mission_image = serializers.ImageField(required=False, allow_null=True)
+    vision_image = serializers.ImageField(required=False, allow_null=True)
+    goals_image = serializers.ImageField(required=False, allow_null=True)
+    achievements_image = serializers.ImageField(required=False, allow_null=True)
+    
     class Meta:
         model = About
         fields = [
@@ -120,6 +121,25 @@ class AboutSerializer(serializers.ModelSerializer):
             "achievements_title", "achievements_content", "achievements_image", "is_published", "updated_at"
         ]
         read_only_fields = ("id", "updated_at")
+    
+    def to_representation(self, instance):
+        data = super().to_representation(instance)
+        request = self.context.get('request')
+        
+        # Convert all image fields to absolute URLs
+        image_fields = ['image', 'mission_image', 'vision_image', 'goals_image', 'achievements_image']
+        for field in image_fields:
+            image = getattr(instance, field, None)
+            if image and hasattr(image, 'url'):
+                try:
+                    url = image.url
+                    data[field] = request.build_absolute_uri(url) if request else url
+                except Exception:
+                    data[field] = None
+            else:
+                data[field] = None
+        
+        return data
 
 @extend_schema_serializer(
     examples=[
@@ -224,6 +244,8 @@ class ProjectSerializer(serializers.ModelSerializer):
     ]
 )
 class ClientSerializer(serializers.ModelSerializer):
+    logo = serializers.ImageField(required=False, allow_null=True)
+    
     class Meta:
         model = Client
         fields = [
@@ -231,6 +253,19 @@ class ClientSerializer(serializers.ModelSerializer):
             "is_active", "order", "created_at", "updated_at"
         ]
         read_only_fields = ("id", "created_at", "updated_at")
+    
+    def to_representation(self, instance):
+        data = super().to_representation(instance)
+        request = self.context.get('request')
+        if instance.logo and hasattr(instance.logo, 'url'):
+            try:
+                url = instance.logo.url
+                data['logo'] = request.build_absolute_uri(url) if request else url
+            except Exception:
+                data['logo'] = None
+        else:
+            data['logo'] = None
+        return data
 
 @extend_schema_serializer(
     examples=[
@@ -339,19 +374,6 @@ class BlogPostSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError("A blog post with this title already exists.")
         
         return value
-
-class SiteLogoSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = SiteLogo
-        fields = ["id", "logo", "alt_text", "updated_at"]
-        read_only_fields = ["id", "updated_at"]
-
-    def to_representation(self, instance):
-        representation = super().to_representation(instance)
-        request = self.context.get("request")
-        if request and instance.logo:
-            representation["logo"] = request.build_absolute_uri(instance.logo.url)
-        return representation
 
 @extend_schema_serializer(
     examples=[
@@ -483,9 +505,8 @@ class ServiceSerializer(serializers.ModelSerializer):
     ]
 )
 class SiteConfigSerializer(serializers.ModelSerializer):
-    # The SiteConfig model stores a direct ImageField for `logo` (not a FK to SiteLogo),
-    # so expose a URL string and alt text instead of trying to nest SiteLogoSerializer.
-    logo = serializers.SerializerMethodField(read_only=True)
+    # Accept direct logo upload; return absolute URL in representation
+    logo = serializers.ImageField(required=False, allow_null=True)
 
     class Meta:
         model = SiteConfig
@@ -498,16 +519,18 @@ class SiteConfigSerializer(serializers.ModelSerializer):
         read_only_fields = ('id', 'created_at', 'updated_at')
 
     @extend_schema_field(OpenApiTypes.URI)
-    def get_logo(self, obj):
+    def to_representation(self, instance):
+        data = super().to_representation(instance)
         request = self.context.get('request')
-        # obj.logo is an ImageFieldFile; return absolute URL or None
-        try:
-            if obj.logo and hasattr(obj.logo, 'url'):
-                url = obj.logo.url
-                return request.build_absolute_uri(url) if request else url
-        except Exception:
-            return None
-        return None
+        if instance.logo and hasattr(instance.logo, 'url'):
+            try:
+                url = instance.logo.url
+                data['logo'] = request.build_absolute_uri(url) if request else url
+            except Exception:
+                data['logo'] = None
+        else:
+            data['logo'] = None
+        return data
 
 
 @extend_schema_serializer(

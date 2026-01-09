@@ -8,7 +8,6 @@ import json
 import sys
 
 ENDPOINTS = [
-    '/api/site-logo/',
     '/api/banners/active/',
     '/api/team-members/?page=1&per_page=1',
     '/api/blog-posts/?status=published&limit=1',

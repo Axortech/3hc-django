@@ -1,10 +1,10 @@
-from rest_framework import viewsets, permissions, filters, status
+from rest_framework import viewsets, permissions, filters, status, parsers
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from drf_spectacular.utils import extend_schema, extend_schema_view, OpenApiParameter, OpenApiExample, OpenApiResponse, OpenApiTypes
 from django.middleware.csrf import get_token
-from .models import Banner, About, Project, Lead, ProjectCategory, BlogCategory, TeamMember, SiteLogo, BlogPost, SiteConfig, Service, ServiceCategory, Client, Career, Notice, JobApplication
-from .serializers import BannerSerializer, AboutSerializer, ProjectSerializer, LeadSerializer, ProjectCategorySerializer, BlogCategorySerializer, TeamMemberSerializer, SiteLogoSerializer, BlogPostSerializer, SiteConfigSerializer, ServiceSerializer, ServiceCategorySerializer, ClientSerializer, UserRegistrationSerializer, CareerSerializer, NoticeSerializer, JobApplicationSerializer
+from .models import Banner, About, Project, Lead, ProjectCategory, BlogCategory, TeamMember, BlogPost, SiteConfig, Service, ServiceCategory, Client, Career, Notice, JobApplication
+from .serializers import BannerSerializer, AboutSerializer, ProjectSerializer, LeadSerializer, ProjectCategorySerializer, BlogCategorySerializer, TeamMemberSerializer, BlogPostSerializer, SiteConfigSerializer, ServiceSerializer, ServiceCategorySerializer, ClientSerializer, UserRegistrationSerializer, CareerSerializer, NoticeSerializer, JobApplicationSerializer
 from rest_framework.views import APIView
 from rest_framework import generics
 from django.contrib.auth.models import User
@@ -16,9 +16,11 @@ from django.shortcuts import redirect
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.views import LoginView, LogoutView
 from django import forms
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, Http404
 from django.views.decorators.cache import never_cache
 from django.views.decorators.http import require_http_methods
+
+
 
 # User Registration API - Authenticated Users Only
 class UserRegistrationView(generics.CreateAPIView):
@@ -74,6 +76,14 @@ class CustomLoginView(LoginView):
     def form_valid(self, form):
         """Log the user in and redirect"""
         login(self.request, form.get_user())
+        # Respect "remember me" checkbox from the login form.
+        # If checked, persist session for 30 days; otherwise expire on browser close.
+        remember_me = self.request.POST.get('remember_me')
+        if remember_me:
+            self.request.session.set_expiry(60 * 60 * 24 * 30)  # 30 days
+        else:
+            # expire at browser close
+            self.request.session.set_expiry(0)
         return super().form_valid(form)
 
 
@@ -147,7 +157,8 @@ class CsrfView(generics.GenericAPIView):
 class IsAdmin(permissions.BasePermission):
     """Allow access only to authenticated users"""
     def has_permission(self, request, view):
-        return request.user and request.user.is_authenticated
+        # Only superusers (single admin role) may perform admin actions
+        return bool(request.user and request.user.is_authenticated and request.user.is_superuser)
 
 # Permission class for authenticated users (read/write)
 class IsAdminOrReadOnly(permissions.BasePermission):
@@ -267,10 +278,59 @@ class BannerViewSet(viewsets.ModelViewSet):
     queryset = Banner.objects.all()
     serializer_class = BannerSerializer
     permission_classes = [IsAdmin]  # Admin dashboard only
+    parser_classes = [parsers.MultiPartParser, parsers.FormParser, parsers.JSONParser]
+    http_method_names = ["get", "post", "patch", "head", "options"]
+
+    @extend_schema(exclude=True)
+    def list(self, request, *args, **kwargs):
+        return Response(status=status.HTTP_405_METHOD_NOT_ALLOWED)
+
+    @extend_schema(exclude=True)
+    def retrieve(self, request, *args, **kwargs):
+        return Response(status=status.HTTP_405_METHOD_NOT_ALLOWED)
+
+    @extend_schema(exclude=True)
+    def destroy(self, request, *args, **kwargs):
+        return Response(status=status.HTTP_405_METHOD_NOT_ALLOWED)
 
     def get_queryset(self):
         # Only allow one banner (singleton)
         return Banner.objects.all()[:1]
+
+    def _get_or_create_singleton(self):
+        """
+        Return the singleton banner, creating a fallback stub if none exists.
+        This guarantees PATCH calls always have a target object without needing a valid pk.
+        """
+        banner = Banner.objects.first()
+        if not banner:
+            banner = Banner.objects.create(
+                title="Welcome to our site",
+                subtitle="Update this banner in the dashboard",
+            )
+        return banner
+
+    def get_object(self):
+        """
+        Always operate on the singleton banner.
+        Ignores the URL pk to avoid stale ID lookups.
+        """
+        banner = self._get_or_create_singleton()
+        self.check_object_permissions(self.request, banner)
+        return banner
+
+    def create(self, request, *args, **kwargs):
+        """
+        Upsert semantics: POST updates the existing singleton if present,
+        otherwise creates the first banner.
+        """
+        existing = Banner.objects.first()
+        if existing:
+            serializer = self.get_serializer(existing, data=request.data, partial=True)
+            serializer.is_valid(raise_exception=True)
+            self.perform_update(serializer)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        return super().create(request, *args, **kwargs)
 
     @action(detail=False, methods=['get'], url_path='singleton', permission_classes=[AllowAny])
     @extend_schema(
@@ -280,9 +340,20 @@ class BannerViewSet(viewsets.ModelViewSet):
         responses={200: BannerSerializer()}
     )
     def singleton(self, request):
-        banner = Banner.objects.first()
-        if not banner:
-            return Response({}, status=200)
+        banner = self._get_or_create_singleton()
+        serializer = BannerSerializer(banner, context={'request': request})
+        return Response(serializer.data)
+
+    @action(detail=False, methods=['get'], url_path='active', permission_classes=[AllowAny])
+    @extend_schema(
+        summary="Get active banner",
+        description="Return the active banner for the homepage. Public endpoint.",
+        tags=['Banners'],
+        responses={200: BannerSerializer()}
+    )
+    def active(self, request):
+        """Return the first banner (singleton) as the active banner"""
+        banner = self._get_or_create_singleton()
         serializer = BannerSerializer(banner, context={'request': request})
         return Response(serializer.data)
 
@@ -325,7 +396,7 @@ class BannerViewSet(viewsets.ModelViewSet):
     ),
 )
 class AboutViewSet(viewsets.ModelViewSet):
-    queryset = About.objects.all()
+    queryset = About.objects.filter(is_published=True)
     serializer_class = AboutSerializer
     
     def get_permissions(self):
@@ -595,89 +666,6 @@ class ServiceViewSet(viewsets.ModelViewSet):
             return Response({'error': 'Service not found'}, status=status.HTTP_404_NOT_FOUND)
 
 
-@extend_schema_view(
-    list=extend_schema(
-        summary='Get site logo',
-        description='Retrieve the site logo. Singleton resource - returns single logo if exists.',
-        tags=['Site Logo'],
-        responses={200: SiteLogoSerializer}
-    ),
-    create=extend_schema(
-        summary='Upload or update site logo',
-        description='Upload a new logo or update the existing one. Only one logo is maintained.',
-        tags=['Site Logo'],
-        request={
-            'multipart/form-data': {
-                'type': 'object',
-                'properties': {
-                    'logo': {'type': 'string', 'format': 'binary', 'description': 'Logo image file'},
-                    'alt_text': {'type': 'string', 'description': 'Alt text for the logo'}
-                },
-                'required': ['logo']
-            }
-        },
-        responses={201: SiteLogoSerializer},
-    ),
-    destroy=extend_schema(
-        summary='Delete site logo',
-        description='Remove the site logo and its file.',
-        tags=['Site Logo'],
-        responses={204: OpenApiResponse(description='Logo deleted successfully')}
-    ),
-)
-class SiteLogoViewSet(viewsets.ViewSet):
-    """Singleton resource for site logo - only one logo is maintained"""
-    # Provide a queryset so drf-spectacular can infer path parameter types
-    queryset = SiteLogo.objects.all()
-    serializer_class = SiteLogoSerializer
-    
-    def get_permissions(self):
-        """Allow public GET requests, require auth for write operations"""
-        if self.action in ('list', 'retrieve'):
-            return [AllowAny()]
-        return [IsAdmin()]
-
-    def list(self, request):
-        """Get the current site logo"""
-        logo = SiteLogo.get_logo()
-        if logo:
-            serializer = SiteLogoSerializer(logo, context={'request': request})
-            return Response(serializer.data)
-        return Response(
-            {"detail": "No logo found"},
-            status=status.HTTP_404_NOT_FOUND
-        )
-
-    def create(self, request):
-        """Upload or update the site logo"""
-        logo_instance = SiteLogo.get_logo() or SiteLogo()
-        serializer = SiteLogoSerializer(logo_instance, data=request.data, partial=True)
-        
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-    def retrieve(self, request, pk=None):
-        """Retrieve a specific logo by ID (supports router detail route)."""
-        try:
-            obj = SiteLogo.objects.get(pk=pk)
-        except SiteLogo.DoesNotExist:
-            return Response({"detail": "Not found."}, status=status.HTTP_404_NOT_FOUND)
-        serializer = self.serializer_class(obj, context={"request": request})
-        return Response(serializer.data)
-
-    def destroy(self, request):
-        """Delete the site logo"""
-        logo = SiteLogo.get_logo()
-        if not logo:
-            return Response(
-                {"detail": "No logo found"},
-                status=status.HTTP_404_NOT_FOUND
-            )
-        logo.delete()
-        return Response(status=status.HTTP_204_NO_CONTENT)
-
 
 
 @extend_schema_view(
@@ -714,6 +702,7 @@ class SiteConfigViewSet(viewsets.ViewSet):
     serializer_class = SiteConfigSerializer
     # Provide queryset so drf-spectacular can infer path parameter types for detail routes
     queryset = SiteConfig.objects.all()
+    parser_classes = [parsers.MultiPartParser, parsers.FormParser, parsers.JSONParser]
     
     def get_permissions(self):
         """Allow public GET requests, require auth for write operations"""

@@ -13,7 +13,6 @@ from content.views import (
     ProjectCategoryViewSet,
     BlogCategoryViewSet,
     TeamMemberViewSet,
-    SiteLogoViewSet,
     BlogPostViewSet,
     SiteConfigViewSet,
     ServiceViewSet,
@@ -49,7 +48,6 @@ router.register(r"leads", LeadViewSet, basename="lead")
 router.register(r"project-categories", ProjectCategoryViewSet, basename="projectcategory")
 router.register(r"blog-categories", BlogCategoryViewSet, basename="blogcategory")
 router.register(r"team-members", TeamMemberViewSet, basename="teammember")
-router.register(r"site-logo", SiteLogoViewSet, basename="site-logo")
 router.register(r"blog-posts", BlogPostViewSet, basename="blogpost")
 router.register(r"site-config", SiteConfigViewSet, basename="site-config")
 router.register(r"services", ServiceViewSet, basename="service")

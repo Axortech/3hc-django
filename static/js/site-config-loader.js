@@ -144,19 +144,21 @@ document.addEventListener('DOMContentLoaded', function() {
      * Update site logo in header and footer
      */
     function updateSiteLogo(config) {
-        if (config.logo) {
-            const headerLogo = document.getElementById('site-logo');
-            if (headerLogo) {
-                headerLogo.src = config.logo;
-                headerLogo.alt = config.logo_alt_text || 'Site Logo';
+        const headerLogo = document.getElementById('site-logo');
+        const footerLogo = document.getElementById('footer-logo') || document.querySelector('.subfooter .logo img');
+        const applyLogo = (el) => {
+            if (!el) return;
+            const fallback = el.getAttribute('data-default-logo');
+            if (config.logo) {
+                el.src = config.logo;
+                el.alt = config.logo_alt_text || 'Site Logo';
+            } else if (fallback) {
+                el.src = fallback;
+                el.alt = 'Site Logo';
             }
-
-            const footerLogo = document.querySelector('.subfooter .logo img');
-            if (footerLogo) {
-                footerLogo.src = config.logo;
-                footerLogo.alt = config.logo_alt_text || 'Site Logo';
-            }
-        }
+        };
+        applyLogo(headerLogo);
+        applyLogo(footerLogo);
     }
 
     /**

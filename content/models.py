@@ -6,25 +6,17 @@ from django.core.exceptions import ObjectDoesNotExist
 
 
 class Banner(models.Model):
-    MEDIA_TYPE_CHOICES = [
-        ('video', 'Video'),
-        ('photo', 'Photo'),
-    ]
-    
+ 
     title = models.CharField(max_length=200, blank=True)
     subtitle = models.CharField(max_length=400, blank=True)
-    media_type = models.CharField(max_length=10, choices=MEDIA_TYPE_CHOICES, default='video')
-    
+    description = models.TextField(blank=True)
+  
     # Video fields
     video = models.FileField(upload_to="banners/videos/", null=True, blank=True)
     video_poster = models.ImageField(upload_to="banners/posters/", null=True, blank=True)
     video_autoplay = models.BooleanField(default=True)
     video_muted = models.BooleanField(default=True)
     video_loop = models.BooleanField(default=True)
-    
-    # Photo field
-    photo = models.ImageField(upload_to="banners/photos/", null=True, blank=True)
-
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -33,7 +25,7 @@ class Banner(models.Model):
         verbose_name_plural = "Banners"
 
     def __str__(self):
-        return self.title or f"Banner - {self.get_media_type_display()}"
+        return self.title or "Banner"
 
 
 class About(models.Model):
@@ -397,44 +389,6 @@ class Service(models.Model):
             self.published_at = None
 
         super().save(*args, **kwargs)
-
-
-class SiteLogo(models.Model):
-    """Singleton model for site logo - only one logo is maintained"""
-    logo = models.ImageField(upload_to="site_logos/")
-    alt_text = models.CharField(max_length=255, default="Site Logo")
-    updated_at = models.DateTimeField(auto_now=True)
-
-    class Meta:
-        verbose_name = "Site Logo"
-        verbose_name_plural = "Site Logo"
-
-    def save(self, *args, **kwargs):
-        # Ensure only one instance exists
-        if self.pk:
-            try:
-                old = SiteLogo.objects.get(pk=self.pk)
-                if old.logo and old.logo != self.logo and default_storage.exists(old.logo.name):
-                    default_storage.delete(old.logo.name)
-            except ObjectDoesNotExist:
-                pass
-        else:
-            # Delete existing logo if adding new one
-            SiteLogo.objects.all().delete()
-        super().save(*args, **kwargs)
-
-    def delete(self, *args, **kwargs):
-        if self.logo and default_storage.exists(self.logo.name):
-            default_storage.delete(self.logo.name)
-        super().delete(*args, **kwargs)
-
-    @classmethod
-    def get_logo(cls):
-        """Get the single site logo"""
-        return cls.objects.first()
-
-    def __str__(self):
-        return "Site Logo"
 
 
 class SiteConfig(models.Model):

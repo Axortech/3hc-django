@@ -98,6 +98,42 @@
   };
 
   /**
+   * Fetch clients from API
+   */
+  const fetchClients = async () => {
+    try {
+      const apiBaseUrl = getApiBaseUrl();
+      const response = await fetch(`${apiBaseUrl}/api/clients/`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        credentials: 'include'
+      });
+
+      if (!response.ok) {
+        console.warn('[AboutLoader] Failed to fetch clients:', response.status);
+        return [];
+      }
+
+      const data = await response.json();
+      // Handle paginated response structure
+      let clients = [];
+      if (data.results && Array.isArray(data.results)) {
+        clients = data.results;
+      } else if (Array.isArray(data)) {
+        clients = data;
+      }
+
+      console.log('[AboutLoader] Fetched clients:', clients);
+      return clients;
+    } catch (error) {
+      console.error('[AboutLoader] Error fetching clients:', error);
+      return [];
+    }
+  };
+
+  /**
    * Update about content on the page
    */
   const updateAboutContent = (aboutData) => {
@@ -357,6 +393,76 @@
   };
 
   /**
+   * Update clients carousel on the page
+   */
+  const updateClients = (clients) => {
+    const carousel = document.getElementById('owl-brand');
+    
+    if (!carousel) {
+      console.warn('[AboutLoader] Clients carousel not found');
+      return;
+    }
+
+    if (!clients || clients.length === 0) {
+      carousel.innerHTML = `
+        <div class="item">
+          <div style="text-align: center; padding: 20px; color: #999;">
+            <p>No clients found.</p>
+          </div>
+        </div>
+      `;
+      console.warn('[AboutLoader] No clients to display');
+      return;
+    }
+
+    console.log('[AboutLoader] Updating clients with:', clients);
+
+    // Generate HTML for clients
+    const clientsHtml = clients.map(client => {
+      if (client.logo) {
+        return `
+          <div class="item">
+            <img alt="${client.name}" src="${client.logo}" style="max-width: 100%; height: auto; object-fit: contain;">
+          </div>
+        `;
+      } else {
+        return `
+          <div class="item">
+            <div style="text-align: center; padding: 20px; background: #f8f9fa; border-radius: 4px;">
+              <h4 style="margin: 0; color: #172434; font-size: 18px;">${client.name}</h4>
+            </div>
+          </div>
+        `;
+      }
+    }).join('');
+
+    carousel.innerHTML = clientsHtml;
+    
+    // Re-initialize owl carousel if it was already initialized
+    if (typeof $.fn.owlCarousel !== 'undefined') {
+      $(carousel).trigger('destroy.owl.carousel');
+      $(carousel).owlCarousel({
+        items: 5,
+        loop: true,
+        autoPlay: true,
+        autoPlaySpeed: 1000,
+        autoPlayTimeout: 3000,
+        autoPlayHoverPause: true,
+        nav: false,
+        dots: false,
+        responsive: {
+          0: { items: 2 },
+          480: { items: 3 },
+          768: { items: 4 },
+          992: { items: 5 }
+        }
+      });
+    }
+    
+    console.log('[AboutLoader] Clients carousel updated');
+  };
+
+  /**
    * Initialize about content loader
    */
   const init = async () => {
@@ -375,17 +481,19 @@
     };
 
     await waitForDOM();
-    console.log('[AboutLoader] DOM ready, fetching about content and team members...');
+    console.log('[AboutLoader] DOM ready, fetching about content, team members, and clients...');
 
-    // Fetch about content and team members in parallel
-    const [aboutData, teamMembers] = await Promise.all([
+    // Fetch about content, team members, and clients in parallel
+    const [aboutData, teamMembers, clients] = await Promise.all([
       fetchAboutContent(),
-      fetchTeamMembers()
+      fetchTeamMembers(),
+      fetchClients()
     ]);
 
-    // Update both sections
+    // Update all sections
     updateAboutContent(aboutData);
     updateTeamMembers(teamMembers);
+    updateClients(clients);
   };
 
   // Auto-initialize

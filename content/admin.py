@@ -1,5 +1,6 @@
 from django.contrib import admin
-from .models import Banner, About, Project, Lead, BlogPost, SiteLogo, SiteConfig, Service, ServiceCategory, Client, TeamMember, Career, Notice, JobApplication
+from django.utils.html import format_html
+from .models import Banner, About, Project, Lead, BlogPost, SiteConfig, Service, ServiceCategory, Client, TeamMember, Career, Notice, JobApplication
 
 @admin.register(ServiceCategory)
 class ServiceCategoryAdmin(admin.ModelAdmin):
@@ -11,14 +12,14 @@ class ServiceCategoryAdmin(admin.ModelAdmin):
 
 @admin.register(Client)
 class ClientAdmin(admin.ModelAdmin):
-    list_display = ("id", "name", "phone", "is_active", "order", "created_at")
+    list_display = ("id", "name", "logo_preview", "phone", "is_active", "order", "created_at")
     list_editable = ("is_active", "order")
     search_fields = ("name", "address", "phone")
-    readonly_fields = ("created_at", "updated_at")
+    readonly_fields = ("created_at", "updated_at", "logo_preview")
     
     fieldsets = (
         ("Company Information", {
-            "fields": ("name", "logo")
+            "fields": ("name", "logo", "logo_preview")
         }),
         ("Contact Details", {
             "fields": ("address", "phone", "website")
@@ -34,6 +35,16 @@ class ClientAdmin(admin.ModelAdmin):
             "classes": ("collapse",)
         }),
     )
+    
+    def logo_preview(self, obj):
+        """Display logo preview in admin"""
+        if obj.logo:
+            return format_html(
+                '<img src="{}" style="max-width: 100px; max-height: 100px; object-fit: contain;" />',
+                obj.logo.url
+            )
+        return "-"
+    logo_preview.short_description = "Logo Preview"
 
 @admin.register(Service)
 class ServiceAdmin(admin.ModelAdmin):
@@ -76,12 +87,6 @@ class ServiceAdmin(admin.ModelAdmin):
             return self.readonly_fields + ("slug",)
         return self.readonly_fields
 
-@admin.register(SiteLogo)
-class SiteLogoAdmin(admin.ModelAdmin):
-    list_display = ("id", "alt_text", "updated_at")
-    search_fields = ("alt_text",)
-    readonly_fields = ("updated_at",)
-    
     fieldsets = (
         ("Logo Information", {
             "fields": ("logo", "alt_text")
@@ -118,22 +123,17 @@ class SiteConfigAdmin(admin.ModelAdmin):
 
 @admin.register(Banner)
 class BannerAdmin(admin.ModelAdmin):
-    list_display = ("id", "title", "subtitle", "media_type", "updated_at")
-    search_fields = ("title", "subtitle")
+    list_display = ("id", "title", "subtitle", "updated_at")
+    search_fields = ("title", "subtitle", "description")
     readonly_fields = ("created_at", "updated_at")
 
     fieldsets = (
         ("Banner Content", {
-            "fields": ("title", "subtitle", "media_type")
+            "fields": ("title", "subtitle", "description")
         }),
         ("Video Settings", {
             "fields": ("video", "video_poster", "video_autoplay", "video_muted", "video_loop"),
             "description": "Upload a video file for the banner background. Poster image is shown before video loads.",
-            "classes": ("collapse",)
-        }),
-        ("Photo Settings", {
-            "fields": ("photo",),
-            "description": "Upload a photo/image for the banner.",
             "classes": ("collapse",)
         }),
         ("Timestamps", {

@@ -330,7 +330,13 @@
       <!-- About Column -->
       <div class="col-md-3 col-xs-12">
         <div class="logo">
-          <img alt="logo" src="{% static 'img/logo.png' %}" />
+          <img
+            id="footer-logo"
+            alt="logo"
+            src="{% static 'img/logo.png' %}"
+            data-default-logo="{% static 'img/logo.png' %}"
+            style="width: 100%; height: auto; max-width: 200px; object-fit: contain;"
+          />
         </div>
         <p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Donec mollis. Quisque convallis libero in sapien pharetra tincidunt.</p>
       </div>
