@@ -35,14 +35,21 @@ DEBUG = os.getenv("DEBUG", "True") == "True"
 ALLOWED_HOSTS_STR = os.getenv("ALLOWED_HOSTS", "localhost,127.0.0.1")
 ALLOWED_HOSTS = [host.strip() for host in ALLOWED_HOSTS_STR.split(",")]
 
-# CSRF trusted origins for production deployments
-CSRF_TRUSTED_ORIGINS = [
-    "https://3hc-django-production.up.railway.app",
-    "https://*.railway.app",
-    "https://*.onrender.com",
-    "http://localhost:8000",
-    "http://127.0.0.1:8000",
-]
+# CSRF trusted origins for production deployments (env override supported)
+CSRF_TRUSTED_ORIGINS_ENV = os.getenv("CSRF_TRUSTED_ORIGINS")
+if CSRF_TRUSTED_ORIGINS_ENV:
+    CSRF_TRUSTED_ORIGINS = [
+        origin.strip() for origin in CSRF_TRUSTED_ORIGINS_ENV.split(",") if origin.strip()
+    ]
+else:
+    CSRF_TRUSTED_ORIGINS = [
+        "https://3hc-django-production.up.railway.app",
+        "https://3hc-django-production-5f7a.up.railway.app",
+        "https://*.railway.app",
+        "https://*.onrender.com",
+        "http://localhost:8000",
+        "http://127.0.0.1:8000",
+    ]
 
 # Allow all origins for development only
 if DEBUG:
