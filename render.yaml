@@ -1,0 +1,29 @@
+services:
+  - type: web
+    name: 3hc-django
+    runtime: python
+    pythonVersion: 3.11
+    startCommand: gunicorn cmspro.wsgi:application
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.11
+      - key: RENDER_ENV
+        value: production
+      - key: DEBUG
+        value: "False"
+      - key: ALLOWED_HOSTS
+        fromDatabase:
+          name: postgres
+          property: host
+      - key: DATABASE_URL
+        fromDatabase:
+          name: postgres
+          property: connectionString
+    build:
+      command: "./build.sh"
+    
+databases:
+  - name: postgres
+    databaseName: 3hc_db
+    user: 3hc_user
+    region: oregon
