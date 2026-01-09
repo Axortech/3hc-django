@@ -13,6 +13,10 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 import os
 from pathlib import Path
 from datetime import timedelta
+from dotenv import load_dotenv
+
+# Load environment variables from .env file
+load_dotenv()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -28,13 +32,23 @@ SECRET_KEY = "django-insecure-8xhrq)km%cdh1_*^pox+nno%$*x_(c6l4y3$jx$_*6!s0tt3_#
 DEBUG = os.getenv("DEBUG", "True") == "True"
 
 # Update ALLOWED_HOSTS for production
-ALLOWED_HOSTS = os.getenv("ALLOWED_HOSTS", "localhost,127.0.0.1").split(",")
+ALLOWED_HOSTS_STR = os.getenv("ALLOWED_HOSTS", "localhost,127.0.0.1")
+ALLOWED_HOSTS = [host.strip() for host in ALLOWED_HOSTS_STR.split(",")]
 
 # CSRF trusted origins for production deployments
 CSRF_TRUSTED_ORIGINS = [
     "https://3hc-django-production.up.railway.app",
+    "https://*.railway.app",
     "https://*.onrender.com",
+    "http://localhost:8000",
+    "http://127.0.0.1:8000",
 ]
+
+# Allow all origins for development only
+if DEBUG:
+    CORS_ALLOW_ALL_ORIGINS = True
+else:
+    CORS_ALLOWED_ORIGINS = CSRF_TRUSTED_ORIGINS
 
 
 # Application definition
